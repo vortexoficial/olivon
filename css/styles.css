@@ -1951,7 +1951,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 @media (max-width: 720px) {
   html { scroll-padding-top: 80px; scroll-padding-bottom: 84px; } /* foco/âncoras nunca param sob o header ou o CTA fixo */
   .section { padding: 88px 0; }
-  .hero { padding: 136px 0 70px; }
+  /* o título sobe um pouco: 64px do cabeçalho fixo mais uma folga de 44 */
+  .hero { padding: 108px 0 70px; }
   /* botões podem quebrar linha: em 320px "Quero um software assim" (303px) estourava a coluna */
   .btn { white-space: normal; height: auto; min-height: 48px; padding-top: 12px; padding-bottom: 12px; max-width: 100%; text-align: center; line-height: 1.25; }
   .btn-lg { min-height: 56px; }
