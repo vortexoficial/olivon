@@ -1900,8 +1900,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   gap: 64px;
   align-items: start;
 }
-/* o argumento fica parado enquanto a lista passa ao lado */
-.fazemos-texto { position: sticky; top: 110px; }
+/* o argumento fica parado enquanto a lista passa ao lado.
+   z-index acima da faixa de desfoque: o titulo e o botao nunca entram no borrado. */
+.fazemos-texto { position: sticky; top: 110px; z-index: 4; }
 .fazemos-texto .lead { margin-top: 18px; }
 .fazemos-texto .btn { margin-top: 30px; }
 
@@ -1911,12 +1912,16 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 /* O desfoque progressivo deixou de ser a borda de um card e passou a ser uma
    faixa presa ao rodapé da tela: enquanto a seção passa, os itens atravessam o
    desfoque e saem nítidos, sem nenhuma barra de rolagem interna. */
+/* A faixa ocupa espaco proprio no fim da secao, sem margem negativa. Enquanto a
+   secao rola ela fica presa no rodape da tela borrando a lista que passa por
+   tras; ao chegar ao fim, ela desce para o proprio espaco vazio e solta o
+   ultimo item, que fica nitido. Com margem negativa o ultimo item ficava
+   borrado para sempre. */
 .pblur-secao {
   position: sticky;
   inset: auto 0 0 0;
   z-index: 3;
   height: 190px;
-  margin-top: -190px;
 }
 .pblur-secao::after { background: linear-gradient(to bottom, transparent, var(--bg)); }
 /* a frente responsavel vira acento quando o item esta sob o cursor */
@@ -2298,7 +2303,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 @media (max-width: 720px) {
   /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
   .fazemos-texto .btn { display: none; }
-  .pblur-secao { height: 150px; margin-top: -150px; }
+  .pblur-secao { height: 150px; }
   .scroll-area { height: 400px; padding: 12px 12px 150px; }
   .banner { gap: 12px; padding: 13px 14px; min-height: 0; flex-wrap: wrap; }
   .banner-num { width: 22px; }
