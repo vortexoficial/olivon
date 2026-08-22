@@ -283,6 +283,12 @@
 
     var passos = [];
     body.innerHTML = "";
+    // espaçador que cresce enquanto sobra lugar: empurra a conversa para o rodapé do card,
+    // então cada mensagem nova nasce embaixo e empurra as anteriores para cima
+    var espaco = document.createElement("div");
+    espaco.className = "phone-espaco";
+    espaco.setAttribute("aria-hidden", "true");
+    body.appendChild(espaco);
     conversa.forEach(function (m, i) {
       var typing = null;
       if (m.de === "bot") {
@@ -309,6 +315,8 @@
         el.appendChild(meta);
         if (i) minuto += 1;
       }
+      // fora da conta do layout até a hora de aparecer: assim a rolagem sempre para na última mensagem revelada
+      el.classList.add("oculta");
       body.appendChild(el);
       passos.push({ m: m, el: el, typing: typing });
     });
@@ -336,6 +344,7 @@
       played = true;
       if (!hasGsap || motionOff) {
         passos.forEach(function (p) {
+          p.el.classList.remove("oculta");
           p.el.style.opacity = 1;
           if (p.m.de === "bot") p.el.classList.add("entregue");
         });
@@ -345,11 +354,12 @@
         return;
       }
       if (tl) tl.kill();
-      passos.forEach(function (p) { p.el.classList.remove("entregue", "chegando"); });
+      passos.forEach(function (p) { p.el.classList.add("oculta"); p.el.classList.remove("entregue", "chegando"); });
       setProgresso(0);
       setStatus();
       body.scrollTop = 0;
-      gsap.set(passos.map(function (p) { return p.el; }), { opacity: 0, y: 10 });
+      // entram de baixo para cima, como numa conversa de verdade
+      gsap.set(passos.map(function (p) { return p.el; }), { opacity: 0, y: 26 });
       passos.forEach(function (p) { if (p.typing) { p.typing.style.display = "none"; gsap.set(p.typing, { opacity: 0 }); } });
       setEtapa(-1);
       tl = gsap.timeline({ defaults: { ease: "power3.out" } });
@@ -365,8 +375,9 @@
           tl.to({}, { duration: p.m.de === "sistema" ? 0.45 : 0.8 });
         }
         tl.to(p.el, {
-          opacity: 1, y: 0, duration: 0.45,
+          opacity: 1, y: 0, duration: 0.5, ease: "power2.out",
           onStart: function () {
+            p.el.classList.remove("oculta");
             setEtapa(p.m.etapa);
             setProgresso(i + 1);
             scrollBottom();

@@ -1941,6 +1941,10 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .phone-progress b { display: block; height: 100%; width: 0; background: var(--red); transition: width 0.45s var(--ease); }
 /* altura acompanha a tela, com piso e teto: em notebook nao estoura, em celular nao vira uma fresta */
 #chatMock .phone-body { height: clamp(330px, 44vh, 460px); scroll-behavior: smooth; }
+/* o espacador ocupa a sobra e some quando a conversa enche: a pilha fica sempre colada no rodape */
+.phone-espaco { flex: 1 1 0; min-height: 0; }
+/* mensagem ainda nao revelada nao entra na conta da altura, senao a rolagem passa da ultima visivel */
+.msg.oculta, .chip.oculta { display: none; }
 #chatMock .phone { width: min(400px, 100%); }
 .msg-meta {
   display: flex;
