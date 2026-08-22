@@ -192,6 +192,20 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   color: var(--text);
   background: transparent;
 }
+
+/* Botão com o feixe correndo na borda, o mesmo efeito do quadro do formulário.
+   Usado onde o vermelho chapado pesaria, como a ação de enviar dentro do form. */
+.btn-beam {
+  position: relative;
+  overflow: hidden;
+  color: var(--text);
+  background: var(--elevated);
+  border-color: var(--border-strong);
+}
+.btn-beam:hover { background: var(--card); border-color: var(--steel); color: #fff; }
+.btn-beam:active { background: var(--elevated); }
+/* o caminho do feixe acompanha o canto do botão, não o raio grande do quadro */
+.btn-beam .border-beam i { offset-path: rect(0 auto auto 0 round 3px); }
 .btn-ghost:hover { border-color: var(--steel); }
 
 .btn-sm { height: 38px; padding: 0 18px; font-size: 0.75rem; }
