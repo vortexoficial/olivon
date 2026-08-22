@@ -1,44 +1,56 @@
 # Site OLIVEON Performance
 
-Site estático — HTML + CSS + JavaScript puros, sem dependências nem build. É só abrir o `index.html` ou publicar a pasta inteira.
-
-## Como editar o conteúdo (administrador)
-
-**Tudo que muda com frequência está em um único arquivo: [`js/dados.js`](js/dados.js)**
-
-- **WhatsApp:** campo `whatsapp` (código do país + DDD + número, só dígitos). ⚠️ Está com placeholder `5500000000000` — trocar antes de publicar!
-- **Números/resultados:** lista `numeros` — valor, prefixo, sufixo e legenda.
-- **Cases:** lista `cases` — duplique um bloco `{ ... }` para adicionar um novo case.
-- **E-mail e Instagram:** campos `email` e `instagram`.
-- **Cards do carrossel 3D do hero:** lista `heroCards` (tipo `metrica` ou `depoimento`).
-- **Bento grid (provisório):** lista `bentoCards` — tamanho `p`/`g`, ícone e visual de fundo.
-- **Lista de entregáveis (provisório):** lista `entregaveis` — banners empilhados com desfoque progressivo.
-
-Textos das seções (hero, serviços, sobre etc.) ficam direto no `index.html`.
-
-**Sistema de design:** as regras visuais (cores, tipografia, componentes, o que fazer e o que evitar) estão em [`DESIGN.md`](DESIGN.md). O `CLAUDE.md` manda o agente ler esse arquivo antes de mexer em qualquer UI — assim toda tela nova nasce consistente.
-Cores e fontes ficam nas variáveis no topo do `css/styles.css`. Tema atual: **"Lâmina"** — Archivo (títulos, expandida), Barlow (texto) e Martian Mono (dados), todas do Google Fonts.
+Página única, estática (HTML + CSS + JS puros, sem build), com animações GSAP via CDN. Tema "Lâmina" documentado em `DESIGN.md`.
 
 ## Estrutura
 
 ```
-site-oliveon/
-├── index.html        ← página única com todas as seções
-├── css/styles.css    ← estilos (paleta nas variáveis :root)
-├── js/dados.js       ← DADOS EDITÁVEIS (números, cases, WhatsApp)
-├── js/main.js        ← animações e interações
-└── assets/           ← logos otimizados para web
+index.html          página (hero, faixa de confiança, 14 seções indexadas, CTA, rodapé)
+css/styles.css      estilos (tokens em :root; regras em DESIGN.md)
+js/dados.js         TODO o conteúdo editável pelo administrador
+js/icons.js         ícones Lucide (gerado; não editar à mão)
+js/main.js          comportamento (renderização a partir de dados.js, carrosséis, GSAP)
+assets/             logos, favicon, vídeos de amostra (assets/videos/)
+DESIGN.md           design system, fonte da verdade visual
+CLAUDE.md           instruções para agentes de código
 ```
 
-## Como publicar (GitHub + Cloudflare Pages)
+## Como editar o conteúdo
 
-1. Criar repositório no GitHub e subir esta pasta.
-2. No painel do Cloudflare → **Workers & Pages → Create → Pages → Connect to Git**.
-3. Selecionar o repositório; build command em branco; output directory `/`.
-4. Cada `git push` republica o site automaticamente.
-5. (Opcional) Conectar domínio próprio em **Custom domains**.
+Abra `js/dados.js`. Cada bloco tem um comentário explicando os campos:
 
-## Observações
+| Bloco | O que controla |
+|---|---|
+| `whatsapp`, `whatsappMensagem`, `email`, `instagram` | contatos (WhatsApp só números, com 55 + DDD) |
+| `heroStats` | os 3 números do hero |
+| `clientes` | logos da faixa de confiança (`assets/clientes/…`); vazio → mostra `segmentos` |
+| `dores` | os 4 cards "dor → resposta" do posicionamento |
+| `servicos` | 8 células de serviço (`destaque: true` ocupa 2 colunas) |
+| `modulosSoftware`, `bancada` | seção Software sob medida |
+| `conversa`, `etapasConversa` | a conversa simulada da seção Automação |
+| `processo`, `entregaveis` | método em 5 etapas e lista rolável |
+| `portfolioFiltros`, `portfolio` | fichas do portfólio (tipo: sites / ecommerce / software / criativos; `capa` opcional) |
+| `videos` | carrossel de vídeos 9:16 (`src` mp4 leve + `poster` jpg) |
+| `equipe`, `equipeFecho`, `comparativo` | papéis da equipe, frase de fecho e tabela comparativa |
+| `numeros`, `cases`, `depoimentos`, `faq`, `heroCards` | resultados, cases, depoimentos, FAQ e cards do carrossel 3D |
 
-- O formulário de contato monta a mensagem e abre no WhatsApp (não precisa de servidor). Se quiser receber por e-mail também, dá para integrar Web3Forms/Formspree depois.
-- Animações respeitam `prefers-reduced-motion` (acessibilidade).
+Itens marcados **EXEMPLO** são provisórios: troque por dados reais antes de publicar.
+
+### Vídeos
+Converta para H.264 leve antes de colocar em `assets/videos/` (ex.: `ffmpeg -i origem.mp4 -t 8 -an -vf "scale=540:-2,fps=24" -c:v libx264 -crf 30 -movflags +faststart criativo-05.mp4`) e gere o poster (`ffmpeg -ss 1 -i criativo-05.mp4 -frames:v 1 criativo-05.jpg`).
+
+### Logos de clientes
+PNG ou SVG com fundo transparente em `assets/clientes/`. O site aplica silhueta branca automaticamente; prefira versões monocromáticas.
+
+## Publicação
+
+1. Commit e push para `main` em `github.com/vortexoficial/olivon`.
+2. Cloudflare → Workers & Pages → Create → Pages → Connect to Git → escolher o repositório; build command em branco; output directory `/`.
+3. Cada push publica automaticamente.
+
+## Validação rápida
+
+```
+node --check js/main.js js/dados.js js/icons.js
+```
+Abra `index.html` no navegador e confira o console (sem erros) e a largura (sem rolagem horizontal) em 1440 / 1024 / 390 px.

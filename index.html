@@ -4,242 +4,319 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
-  <title>Oliveon Performance — Estratégia, Mídia e Resultados</title>
-  <meta name="description" content="Performance que transforma investimento em crescimento. Estratégia, mídia e tecnologia para empresas que querem gerar mais leads, vendas e crescimento através do digital.">
+  <!-- Marca a entrada do hero antes da primeira pintura; js/main.js remove (com ou sem GSAP) -->
+  <script>document.documentElement.classList.add("intro-pending");</script>
+  <title>Oliveon Performance, Sistemas de aquisição completos</title>
+  <meta name="description" content="Estratégia, tráfego pago, design, web e desenvolvimento em uma equipe só. Do anúncio ao software que atende, qualifica e vende. Diagnóstico gratuito.">
   <link rel="icon" type="image/png" href="assets/favicon.png">
-  <link rel="apple-touch-icon" href="assets/simbolo.png">
-  <meta property="og:title" content="Oliveon Performance">
-  <meta property="og:description" content="Performance que transforma investimento em crescimento.">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <!-- TODO ao publicar: trocar por URLs absolutas do domínio final (canonical, og:url e og:image): os robôs do WhatsApp/Meta ignoram caminho relativo -->
+  <meta property="og:title" content="Oliveon Performance, Sistemas de aquisição">
+  <meta property="og:description" content="Performance que transforma investimento em crescimento. Tráfego, automação, sites, criativos e software sob medida, por uma equipe completa.">
   <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Barlow:wght@400;500;600&family=Martian+Mono:wdth,wght@87.5..112.5,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
   <!-- ================= HEADER ================= -->
   <header class="header" id="header">
     <div class="header-inner">
-      <a href="#hero" class="header-logo" aria-label="Oliveon Performance — início">
+      <a href="#hero" class="header-logo" aria-label="Oliveon Performance, início">
         <img src="assets/logo-branco.png" alt="Oliveon Performance" width="180" height="60">
       </a>
       <span class="header-idx" id="headerIdx" aria-hidden="true"></span>
-      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav">
+      <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false" aria-controls="nav">
         <span></span><span></span>
       </button>
       <nav class="nav" id="nav" aria-label="Principal">
         <a href="#servicos">Serviços</a>
-        <a href="#metodo">Como trabalhamos</a>
-        <a href="#cases">Cases</a>
-        <a href="#sobre">Sobre</a>
+        <a href="#software">Software</a>
+        <a href="#portfolio">Portfólio</a>
+        <a href="#equipe">Equipe</a>
+        <a href="#processo">Processo</a>
         <a href="#contato">Contato</a>
-        <a href="#" class="btn btn-red btn-sm nav-cta" data-whats>Quero crescer</a>
+        <a href="#" class="btn btn-red btn-sm nav-cta" data-whats>Quero um diagnóstico</a>
       </nav>
     </div>
   </header>
 
-  <main>
+  <!-- Trilho de produção: as 5 estações da página (desktop largo) -->
+  <aside class="rail" id="rail" aria-hidden="true">
+    <ol class="rail-list">
+      <li data-station="atrair"><i></i><span>Atrair</span></li>
+      <li data-station="construir"><i></i><span>Construir</span></li>
+      <li data-station="provar"><i></i><span>Provar</span></li>
+      <li data-station="escalar"><i></i><span>Escalar</span></li>
+      <li data-station="comecar"><i></i><span>Começar</span></li>
+    </ol>
+    <span class="rail-line"><b id="railFill"></b></span>
+  </aside>
+
+  <main id="conteudo">
 
     <!-- ================= HERO ================= -->
-    <section class="hero" id="hero">
+    <section class="hero" id="hero" data-station="atrair">
       <div class="hero-bg" aria-hidden="true">
-        <svg class="hero-ring" viewBox="0 0 760 760" aria-hidden="true"><circle cx="380" cy="380" r="310"/><line x1="40" y1="636" x2="720" y2="124"/></svg>
+        <svg class="hero-ring" id="heroRing" viewBox="0 0 760 760" aria-hidden="true"><circle cx="380" cy="380" r="310"/><line x1="40" y1="636" x2="720" y2="124"/></svg>
       </div>
       <div class="container hero-inner">
         <div class="hero-texto">
-          <p class="hero-badge reveal"><span class="slash"></span>Estratégia · Mídia · Resultados</p>
-          <h1 class="reveal delay-1">Performance que transforma <span class="red">investimento</span> em <span class="red">crescimento</span>.</h1>
-          <p class="hero-sub reveal delay-2">Estratégia, mídia e tecnologia para empresas que querem gerar mais leads, vendas e crescimento através do digital.</p>
-          <div class="hero-actions reveal delay-3">
-            <a href="#" class="btn btn-red" data-whats>Quero crescer</a>
-            <a href="#sobre" class="btn btn-ghost">Conheça a Oliveon</a>
+          <p class="hero-badge" data-hero="badge"><span class="slash"></span>Performance · Tecnologia · Criação, sob o mesmo teto</p>
+          <h1 id="heroTitle" data-hero="title">Performance que transforma investimento em <span class="red">crescimento</span>.</h1>
+          <p class="hero-sub" data-hero="sub">Uma equipe completa, estratégia, tráfego, design, web e desenvolvimento, que constrói o sistema inteiro de aquisição do seu negócio: do anúncio ao software que atende, qualifica e vende.</p>
+          <div class="hero-actions" data-hero="actions">
+            <a href="#" class="btn btn-red" data-whats>Quero um diagnóstico</a>
+            <a href="#portfolio" class="btn btn-ghost">Ver o que construímos</a>
           </div>
+          <ul class="hero-stats" id="heroStats" data-hero="stats" aria-label="Números da Oliveon"><!-- js/dados.js → heroStats --></ul>
         </div>
 
         <!-- Carrossel 3D (cards em js/dados.js → heroCards) -->
-        <div class="hero-marquee reveal delay-2" aria-hidden="true">
+        <div class="hero-marquee" data-hero="marquee" aria-hidden="true">
           <div class="marquee-stage" id="marqueeStage"></div>
         </div>
         <button class="motion-toggle" id="motionToggle" type="button">Pausar animações</button>
       </div>
     </section>
 
-    <!-- ================= SERVIÇOS ================= -->
-    <section class="section" id="servicos">
+    <!-- ================= FAIXA DE CONFIANÇA (logos de clientes ou segmentos) ================= -->
+    <section class="faixa" id="faixa" data-station="atrair" aria-label="Quem confia na Oliveon">
+      <div class="container faixa-inner">
+        <p class="faixa-rotulo" id="faixaRotulo">Operações que confiam na bancada</p>
+        <div class="faixa-marquee" id="faixaMarquee"><!-- js/dados.js → clientes ou segmentos --></div>
+      </div>
+    </section>
+
+    <!-- ================= 01 POSICIONAMENTO ================= -->
+    <section class="section diferencial" id="posicionamento" data-station="atrair">
       <div class="container">
-        <div class="section-head reveal">
-          <p class="eyebrow"><span class="idx">01</span>Serviços</p>
-          <h2>O que fazemos para a sua empresa crescer</h2>
+        <p class="eyebrow reveal"><span class="idx">01</span>Posicionamento</p>
+        <h2 class="dores-lead reveal delay-1">Quase toda operação chega aqui do mesmo jeito</h2>
+        <div class="dores" id="doresGrid"><!-- js/dados.js → dores --></div>
+        <h2 class="diferencial-title reveal delay-1">Não gerenciamos campanhas.<br><span class="red">Construímos sistemas de aquisição.</span></h2>
+        <div class="diferencial-argumento">
+          <p class="reveal delay-2">Anúncio sem página boa converte mal. Página sem automação perde o lead no primeiro minuto. Automação sem dado não aprende. Por isso a Oliveon não vende peças soltas.</p>
+          <p class="reveal delay-3">Entregamos a operação inteira, mídia, páginas, criativos, automações e o software que falta, desenhada por uma equipe que já colocou dezenas de sistemas em produção: delivery, e-commerce, clínicas, imobiliárias, indústria, infoprodutos e negócios locais.</p>
+          <p class="reveal delay-4">O resultado não é um relatório bonito. É custo por venda caindo mês a mês, com você dono de cada ferramenta.</p>
         </div>
-        <div class="grid-servicos">
-          <article class="card reveal">
-            <span class="card-index">01</span>
-            <h3>Tráfego pago</h3>
-            <p>Google Ads e Meta Ads focados em aquisição e geração de oportunidades.</p>
-          </article>
-          <article class="card reveal delay-1">
-            <span class="card-index">02</span>
-            <h3>Google Ads</h3>
-            <p>Estratégias para capturar demanda e transformar pesquisas em clientes.</p>
-          </article>
-          <article class="card reveal delay-2">
-            <span class="card-index">03</span>
-            <h3>Meta Ads</h3>
-            <p>Campanhas de aquisição, remarketing e geração de leads.</p>
-          </article>
-          <article class="card reveal">
-            <span class="card-index">04</span>
-            <h3>E-commerce</h3>
-            <p>Estrutura, otimização e estratégias para aumentar vendas online.</p>
-          </article>
-          <article class="card reveal delay-1">
-            <span class="card-index">05</span>
-            <h3>Landing pages &amp; sites</h3>
-            <p>Páginas desenvolvidas para conversão e geração de oportunidades.</p>
-          </article>
-          <article class="card reveal delay-2">
-            <span class="card-index">06</span>
-            <h3>Estratégia digital</h3>
-            <p>Planejamento de aquisição, funil, métricas e posicionamento.</p>
-          </article>
+        <div class="pilares">
+          <div class="pilar reveal"><span class="pilar-line"></span>Mídia que compra atenção</div>
+          <div class="pilar reveal delay-1"><span class="pilar-line"></span>Páginas e criativos que convertem</div>
+          <div class="pilar reveal delay-2"><span class="pilar-line"></span>Software e automação que não deixam lead esfriar</div>
         </div>
       </div>
     </section>
 
-    <!-- ================= COMO TRABALHAMOS ================= -->
-    <section class="section section-alt" id="metodo">
+    <!-- ================= 02 SERVIÇOS ================= -->
+    <section class="section" id="servicos" data-station="atrair">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow"><span class="idx">02</span>Como trabalhamos</p>
-          <h2>Um método claro, do diagnóstico à escala</h2>
+          <p class="eyebrow"><span class="idx">02</span>Serviços</p>
+          <h2>Tudo que uma operação de aquisição precisa. Feito aqui dentro.</h2>
         </div>
-        <ol class="steps">
-          <li class="step reveal">
-            <span class="step-num">1</span>
-            <h3>Diagnóstico</h3>
-            <p>Entendemos o negócio, mercado e objetivos.</p>
-          </li>
-          <li class="step reveal delay-1">
-            <span class="step-num">2</span>
-            <h3>Estratégia</h3>
-            <p>Definimos canais, público, ofertas e estrutura de aquisição.</p>
-          </li>
-          <li class="step reveal delay-2">
-            <span class="step-num">3</span>
-            <h3>Execução</h3>
-            <p>Campanhas, páginas, criativos e implementação.</p>
-          </li>
-          <li class="step reveal delay-3">
-            <span class="step-num">4</span>
-            <h3>Otimização</h3>
-            <p>Análise constante de dados e melhoria da performance.</p>
-          </li>
-          <li class="step reveal delay-4">
-            <span class="step-num">5</span>
-            <h3>Crescimento</h3>
-            <p>Escalamos o que funciona.</p>
-          </li>
-        </ol>
+        <div class="grid-servicos" id="servicosGrid"><!-- js/dados.js → servicos --></div>
       </div>
     </section>
 
-    <!-- ================= ENTREGÁVEIS (provisório — lista com desfoque progressivo) ================= -->
-    <section class="section entregaveis" id="entregaveis">
+    <!-- ================= 03 SOFTWARE SOB MEDIDA (destaque) ================= -->
+    <section class="section section-alt software" id="software" data-station="construir">
+      <div class="container software-inner" id="softwareInner">
+        <div class="software-texto">
+          <p class="eyebrow reveal"><span class="idx">03</span>Software sob medida</p>
+          <h2 class="reveal delay-1">A ferramenta que o seu negócio precisa, construída por quem conhece o seu funil.</h2>
+          <p class="lead reveal delay-2">Desenvolvedor fullstack dentro do time de performance. Isso muda o que dá para prometer: o lead que chega do anúncio cai num painel seu, é qualificado por automação, avisa o comercial no WhatsApp e aparece no dashboard, sem planilha, sem ferramenta alugada que não conversa com a outra.</p>
+          <div class="bancada reveal delay-3">
+            <p class="bancada-rotulo">O que já saiu da bancada</p>
+            <ul class="bancada-lista" id="bancadaLista"><!-- js/dados.js → bancada --></ul>
+          </div>
+          <a href="#" class="btn btn-red reveal delay-3" data-whats data-whats-msg="Olá! Quero conversar sobre um software sob medida para a minha operação.">Quero um software assim</a>
+        </div>
+        <div class="software-stack" id="softwareStack" role="group" aria-label="Módulos que construímos"><!-- js/dados.js → modulosSoftware --></div>
+      </div>
+    </section>
+
+    <!-- ================= 04 AUTOMAÇÃO EM AÇÃO ================= -->
+    <section class="section automacao" id="automacao" data-station="construir">
+      <div class="container automacao-inner">
+        <div class="automacao-texto">
+          <p class="eyebrow reveal"><span class="idx">04</span>Automação em ação</p>
+          <h2 class="reveal delay-1">O lead chega às 23h. Às 23h01 ele já foi atendido.</h2>
+          <p class="lead reveal delay-2">Simulação de um fluxo que colocamos em produção: o anúncio gera o contato, a automação qualifica, o CRM registra e o comercial recebe o resumo, enquanto a equipe dorme.</p>
+          <ol class="etapas reveal delay-3" id="etapasConversa" aria-label="Etapas do fluxo"><!-- js/dados.js → etapasConversa --></ol>
+          <button class="replay reveal delay-3" id="chatReplay" type="button"><span class="ic-wrap" data-icon="repeat"></span>Ver de novo</button>
+        </div>
+        <div class="phone reveal delay-2" id="chatMock" role="group" aria-label="Simulação de conversa automatizada no WhatsApp">
+          <div class="phone-top">
+            <span class="phone-avatar" aria-hidden="true">O</span>
+            <div><b>Oliveon</b><small>Atendimento automático · simulação</small></div>
+          </div>
+          <div class="phone-body" id="chatBody"><!-- js/dados.js → conversa --></div>
+          <div class="phone-bar" aria-hidden="true"><span>Mensagem</span><i data-icon="send"></i></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 05 PROCESSO ================= -->
+    <section class="section section-alt" id="processo" data-station="construir">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow"><span class="idx">05</span>Processo</p>
+          <h2>Um método que reduz risco antes de pedir orçamento.</h2>
+        </div>
+        <ol class="steps" id="processoLista"><!-- js/dados.js → processo --></ol>
+      </div>
+    </section>
+
+    <!-- ================= 06 ENTREGÁVEIS ================= -->
+    <section class="section entregaveis" id="entregaveis" data-station="construir">
       <div class="container entregaveis-inner">
         <div class="entregaveis-texto">
-          <p class="eyebrow reveal"><span class="idx">03</span>O que está incluso</p>
-          <h2 class="reveal delay-1">Um sistema completo, não uma campanha solta</h2>
-          <p class="reveal delay-2">Tudo o que compõe uma operação de aquisição de verdade — da mensuração à escala. Role a lista para ver cada entregável.</p>
+          <p class="eyebrow reveal"><span class="idx">06</span>Entregáveis</p>
+          <h2 class="reveal delay-1">Um sistema completo, não uma campanha solta.</h2>
+          <p class="reveal delay-2">Tudo o que compõe uma operação de aquisição de verdade, da estratégia ao software, da mídia ao dado. Role a lista para ver cada entregável e a frente responsável.</p>
         </div>
         <div class="scroll-wrap reveal delay-2">
-          <div class="scroll-area" id="entregaveisLista" tabindex="0" role="region" aria-label="Lista de entregáveis"><!-- preenchido via js/dados.js (entregaveis) --></div>
+          <div class="scroll-area" id="entregaveisLista" tabindex="0" role="region" aria-label="Lista de entregáveis"><!-- js/dados.js → entregaveis --></div>
           <div class="pblur" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
         </div>
       </div>
     </section>
 
-    <!-- ================= DIFERENCIAL ================= -->
-    <section class="section diferencial" id="diferencial">
+    <!-- ================= 07 PORTFÓLIO ================= -->
+    <section class="section" id="portfolio" data-station="provar">
       <div class="container">
-        <p class="eyebrow reveal"><span class="idx">04</span>Nosso diferencial</p>
-        <h2 class="diferencial-title reveal delay-1">Não gerenciamos campanhas.<br><span class="red">Construímos sistemas de aquisição.</span></h2>
-        <p class="diferencial-text reveal delay-2">Apertar botão no gerenciador de anúncios qualquer um faz. Na Oliveon, mídia paga, landing pages, dados, estratégia e tecnologia trabalham juntos — um sistema completo desenhado para gerar resultado previsível e escalável.</p>
-        <div class="pilares">
-          <div class="pilar reveal"><span class="pilar-line"></span>Mídia paga</div>
-          <div class="pilar reveal delay-1"><span class="pilar-line"></span>Landing pages</div>
-          <div class="pilar reveal delay-2"><span class="pilar-line"></span>Dados</div>
-          <div class="pilar reveal delay-3"><span class="pilar-line"></span>Estratégia</div>
-          <div class="pilar reveal delay-4"><span class="pilar-line"></span>Tecnologia</div>
+        <div class="section-head section-head-wide reveal">
+          <div>
+            <p class="eyebrow"><span class="idx">07</span>Portfólio</p>
+            <h2>O que já saiu da nossa bancada.</h2>
+          </div>
+          <p class="section-lead">Fichas técnicas de projetos entregues, por tipo. Sem nome de cliente: o que importa é o que foi construído e o que passou a funcionar.</p>
         </div>
+        <div class="filtros reveal" id="portfolioFiltros" role="group" aria-label="Filtrar portfólio"><!-- js/dados.js → portfolioFiltros --></div>
+        <div class="pf-grid" id="portfolioGrid"><!-- js/dados.js → portfolio --></div>
       </div>
     </section>
 
-    <!-- ================= BENTO GRID (provisório — conteúdo a definir) ================= -->
-    <section class="section" id="bento">
+    <!-- ================= 08 CRIATIVOS EM MOVIMENTO (carrossel de vídeos) ================= -->
+    <section class="section section-alt videos" id="videos" data-station="provar">
+      <div class="container">
+        <div class="section-head section-head-wide reveal">
+          <div>
+            <p class="eyebrow"><span class="idx">08</span>Criativos em movimento</p>
+            <h2>Vídeo que para o dedo. E vende.</h2>
+          </div>
+          <p class="section-lead">Produzimos criativos em volume, estáticos e vídeos 9:16, e deixamos o dado escolher o vencedor. Abaixo, amostras do formato.</p>
+        </div>
+      </div>
+      <div class="vcar reveal" id="vcar">
+        <button class="vcar-btn prev" id="vcarPrev" type="button" aria-label="Vídeo anterior"><i data-icon="chevron-left"></i></button>
+        <div class="vcar-viewport" id="vcarViewport" role="region" aria-roledescription="carrossel" aria-label="Vídeos de criativos">
+          <div class="vcar-track" id="videoTrack"><!-- js/dados.js → videos --></div>
+        </div>
+        <button class="vcar-btn next" id="vcarNext" type="button" aria-label="Próximo vídeo"><i data-icon="chevron-right"></i></button>
+      </div>
+      <div class="vcar-dots" id="vcarDots" aria-hidden="true"></div>
+    </section>
+
+    <!-- ================= 09 EQUIPE ================= -->
+    <section class="section" id="equipe" data-station="provar">
+      <div class="container">
+        <div class="section-head section-head-wide reveal">
+          <div>
+            <p class="eyebrow"><span class="idx">09</span>Equipe</p>
+            <h2>Cinco especialidades. Uma mesa.</h2>
+          </div>
+          <p class="section-lead">Agência tradicional terceiriza o que não sabe fazer. Aqui, estratégia, mídia, design, web e desenvolvimento trabalham no mesmo projeto, no mesmo dia, e a IA de última geração entra como sexta cadeira.</p>
+        </div>
+        <div class="grid-equipe" id="equipeGrid"><!-- js/dados.js → equipe --></div>
+        <p class="equipe-fecho reveal" id="equipeFecho"><!-- js/dados.js → equipeFecho --></p>
+        <div class="comp-wrap reveal" id="comparativo" tabindex="0" role="region" aria-label="Comparativo: freelancer, agência fragmentada e Oliveon"><!-- js/dados.js → comparativo --></div>
+      </div>
+    </section>
+
+    <!-- ================= 10 NÚMEROS ================= -->
+    <section class="section section-alt" id="numeros" data-station="escalar">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow"><span class="idx">05</span>Plataforma</p>
-          <h2>Tudo que a sua operação precisa, em um só lugar</h2>
+          <p class="eyebrow"><span class="idx">10</span>Resultados</p>
+          <h2>Performance em números.</h2>
         </div>
-        <div class="bento" id="bentoGrid"><!-- preenchido via js/dados.js (bentoCards) --></div>
+        <div class="numeros" id="numerosGrid"><!-- js/dados.js → numeros --></div>
       </div>
     </section>
 
-    <!-- ================= NÚMEROS ================= -->
-    <section class="section section-alt" id="numeros">
+    <!-- ================= 11 CASES ================= -->
+    <section class="section" id="cases" data-station="escalar">
       <div class="container">
         <div class="section-head reveal">
-          <p class="eyebrow"><span class="idx">06</span>Resultados</p>
-          <h2>Performance em números</h2>
+          <p class="eyebrow"><span class="idx">11</span>Cases</p>
+          <h2>Resultados reais, de operações reais.</h2>
         </div>
-        <div class="numeros" id="numerosGrid"><!-- preenchido via js/dados.js --></div>
+        <div class="cases-list" id="casesGrid"><!-- js/dados.js → cases --></div>
       </div>
     </section>
 
-    <!-- ================= CASES ================= -->
-    <section class="section" id="cases">
+    <!-- ================= 12 DEPOIMENTOS ================= -->
+    <section class="section section-alt depoimentos" id="depoimentos" data-station="escalar">
       <div class="container">
-        <div class="section-head reveal">
-          <p class="eyebrow"><span class="idx">07</span>Cases</p>
-          <h2>Resultados reais, de operações reais</h2>
+        <div class="section-head section-head-wide reveal">
+          <div>
+            <p class="eyebrow"><span class="idx">12</span>Depoimentos</p>
+            <h2>Quem opera com a gente.</h2>
+          </div>
+          <div class="depo-controls">
+            <button class="ctrl" id="depoPrev" type="button" aria-label="Depoimento anterior"><i data-icon="chevron-left"></i></button>
+            <button class="ctrl" id="depoNext" type="button" aria-label="Próximo depoimento"><i data-icon="chevron-right"></i></button>
+          </div>
         </div>
-        <div class="cases-list" id="casesGrid"><!-- preenchido via js/dados.js --></div>
+      </div>
+      <div class="depo-car reveal" id="depoCar" role="region" aria-roledescription="carrossel" aria-label="Depoimentos de clientes">
+        <div class="depo-track" id="depoTrack"><!-- js/dados.js → depoimentos --></div>
       </div>
     </section>
 
-    <!-- ================= SOBRE ================= -->
-    <section class="section section-alt sobre" id="sobre">
-      <div class="container sobre-inner">
-        <div class="sobre-texto">
-          <p class="eyebrow reveal"><span class="idx">08</span>Sobre a Oliveon</p>
-          <h2 class="reveal delay-1">Estratégia, tecnologia e performance no mesmo lugar</h2>
-          <p class="reveal delay-2">A Oliveon Performance nasceu para aproximar estratégia, tecnologia e performance. Construímos operações digitais completas, focadas em aquisição e crescimento — onde cada campanha, página e decisão é guiada por dados.</p>
+    <!-- ================= 13 FAQ ================= -->
+    <section class="section" id="faq" data-station="comecar">
+      <div class="container faq-inner">
+        <div class="faq-texto">
+          <p class="eyebrow reveal"><span class="idx">13</span>FAQ</p>
+          <h2 class="reveal delay-1">Respostas diretas.</h2>
+          <p class="reveal delay-2">Sem promessas milagrosas. O que você pode esperar, e o que não pode, antes de falar com a gente.</p>
         </div>
-        <div class="sobre-visual reveal delay-2" aria-hidden="true">
-          <img src="assets/logo-metalico.png" alt="" loading="lazy" width="450" height="337">
-        </div>
+        <div class="faq-lista reveal delay-2" id="faqLista"><!-- js/dados.js → faq --></div>
       </div>
     </section>
 
     <!-- ================= CTA FINAL ================= -->
-    <section class="cta" id="cta">
+    <section class="cta" id="cta" data-station="comecar">
       <canvas id="ctaGrid" class="cta-grid" aria-hidden="true"></canvas>
       <div class="cta-inner">
-        <h2 class="reveal">Seu próximo nível de crescimento<br>começa aqui.</h2>
-        <a href="#" class="btn btn-red btn-lg reveal delay-1" data-whats>Falar com a Oliveon</a>
+        <h2 class="reveal">Seu próximo nível de crescimento<br>começa com um diagnóstico.</h2>
+        <a href="#" class="btn btn-red btn-lg reveal delay-1" data-whats>Solicitar diagnóstico gratuito</a>
       </div>
     </section>
 
-    <!-- ================= CONTATO ================= -->
-    <section class="section" id="contato">
+    <!-- ================= 14 CONTATO ================= -->
+    <section class="section" id="contato" data-station="comecar">
       <div class="container contato-inner">
         <div class="contato-info">
-          <p class="eyebrow reveal"><span class="idx">09</span>Contato</p>
-          <h2 class="reveal delay-1">Solicite um diagnóstico gratuito</h2>
-          <p class="reveal delay-2">Conte um pouco sobre a sua operação e retornamos com uma análise inicial de oportunidades — sem compromisso.</p>
+          <p class="eyebrow reveal"><span class="idx">14</span>Contato</p>
+          <h2 class="reveal delay-1">Solicite um diagnóstico gratuito.</h2>
+          <p class="reveal delay-2">Conte um pouco sobre a sua operação e devolvemos, por escrito, uma análise inicial de oportunidades, o que fazer primeiro, o que pode esperar e quanto custa cada frente. Sem compromisso.</p>
+          <p class="contato-garantia reveal delay-2"><i data-icon="timer"></i>Diagnóstico gratuito · Retorno em até 1 dia útil</p>
           <a href="#" class="whats-direct reveal delay-3" data-whats>
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm5.4 14.1c-.2.6-1.2 1.2-1.7 1.2-.4.1-1 .1-1.6-.1a13 13 0 0 1-1.5-.5 11.5 11.5 0 0 1-4.4-3.9 5 5 0 0 1-1-2.6c0-1.3.6-1.9.9-2.2.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.4l.9 2.1c0 .2.1.3 0 .5l-.3.5-.4.5c-.2.1-.3.3-.1.6.1.3.7 1.1 1.5 1.8a8 8 0 0 0 2.1 1.3c.3.2.5.1.6 0l.6-.7c.2-.3.4-.2.6-.1l2 .9c.2.1.4.2.4.3.1.1.1.7-.1 1.3Z"/></svg>
+            <i data-icon="whatsapp"></i>
             Chamar direto no WhatsApp
           </a>
         </div>
@@ -253,18 +330,38 @@
             <div class="field"><label for="fEmail">E-mail</label><input id="fEmail" name="email" type="email" required autocomplete="email"></div>
           </div>
           <div class="field"><label for="fSite">Site / Instagram</label><input id="fSite" name="site" type="text" placeholder="www.suaempresa.com.br ou @perfil"></div>
-          <div class="field">
-            <label for="fInvest">Quanto investe atualmente em marketing?</label>
-            <select id="fInvest" name="investimento" required>
-              <option value="" disabled selected>Selecione uma faixa</option>
-              <option>Ainda não invisto</option>
-              <option>Até R$ 3.000/mês</option>
-              <option>R$ 3.000 a R$ 10.000/mês</option>
-              <option>R$ 10.000 a R$ 30.000/mês</option>
-              <option>Acima de R$ 30.000/mês</option>
-            </select>
+          <div class="form-row">
+            <div class="field">
+              <label for="fInvest">Quanto investe atualmente em marketing?</label>
+              <select id="fInvest" name="investimento" required>
+                <option value="" disabled selected>Selecione uma faixa</option>
+                <option>Ainda não invisto</option>
+                <option>Até R$ 3.000/mês</option>
+                <option>R$ 3.000 a R$ 10.000/mês</option>
+                <option>R$ 10.000 a R$ 30.000/mês</option>
+                <option>Acima de R$ 30.000/mês</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fFrente">O que precisa primeiro?</label>
+              <select id="fFrente" name="frente" required>
+                <option value="" disabled selected>Selecione</option>
+                <option>Tráfego pago</option>
+                <option>Funil e automação</option>
+                <option>Site ou landing page</option>
+                <option>E-commerce ou delivery</option>
+                <option>Software sob medida</option>
+                <option>Lançamento</option>
+                <option>Criativos</option>
+                <option>O sistema completo</option>
+              </select>
+            </div>
           </div>
-          <div class="field"><label for="fBusca">O que busca melhorar?</label><textarea id="fBusca" name="objetivo" rows="3" required placeholder="Ex.: gerar mais leads, reduzir custo por venda, escalar o e-commerce..."></textarea></div>
+          <div class="field"><label for="fBusca">O que busca melhorar?</label><textarea id="fBusca" name="objetivo" rows="3" required placeholder="Ex.: gerar mais leads, reduzir custo por venda, automatizar o atendimento, escalar o e-commerce..."></textarea></div>
+          <div class="ficha" id="fichaBox" hidden>
+            <small>Frentes que você marcou no site, vão junto na mensagem</small>
+            <div class="ficha-chips" id="fichaChips"></div>
+          </div>
           <button type="submit" class="btn btn-red btn-block">Solicitar diagnóstico</button>
           <p class="form-hint">Ao enviar, você continua a conversa direto no nosso WhatsApp.</p>
           <span class="border-beam" style="--size:320px;--duration:7s"><i></i></span>
@@ -280,21 +377,36 @@
     <div class="container footer-top">
       <div class="footer-brand">
         <img src="assets/logo-branco.png" alt="Oliveon Performance" width="170" height="57">
-        <p>Estratégia, mídia e tecnologia para empresas que querem crescer através do digital.</p>
+        <p>Estratégia, mídia, criação e software para empresas que querem crescer com um sistema, não com sorte.</p>
+        <div class="footer-social">
+          <a href="#" id="footerInstagram" target="_blank" rel="noopener" aria-label="Instagram"><i data-icon="instagram"></i></a>
+          <a href="#" data-whats aria-label="WhatsApp"><i data-icon="whatsapp"></i></a>
+          <a href="#" id="footerEmail" aria-label="E-mail"><i data-icon="mail"></i></a>
+        </div>
       </div>
       <nav class="footer-nav" aria-label="Rodapé">
         <div>
-          <h4>Navegação</h4>
-          <a href="#servicos">Serviços</a>
-          <a href="#metodo">Como trabalhamos</a>
-          <a href="#cases">Cases</a>
-          <a href="#sobre">Sobre</a>
+          <p class="footer-nav-titulo">Serviços</p>
+          <a href="#servicos">Tráfego pago</a>
+          <a href="#servicos">Funis e automações</a>
+          <a href="#servicos">Sites e landing pages</a>
+          <a href="#servicos">E-commerce e delivery</a>
+          <a href="#software">Software sob medida</a>
         </div>
         <div>
-          <h4>Contato</h4>
+          <p class="footer-nav-titulo">Empresa</p>
+          <a href="#posicionamento">Posicionamento</a>
+          <a href="#portfolio">Portfólio</a>
+          <a href="#equipe">Equipe</a>
+          <a href="#processo">Processo</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <div>
+          <p class="footer-nav-titulo">Contato</p>
           <a href="#" data-whats>WhatsApp</a>
-          <a href="#" id="footerEmail">E-mail</a>
-          <a href="#" id="footerInstagram" target="_blank" rel="noopener">Instagram</a>
+          <a href="#" id="footerEmail2">E-mail</a>
+          <a href="#" id="footerInstagram2" target="_blank" rel="noopener">Instagram</a>
+          <a href="#contato">Solicitar diagnóstico</a>
         </div>
       </nav>
     </div>
@@ -303,10 +415,16 @@
     </div>
     <div class="container footer-bottom">
       <p>© <span id="ano"></span> Oliveon Performance. Todos os direitos reservados.</p>
+      <p>Site próprio, projetado e construído pela bancada Oliveon.</p>
     </div>
   </footer>
 
+  <!-- CTA fixo no mobile -->
+  <a href="#" class="sticky-cta" id="stickyCta" data-whats><i data-icon="whatsapp"></i>Falar com a Oliveon</a>
+
+  <script src="js/icons.js"></script>
   <script src="js/dados.js"></script>
+  <!-- GSAP (gsap, ScrollTrigger, Flip) é carregado por js/main.js sem bloquear a renderização -->
   <script src="js/main.js"></script>
 </body>
 </html>
