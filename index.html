@@ -146,11 +146,28 @@
           </div>
           <p class="section-lead">Fichas técnicas de projetos entregues, por tipo. O que importa é o que foi construído e o que passou a funcionar.</p>
         </div>
-        <div class="filtros reveal" id="portfolioFiltros" role="group" aria-label="Filtrar portfólio"><!-- js/dados.js → portfolioFiltros --></div>
-        <div class="pf-grid" id="portfolioGrid"><!-- js/dados.js → portfolio --></div>
-        <div class="pf-mais" hidden><button class="btn btn-ghost" id="pfMais" type="button">Ver mais projetos</button></div>
       </div>
+      <!-- Carrossel 3D: o card do meio fica de frente, os vizinhos giram e recuam.
+           Cada card mostra o vídeo do projeto mudo e em loop; ao clicar, abre em tela
+           cheia do início e com som. Vídeos entram em js/dados.js → portfolio[].video -->
+      <div class="pcar reveal" id="pcar">
+        <button class="pcar-btn prev" id="pcarPrev" type="button" aria-label="Projeto anterior"><i data-icon="chevron-left"></i></button>
+        <div class="pcar-viewport" id="pcarViewport" role="region" aria-roledescription="carrossel" aria-label="Projetos da Oliveon">
+          <div class="pcar-track" id="pcarTrack"><!-- js/dados.js → portfolio --></div>
+        </div>
+        <button class="pcar-btn next" id="pcarNext" type="button" aria-label="Próximo projeto"><i data-icon="chevron-right"></i></button>
+      </div>
+      <div class="pcar-dots" id="pcarDots" aria-hidden="true"></div>
     </section>
+
+    <!-- Tela cheia do projeto: fundo desfocado, vídeo do início e com som -->
+    <div class="lbox" id="lbox" hidden>
+      <button class="lbox-fechar" id="lboxFechar" type="button" aria-label="Fechar"><i data-icon="x"></i></button>
+      <figure class="lbox-palco">
+        <video id="lboxVideo" playsinline controls preload="none"></video>
+        <figcaption class="lbox-legenda" id="lboxLegenda"></figcaption>
+      </figure>
+    </div>
 
     <!-- ================= 04 ALGUNS CLIENTES ================= -->
     <section class="section section-alt clientes" id="clientes">

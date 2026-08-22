@@ -188,16 +188,20 @@ window.OLIVEON = {
     { id: "software",  rotulo: "Software & automação" },
     { id: "criativos", rotulo: "Criativos" }
   ],
+  /* video: caminho do vídeo do projeto (mp4 em assets/). O card mostra o vídeo mudo
+     em loop e, ao clicar, abre em tela cheia do início e com som.
+     poster: imagem do primeiro quadro, opcional, deixa o card pintar antes de carregar.
+     Enquanto video ficar vazio, o card mostra a capa desenhada em CSS. */
   portfolio: [
-    { tipo: "ecommerce", titulo: "Delivery com painel próprio",          descricao: "Cardápio, pedidos e galeria administráveis; publicação sem desenvolvedor.",        entregas: ["Site", "Painel admin", "API"] },
-    { tipo: "software",  titulo: "Automação de WhatsApp com IA",         descricao: "Atendimento e qualificação 24/7 com base de conhecimento e avaliação contínua.",  entregas: ["IA", "Base de conhecimento", "Docker"] },
-    { tipo: "ecommerce", titulo: "Loja virtual com checkout",            descricao: "Catálogo administrável, checkout integrado e publicação em dois domínios.",        entregas: ["Loja", "Checkout", "Painel"] },
-    { tipo: "sites",     titulo: "Landing page de lançamento",           descricao: "Página longa com comparativo, FAQ estruturado e lista de espera com LGPD.",        entregas: ["LP", "Lista de espera", "SEO"] },
-    { tipo: "sites",     titulo: "Site institucional multipágina",       descricao: "18 páginas de produto, SEO técnico e formulários conectados ao WhatsApp.",         entregas: ["18 páginas", "SEO", "WhatsApp"] },
-    { tipo: "software",  titulo: "Painel de controle de demandas",       descricao: "Upload de mídia, fila de tarefas e deploy automatizado.",                          entregas: ["Painel", "Upload", "CI/CD"] },
-    { tipo: "criativos", titulo: "Criativos em vídeo para anúncios",     descricao: "Peças 9:16 geradas e editadas em volume para teste contra o dado.",               entregas: ["Vídeo", "9:16", "Testes A/B"] },
-    { tipo: "software",  titulo: "Sistema de rastreio",                  descricao: "API, painel web e site público em monorepo com integração contínua.",             entregas: ["API", "Painel", "Monorepo"] },
-    { tipo: "criativos", titulo: "Identidade e criativos de campanha",   descricao: "Sistema visual, peças estáticas e variações para teste em Meta Ads.",             entregas: ["Identidade", "Estáticos", "Variações"] }
+    { tipo: "ecommerce", video: "", poster: "", titulo: "Delivery com painel próprio",          descricao: "Cardápio, pedidos e galeria administráveis; publicação sem desenvolvedor.",        entregas: ["Site", "Painel admin", "API"] },
+    { tipo: "software", video: "", poster: "",  titulo: "Automação de WhatsApp com IA",         descricao: "Atendimento e qualificação 24/7 com base de conhecimento e avaliação contínua.",  entregas: ["IA", "Base de conhecimento", "Docker"] },
+    { tipo: "ecommerce", video: "", poster: "", titulo: "Loja virtual com checkout",            descricao: "Catálogo administrável, checkout integrado e publicação em dois domínios.",        entregas: ["Loja", "Checkout", "Painel"] },
+    { tipo: "sites", video: "", poster: "",     titulo: "Landing page de lançamento",           descricao: "Página longa com comparativo, FAQ estruturado e lista de espera com LGPD.",        entregas: ["LP", "Lista de espera", "SEO"] },
+    { tipo: "sites", video: "", poster: "",     titulo: "Site institucional multipágina",       descricao: "18 páginas de produto, SEO técnico e formulários conectados ao WhatsApp.",         entregas: ["18 páginas", "SEO", "WhatsApp"] },
+    { tipo: "software", video: "", poster: "",  titulo: "Painel de controle de demandas",       descricao: "Upload de mídia, fila de tarefas e deploy automatizado.",                          entregas: ["Painel", "Upload", "CI/CD"] },
+    { tipo: "criativos", video: "", poster: "", titulo: "Criativos em vídeo para anúncios",     descricao: "Peças 9:16 geradas e editadas em volume para teste contra o dado.",               entregas: ["Vídeo", "9:16", "Testes A/B"] },
+    { tipo: "software", video: "", poster: "",  titulo: "Sistema de rastreio",                  descricao: "API, painel web e site público em monorepo com integração contínua.",             entregas: ["API", "Painel", "Monorepo"] },
+    { tipo: "criativos", video: "", poster: "", titulo: "Identidade e criativos de campanha",   descricao: "Sistema visual, peças estáticas e variações para teste em Meta Ads.",             entregas: ["Identidade", "Estáticos", "Variações"] }
   ],
 
   /* ---------------- CARROSSEL DE VÍDEOS (formato 9:16) ----------------

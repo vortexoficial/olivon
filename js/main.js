@@ -584,13 +584,16 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { posiciona(atual); });
   })();
 
-  /* ---------- 07 Portfólio: filtros + fichas com capa técnica ---------- */
+  /* ---------- Portfólio: carrossel 3D com vídeo dos projetos ----------
+     O card do meio fica de frente e os vizinhos giram e recuam, com o giro
+     aplicado a cada troca. O vídeo do card roda mudo e em loop; ao clicar,
+     abre em tela cheia, do início e com som. Sem vídeo, o card mostra a capa
+     desenhada em CSS, então a seção funciona antes de os vídeos chegarem. */
   (function portfolio() {
-    var grid = $("portfolioGrid");
-    var filtrosEl = $("portfolioFiltros");
+    var track = $("pcarTrack");
     var itens = D.portfolio || [];
+    if (!track || !itens.length) { var s = $("portfolio"); if (s) s.remove(); return; }
     var filtros = D.portfolioFiltros || [];
-    if (!grid || !itens.length) return;
     var rotuloTipo = {};
     filtros.forEach(function (f) { rotuloTipo[f.id] = f.rotulo; });
 
@@ -608,68 +611,131 @@
       }
     }
 
-    grid.innerHTML = itens.map(function (p, i) {
-      return '<article class="pf reveal' + (i % 3 ? " delay-" + (i % 3) : "") + '" data-tipo="' + esc(p.tipo) + '">' +
-        '<div class="pf-capa" aria-hidden="true">' + capaHTML(p) + "</div>" +
-        '<div class="pf-body"><span class="pf-tipo">' + esc(rotuloTipo[p.tipo] || p.tipo) + "</span><h3>" + p.titulo + "</h3><p>" + p.descricao + "</p>" +
-        '<ul class="pf-entregas">' + (p.entregas || []).map(function (e) { return '<li class="tag">' + esc(e) + "</li>"; }).join("") + "</ul></div></article>";
+    track.innerHTML = itens.map(function (p, i) {
+      var temVideo = !!p.video;
+      return '<article class="pslide" data-i="' + i + '" tabindex="0" aria-label="' + esc(p.titulo) + '">' +
+        '<div class="pslide-tela">' +
+          (temVideo
+            ? '<video class="pslide-video" muted loop playsinline preload="none" poster="' + esc(p.poster || "") + '" data-src="' + esc(p.video) + '"></video>'
+            : capaHTML(p)) +
+          (temVideo ? '<span class="pslide-play" aria-hidden="true"><i data-icon="play"></i></span>' : "") +
+        "</div>" +
+        '<div class="pslide-info"><span class="pf-tipo">' + esc(rotuloTipo[p.tipo] || p.tipo) + "</span>" +
+        "<b>" + p.titulo + "</b><p>" + p.descricao + "</p>" +
+        '<ul class="pf-entregas">' + (p.entregas || []).slice(0, 3).map(function (e) { return '<li class="tag">' + esc(e) + "</li>"; }).join("") + "</ul></div>" +
+        "</article>";
     }).join("");
-    var cards = Array.prototype.slice.call(grid.children);
 
-    /* Página curta: mostra os primeiros projetos e guarda o resto atrás de um botão.
-       Nada some, a página é que não nasce com 9 fichas abertas. */
-    var LIMITE = 6;
-    var botaoMais = $("pfMais");
-    var caixaMais = botaoMais ? botaoMais.parentNode : null;
-    var expandido = false;
-    function aplicarLimite() {
-      if (!caixaMais) return;
-      var visiveis = cards.filter(function (c) { return !c.hidden; });
-      var excede = visiveis.length > LIMITE;
-      cards.forEach(function (c) { c.classList.remove("pf-oculto"); });
-      if (excede && !expandido) visiveis.slice(LIMITE).forEach(function (c) { c.classList.add("pf-oculto"); });
-      caixaMais.hidden = !excede;
-      botaoMais.textContent = expandido ? "Ver menos" : "Ver mais projetos (" + (visiveis.length - LIMITE) + ")";
-    }
-    if (botaoMais) {
-      botaoMais.addEventListener("click", function () {
-        expandido = !expandido;
-        aplicarLimite();
-        if (hasGsap) ScrollTrigger.refresh();
-        if (!expandido) grid.scrollIntoView({ behavior: "smooth", block: "start" });
-      });
-      aplicarLimite();
+    track.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+
+    var slides = Array.prototype.slice.call(track.children);
+    var videos = slides.map(function (s) { return s.querySelector(".pslide-video"); });
+
+    // pontos de navegação
+    var dots = $("pcarDots");
+    if (dots) {
+      dots.innerHTML = slides.map(function (_, i) { return '<button class="pcar-dot" type="button" data-i="' + i + '" aria-label="Ir para o projeto ' + (i + 1) + '"></button>'; }).join("");
     }
 
-    if (filtrosEl && filtros.length) {
-      filtrosEl.innerHTML = filtros.map(function (f, i) {
-        return '<button class="filtro" type="button" aria-pressed="' + (i === 0) + '" data-filtro="' + esc(f.id) + '">' + esc(f.rotulo) + "</button>";
-      }).join("");
-      filtrosEl.addEventListener("click", function (e) {
-        var btn = e.target.closest(".filtro");
-        if (!btn) return;
-        filtrosEl.querySelectorAll(".filtro").forEach(function (b) { b.setAttribute("aria-pressed", String(b === btn)); });
-        var f = btn.getAttribute("data-filtro");
-        var state = (hasGsap && window.Flip && !motionOff) ? Flip.getState(cards) : null;
-        cards.forEach(function (c) {
-          c.hidden = f !== "todos" && c.getAttribute("data-tipo") !== f;
-          c.classList.add("visible"); // quem já foi revelado não volta a esconder
-        });
-        if (state) {
-          Flip.from(state, {
-            duration: 0.55,
-            ease: "power2.inOut",
-            absolute: true,
-            onEnter: function (els) { return gsap.fromTo(els, { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.45 }); },
-            onLeave: function (els) { return gsap.to(els, { opacity: 0, scale: 0.92, duration: 0.3 }); },
-            onComplete: function () { ScrollTrigger.refresh(); }
-          });
+    // o vídeo só é carregado quando o card está por perto: a página continua leve
+    function ligaVideo(i, tocar) {
+      var v = videos[i];
+      if (!v) return;
+      if (!v.getAttribute("src")) v.setAttribute("src", v.getAttribute("data-src"));
+      if (tocar && !reduceMotion && !lboxAberto) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+      else v.pause();
+    }
+
+    var car = null;
+    function aplica3D(idx) {
+      slides.forEach(function (s, i) {
+        var d = i - idx;
+        var ad = Math.abs(d);
+        var giro = Math.max(-2, Math.min(2, d)) * -16;
+        var recuo = Math.min(ad, 2) * 130;
+        var escala = 1 - Math.min(ad, 2) * 0.07;
+        var alvo = { rotationY: giro, z: -recuo, scale: escala, opacity: ad > 2 ? 0 : 1 };
+        if (hasGsap && !motionOff) gsap.to(s, Object.assign({ duration: 0.65, ease: "power3.out", overwrite: true }, alvo));
+        else {
+          s.style.transform = "perspective(1400px) rotateY(" + giro + "deg) translateZ(" + -recuo + "px) scale(" + escala + ")";
+          s.style.opacity = alvo.opacity;
         }
-        expandido = false;
-        aplicarLimite();
+        // só o card em foco toca; os vizinhos ficam carregados e parados
+        if (ad === 0) ligaVideo(i, true);
+        else if (ad <= 1) ligaVideo(i, false);
+        if (dots && dots.children[i]) dots.children[i].classList.toggle("on", i === idx);
       });
     }
+
+    car = makeCarousel({
+      viewport: $("pcarViewport"),
+      track: track,
+      prev: $("pcarPrev"),
+      next: $("pcarNext"),
+      onChange: function (idx) { aplica3D(idx); }
+    });
+    if (!car) return;
+    if (dots) dots.addEventListener("click", function (e) {
+      var b = e.target.closest(".pcar-dot");
+      if (b) car.go(+b.getAttribute("data-i"));
+    });
+
+    /* ---------- Tela cheia com som ---------- */
+    var lbox = $("lbox");
+    var lvideo = $("lboxVideo");
+    var lboxAberto = false;
+    var focoAnterior = null;
+
+    function abre(i) {
+      var p = itens[i];
+      if (!lbox || !lvideo || !p || !p.video) return;
+      focoAnterior = document.activeElement;
+      videos.forEach(function (v) { if (v) v.pause(); });
+      lvideo.setAttribute("src", p.video);
+      if (p.poster) lvideo.setAttribute("poster", p.poster);
+      lvideo.currentTime = 0;
+      lvideo.muted = false;
+      lvideo.volume = 1;
+      if ($("lboxLegenda")) $("lboxLegenda").textContent = p.titulo;
+      lbox.hidden = false;
+      docEl.classList.add("lbox-on");
+      lboxAberto = true;
+      var pr = lvideo.play();
+      if (pr && pr.catch) pr.catch(function () { lvideo.muted = true; lvideo.play(); });  // navegador que exige silêncio
+      var fechar = $("lboxFechar");
+      if (fechar) fechar.focus();
+    }
+    function fecha() {
+      if (!lboxAberto) return;
+      lvideo.pause();
+      lvideo.removeAttribute("src");
+      lvideo.load();
+      lbox.hidden = true;
+      docEl.classList.remove("lbox-on");
+      lboxAberto = false;
+      if (focoAnterior && focoAnterior.focus) focoAnterior.focus();
+      aplica3D(car.index);   // volta a tocar a prévia do card em foco
+    }
+    if ($("lboxFechar")) $("lboxFechar").addEventListener("click", fecha);
+    if (lbox) lbox.addEventListener("click", function (e) { if (e.target === lbox) fecha(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && lboxAberto) fecha(); });
+
+    slides.forEach(function (s, i) {
+      s.addEventListener("click", function () { if (i === car.index) abre(i); });
+      s.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (i === car.index) abre(i); else car.go(i); }
+      });
+    });
+
+    // fora da tela, tudo parado
+    onVisible($("pcar"), function (vis) {
+      if (vis) aplica3D(car.index);
+      else videos.forEach(function (v) { if (v) v.pause(); });
+    }, 0.15);
+
+    aplica3D(car.index);
   })();
+
 
   /* ---------- Carrossel genérico: card central em foco ---------- */
   function makeCarousel(opts) {
