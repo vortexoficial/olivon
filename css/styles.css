@@ -180,12 +180,13 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   transition: background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
 /* Primário: canto superior direito chanfrado, a lâmina em miniatura */
+/* Botão reto: o canto chanfrado da versão anterior foi retirado a pedido */
 .btn-red {
   color: #fff;
-  background: linear-gradient(225deg, transparent 9px, var(--red) 9px);
+  background: var(--red);
 }
-.btn-red:hover { background: linear-gradient(225deg, transparent 9px, var(--red-hover) 9px); }
-.btn-red:active { background: linear-gradient(225deg, transparent 9px, var(--red-pressed) 9px); }
+.btn-red:hover { background: var(--red-hover); }
+.btn-red:active { background: var(--red-pressed); }
 
 .btn-ghost {
   border-color: var(--border-strong);
@@ -193,19 +194,16 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   background: transparent;
 }
 
-/* Botão com o feixe correndo na borda, o mesmo efeito do quadro do formulário.
-   Usado onde o vermelho chapado pesaria, como a ação de enviar dentro do form. */
-.btn-beam {
-  position: relative;
-  overflow: hidden;
-  color: var(--text);
-  background: var(--elevated);
-  border-color: var(--border-strong);
+/* Luz correndo na borda do botão, o mesmo efeito do quadro do formulário.
+   Usada só no CTA principal do hero, para não virar ruído em todo botão vermelho. */
+.btn-luz { position: relative; overflow: hidden; }
+/* o caminho da luz acompanha o canto do botão, não o raio grande do quadro */
+.btn-luz .border-beam i {
+  offset-path: rect(0 auto auto 0 round 3px);
+  /* sobre o vermelho cheio um fio de 1px se perde: o brilho é o que faz a luz aparecer */
+  filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.9));
 }
-.btn-beam:hover { background: var(--card); border-color: var(--steel); color: #fff; }
-.btn-beam:active { background: var(--elevated); }
-/* o caminho do feixe acompanha o canto do botão, não o raio grande do quadro */
-.btn-beam .border-beam i { offset-path: rect(0 auto auto 0 round 3px); }
+.btn-luz .border-beam { --border-width: 2px; }
 .btn-ghost:hover { border-color: var(--steel); }
 
 .btn-sm { height: 38px; padding: 0 18px; font-size: 0.75rem; }
