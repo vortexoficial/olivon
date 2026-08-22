@@ -458,6 +458,70 @@
     }).join("");
   })();
 
+  /* ---------- Faixa de foco: uma palavra nítida por vez, as outras desfocadas ----------
+     Recriação em JS puro do efeito True Focus (react-bits): a moldura de cantos
+     percorre as palavras e o desfoque sai de quem está em foco. */
+  (function foco() {
+    var caixa = $("focoFrase");
+    var secao = $("foco");
+    var cfg = D.foco || {};
+    var palavras = String(cfg.frase || "").trim().split(/\s+/).filter(Boolean);
+    if (!caixa || !palavras.length) { if (secao) secao.remove(); return; }
+
+    if ($("focoApoio")) $("focoApoio").textContent = cfg.apoio || "";
+    var cta = $("focoCta");
+    if (cta) {
+      if (!cfg.cta) cta.remove();
+      else {
+        cta.textContent = cfg.cta;
+        if (cfg.ctaMensagem) cta.href = waLink(cfg.ctaMensagem);
+      }
+    }
+
+    caixa.innerHTML = palavras.map(function (p) { return '<span class="foco-palavra">' + esc(p) + "</span>"; }).join("");
+    var moldura = document.createElement("span");
+    moldura.className = "foco-moldura";
+    moldura.setAttribute("aria-hidden", "true");
+    moldura.innerHTML = "<i></i><i></i><i></i><i></i>";
+    caixa.appendChild(moldura);
+
+    var spans = Array.prototype.slice.call(caixa.querySelectorAll(".foco-palavra"));
+    var atual = 0;
+    var timer = null;
+    var preso = null;                       // palavra presa pelo ponteiro
+
+    function posiciona(i) {
+      var alvo = spans[i];
+      if (!alvo) return;
+      var r = alvo.getBoundingClientRect();
+      var pai = caixa.getBoundingClientRect();
+      moldura.style.transform = "translate(" + (r.left - pai.left) + "px, " + (r.top - pai.top) + "px)";
+      moldura.style.width = r.width + "px";
+      moldura.style.height = r.height + "px";
+      moldura.style.opacity = 1;
+      spans.forEach(function (s, k) { s.classList.toggle("on", k === i); });
+      atual = i;
+    }
+    function anda() { posiciona((atual + 1) % spans.length); }
+    function liga() {
+      if (timer || reduceMotion || motionOff) return;
+      timer = setInterval(function () { if (preso === null) anda(); }, 1500);
+    }
+    function desliga() { if (timer) { clearInterval(timer); timer = null; } }
+
+    spans.forEach(function (s, i) {
+      s.addEventListener("mouseenter", function () { preso = i; posiciona(i); });
+      s.addEventListener("mouseleave", function () { preso = null; });
+    });
+
+    if (reduceMotion) caixa.classList.add("sem-movimento");   // tudo nítido, moldura parada
+
+    posiciona(0);
+    onVisible(caixa, function (vis) { if (vis) liga(); else desliga(); }, 0.25);   // só roda na tela
+    window.addEventListener("resize", function () { posiciona(preso === null ? atual : preso); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { posiciona(atual); });
+  })();
+
   /* ---------- 07 Portfólio: filtros + fichas com capa técnica ---------- */
   (function portfolio() {
     var grid = $("portfolioGrid");

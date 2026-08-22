@@ -38,6 +38,17 @@ window.OLIVEON = {
   /* Texto alternativo da imagem acima (acessibilidade e SEO) */
   mockupAutomacaoAlt: "Conversa automática da Oliveon atendendo um lead no WhatsApp",
 
+  /* ---------------- FAIXA DE FOCO (efeito de lente) ----------------
+     A frase é quebrada por espaço: cada palavra entra em foco por vez,
+     as outras ficam desfocadas. Funciona melhor com 3 a 5 palavras
+     curtas e fortes. Passar o mouse numa palavra prende o foco nela. */
+  foco: {
+    frase: "Atrair Converter Automatizar Escalar",
+    apoio: "As quatro etapas da sua aquisição, operadas pela mesma equipe. Um único responsável pelo resultado, do primeiro anúncio ao pedido fechado.",
+    cta: "Quero um diagnóstico gratuito",
+    ctaMensagem: "Olá! Vim pelo site da Oliveon e quero entender como vocês montam o sistema de aquisição."
+  },
+
   /* ---------------- STATS DO HERO (3 itens) ----------------
      EXEMPLO · troque pelos números reais da agência.
      valor: texto livre (ex.: "+8", "120", "24/7") */
