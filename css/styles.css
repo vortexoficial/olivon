@@ -1866,3 +1866,179 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .section { padding: 76px 0; }
   .cta { padding: 88px 24px; }
 }
+
+/* ============================================================
+   VERSAO CURTA (index.html): 5 blocos
+   O que fazemos · Automacao · Portfolio · Clientes · Contato
+   Reaproveita os componentes do tema Lamina; aqui ficam so as
+   pecas novas e os ajustes de leitura em tela pequena.
+   ============================================================ */
+
+/* ---------- 01 O que fazemos: lista rolavel com desfoque progressivo ---------- */
+.fazemos-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 70px;
+  align-items: center;
+}
+.fazemos-texto .lead { margin-top: 18px; }
+.fazemos-texto .btn { margin-top: 30px; }
+/* dica de rolagem: fica acima do desfoque, some quando a lista chega ao fim */
+.scroll-dica {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--steel-dim);
+  pointer-events: none;
+  transition: opacity var(--dur-2) var(--ease);
+}
+.scroll-wrap.no-fim .scroll-dica { opacity: 0; }
+.scroll-dica .ic { transform: rotate(90deg); animation: dica-desce 1.9s var(--ease) infinite; }
+@keyframes dica-desce {
+  0%, 100% { transform: rotate(90deg) translateX(0); }
+  50% { transform: rotate(90deg) translateX(4px); }
+}
+/* a frente responsavel vira acento quando o item esta sob o cursor */
+.banner:hover .banner-tag { color: var(--text); border-color: var(--steel); }
+
+/* ---------- 02 Automacao: card da conversa ---------- */
+.phone-id { flex: 1; min-width: 0; }
+/* o status troca para "digitando…" durante a simulação: uma linha só, sem empurrar o cabeçalho */
+#chatMock .phone-top small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.phone-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--steel-dim);
+  white-space: nowrap;
+}
+.phone-live i {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: pulso-vivo 2.2s var(--ease) infinite;
+}
+@keyframes pulso-vivo {
+  0% { box-shadow: 0 0 0 0 rgba(47, 210, 122, 0.45); }
+  70% { box-shadow: 0 0 0 7px rgba(47, 210, 122, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(47, 210, 122, 0); }
+}
+.phone-progress { height: 2px; background: var(--border); flex-shrink: 0; }
+.phone-progress b { display: block; height: 100%; width: 0; background: var(--red); transition: width 0.45s var(--ease); }
+/* altura acompanha a tela, com piso e teto: em notebook nao estoura, em celular nao vira uma fresta */
+#chatMock .phone-body { height: clamp(330px, 44vh, 460px); scroll-behavior: smooth; }
+#chatMock .phone { width: min(400px, 100%); }
+.msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: flex-end;
+  margin-top: 5px;
+  font-family: var(--mono);
+  font-size: 0.54rem;
+  letter-spacing: 0.06em;
+  color: var(--steel-dim);
+}
+.msg.lead .msg-meta { justify-content: flex-start; }
+.msg-meta .ic { font-size: 0.9em; }
+.msg.entregue .msg-meta .ic { color: var(--ok); }
+/* a mensagem que esta entrando ganha um fio da marca na borda */
+.msg.chegando { border-color: var(--steel); }
+.chip .ic { color: var(--ok); }
+
+/* ---------- 03 Portfólio: o resto das fichas fica atrás de um botão ---------- */
+.pf-oculto { display: none !important; }
+.pf-mais { display: flex; justify-content: center; margin-top: 40px; }
+.pf-mais[hidden] { display: none; }
+
+/* ---------- 04 Alguns clientes ---------- */
+.clientes .faixa-marquee { margin-top: 44px; }
+.clientes .faixa-item { font-size: 1rem; color: var(--muted); }
+.clientes .faixa-item img { filter: grayscale(1) brightness(1.8); opacity: 0.75; transition: filter var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease); }
+.clientes .faixa-item:hover img { filter: none; opacity: 1; }
+
+/* ---------- 05 Contato: WhatsApp e e-mail lado a lado ---------- */
+.contato-canais { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+.contato-canais .whats-direct { margin-top: 0; }
+.canal-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+.canal-email:hover { border-color: var(--steel); background: var(--elevated); }
+.canal-email .ic { font-size: 1.15rem; color: var(--steel); }
+.canal-email small {
+  display: block;
+  font-family: var(--mono);
+  font-size: 0.56rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--steel-dim);
+}
+.canal-email b { display: block; font-family: var(--font); font-weight: 500; font-size: 0.9rem; margin-top: 2px; word-break: break-all; }
+
+/* ---------- Notebook: as pecas novas encolhem junto ---------- */
+@media (min-width: 961px) and (max-width: 1536px),
+       (min-width: 961px) and (max-height: 900px) {
+  .fazemos-inner { gap: 48px; }
+  .scroll-area { height: 380px; }
+  #chatMock .phone-body { height: clamp(300px, 40vh, 400px); }
+}
+
+/* ---------- Tablet ---------- */
+@media (max-width: 960px) {
+  .fazemos-inner { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  .fazemos-texto .btn { margin-top: 24px; }
+  .clientes .faixa-marquee { margin-top: 32px; }
+}
+
+/* ---------- Celular ---------- */
+@media (max-width: 720px) {
+  .scroll-area { height: 400px; padding: 12px 12px 150px; }
+  .banner { gap: 12px; padding: 13px 14px; min-height: 0; flex-wrap: wrap; }
+  .banner-num { width: 22px; }
+  .banner h3 { font-size: 0.95rem; }
+  .banner p { font-size: 0.82rem; }
+  /* a frente responsavel desce para a linha de baixo em vez de espremer o titulo */
+  .banner-tag { margin-left: 34px; order: 3; width: auto; }
+  .scroll-dica { right: 12px; bottom: 12px; }
+
+  #chatMock .phone { width: 100%; }
+  #chatMock .phone-body { height: clamp(320px, 56vh, 440px); padding: 16px 14px; }
+  .phone-top { padding: 12px 14px; gap: 10px; }
+  .msg { max-width: 88%; font-size: 0.88rem; }
+  .etapas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; margin-top: 28px; }
+  .replay { margin-top: 22px; }
+
+  .contato-canais { flex-direction: column; align-items: stretch; }
+  .contato-canais .whats-direct,
+  .canal-email { justify-content: center; text-align: center; }
+  .canal-email b { font-size: 0.84rem; }
+}
+
+@media (max-width: 380px) {
+  .canal-email b { font-size: 0.78rem; }
+  .etapas { grid-template-columns: 1fr; }
+}

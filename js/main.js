@@ -82,7 +82,11 @@
     el.target = "_blank";
     el.rel = "noopener";
   });
-  ["footerEmail", "footerEmail2"].forEach(function (id) { var a = $(id); if (a && D.email) a.href = "mailto:" + D.email; });
+  ["footerEmail", "footerEmail2", "heroEmail", "contatoEmail"].forEach(function (id) {
+    var a = $(id);
+    if (a && D.email) a.href = "mailto:" + D.email + "?subject=" + encodeURIComponent("Quero um diagnóstico da minha operação");
+  });
+  if ($("contatoEmailTexto") && D.email) $("contatoEmailTexto").textContent = D.email;
   ["footerInstagram", "footerInstagram2"].forEach(function (id) { var a = $(id); if (a && D.instagram) a.href = D.instagram; });
   $("ano").textContent = new Date().getFullYear();
 
@@ -135,10 +139,17 @@
         return '<span class="faixa-item">' + (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>" : img) + "</span>";
       });
     } else {
+      // sem logo de cliente ainda: a faixa mostra os segmentos atendidos
       if (rotulo) rotulo.textContent = "Segmentos atendidos";
+      var lead = $("clientesLead");
+      if (lead) lead.textContent = "Segmentos em que já colocamos sistemas de aquisição em produção. As marcas entram aqui conforme cada cliente libera o uso.";
       itens = (D.segmentos || []).map(function (s) { return '<span class="faixa-item">' + esc(s) + "</span>"; });
     }
-    if (!itens.length) { wrap.closest(".faixa").remove(); return; }
+    if (!itens.length) {
+      var caixa = wrap.closest(".faixa") || wrap.closest("section");
+      if (caixa) caixa.remove();
+      return;
+    }
     var track = document.createElement("div");
     track.className = "faixa-track";
     track.style.setProperty("--duration", Math.max(24, itens.length * 4.5) + "s");
@@ -211,6 +222,30 @@
     ficha.render();
   })();
 
+  /* ---------- 01 O que fazemos: mesma lista dos serviços, em faixas roláveis com desfoque ---------- */
+  (function oQueFazemos() {
+    var lista = $("fazLista");
+    var itens = D.servicos || [];
+    if (!lista || !itens.length) return;
+    lista.innerHTML = itens.map(function (s, i) {
+      return '<div class="banner">' +
+        '<span class="banner-num">' + pad(i + 1) + "</span>" +
+        "<div><h3>" + s.titulo + "</h3><p>" + s.texto + "</p></div>" +
+        '<span class="banner-tag">' + esc((s.tags && s.tags[0]) || "Oliveon") + "</span></div>";
+    }).join("");
+
+    // a dica de rolagem some quando a lista chega ao fim
+    var wrap = lista.closest(".scroll-wrap");
+    if (!wrap) return;
+    function verFim() {
+      var fim = lista.scrollTop + lista.clientHeight >= lista.scrollHeight - 24;
+      wrap.classList.toggle("no-fim", fim);
+    }
+    lista.addEventListener("scroll", verFim, { passive: true });
+    window.addEventListener("resize", verFim);
+    verFim();
+  })();
+
   /* ---------- 03 Software sob medida ---------- */
   (function software() {
     var stack = $("softwareStack");
@@ -239,9 +274,16 @@
     if (etapasEl) etapasEl.innerHTML = etapas.map(function (e) { return "<li>" + e + "</li>"; }).join("");
     var etapaItens = etapasEl ? Array.prototype.slice.call(etapasEl.children) : [];
 
+    // relógio da simulação: começa 23h00 e anda um minuto a cada troca, para dar a sensação de atendimento imediato
+    var minuto = 0;
+    function hora() {
+      var h = 23 + Math.floor(minuto / 60);
+      return pad(h % 24) + ":" + pad(minuto % 60);
+    }
+
     var passos = [];
     body.innerHTML = "";
-    conversa.forEach(function (m) {
+    conversa.forEach(function (m, i) {
       var typing = null;
       if (m.de === "bot") {
         typing = document.createElement("div");
@@ -257,11 +299,29 @@
         el.innerHTML = ICON("check") + m.texto;
       } else {
         el.className = "msg " + (m.de === "lead" ? "lead" : "bot");
-        el.textContent = m.texto;
+        var texto = document.createElement("span");
+        texto.className = "msg-texto";
+        texto.textContent = m.texto;
+        var meta = document.createElement("span");
+        meta.className = "msg-meta";
+        meta.innerHTML = "<span>" + hora() + "</span>" + (m.de === "bot" ? '<span class="ic-wrap" data-icon="check"></span>' : "");
+        el.appendChild(texto);
+        el.appendChild(meta);
+        if (i) minuto += 1;
       }
       body.appendChild(el);
       passos.push({ m: m, el: el, typing: typing });
     });
+    // os ícones desta seção são criados depois da varredura inicial do arquivo
+    body.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+
+    var status = $("chatStatus");
+    var statusPadrao = status ? status.textContent : "";
+    var progresso = $("chatProgresso");
+    function setStatus(txt) { if (status) status.textContent = txt || statusPadrao; }
+    function setProgresso(feitos) {
+      if (progresso) progresso.style.width = Math.round((feitos / passos.length) * 100) + "%";
+    }
 
     function setEtapa(idx) {
       etapaItens.forEach(function (li, i) {
@@ -275,29 +335,50 @@
     playChat = function () {
       played = true;
       if (!hasGsap || motionOff) {
-        passos.forEach(function (p) { p.el.style.opacity = 1; });
+        passos.forEach(function (p) {
+          p.el.style.opacity = 1;
+          if (p.m.de === "bot") p.el.classList.add("entregue");
+        });
         setEtapa(etapas.length);
+        setProgresso(passos.length);
         scrollBottom();
         return;
       }
       if (tl) tl.kill();
+      passos.forEach(function (p) { p.el.classList.remove("entregue", "chegando"); });
+      setProgresso(0);
+      setStatus();
       body.scrollTop = 0;
       gsap.set(passos.map(function (p) { return p.el; }), { opacity: 0, y: 10 });
       passos.forEach(function (p) { if (p.typing) { p.typing.style.display = "none"; gsap.set(p.typing, { opacity: 0 }); } });
       setEtapa(-1);
       tl = gsap.timeline({ defaults: { ease: "power3.out" } });
-      passos.forEach(function (p) {
+      passos.forEach(function (p, i) {
         if (p.typing) {
           tl.set(p.typing, { display: "flex" })
+            .call(function () { setStatus("digitando…"); })
             .to(p.typing, { opacity: 1, duration: 0.25, onStart: scrollBottom })
             .to({}, { duration: 1.1 })
-            .set(p.typing, { display: "none" });
+            .set(p.typing, { display: "none" })
+            .call(function () { setStatus(); });
         } else {
           tl.to({}, { duration: p.m.de === "sistema" ? 0.45 : 0.8 });
         }
-        tl.to(p.el, { opacity: 1, y: 0, duration: 0.45, onStart: function () { setEtapa(p.m.etapa); scrollBottom(); } });
+        tl.to(p.el, {
+          opacity: 1, y: 0, duration: 0.45,
+          onStart: function () {
+            setEtapa(p.m.etapa);
+            setProgresso(i + 1);
+            scrollBottom();
+            p.el.classList.add("chegando");
+          },
+          onComplete: function () {
+            p.el.classList.remove("chegando");
+            if (p.m.de === "bot") p.el.classList.add("entregue");
+          }
+        });
       });
-      tl.call(function () { setEtapa(etapas.length); });
+      tl.call(function () { setEtapa(etapas.length); setProgresso(passos.length); setStatus(); });
     };
 
     onVisible($("chatMock"), function (vis) { if (vis && !played) playChat(); }, 0.5);
@@ -361,6 +442,31 @@
     }).join("");
     var cards = Array.prototype.slice.call(grid.children);
 
+    /* Página curta: mostra os primeiros projetos e guarda o resto atrás de um botão.
+       Nada some, a página é que não nasce com 9 fichas abertas. */
+    var LIMITE = 6;
+    var botaoMais = $("pfMais");
+    var caixaMais = botaoMais ? botaoMais.parentNode : null;
+    var expandido = false;
+    function aplicarLimite() {
+      if (!caixaMais) return;
+      var visiveis = cards.filter(function (c) { return !c.hidden; });
+      var excede = visiveis.length > LIMITE;
+      cards.forEach(function (c) { c.classList.remove("pf-oculto"); });
+      if (excede && !expandido) visiveis.slice(LIMITE).forEach(function (c) { c.classList.add("pf-oculto"); });
+      caixaMais.hidden = !excede;
+      botaoMais.textContent = expandido ? "Ver menos" : "Ver mais projetos (" + (visiveis.length - LIMITE) + ")";
+    }
+    if (botaoMais) {
+      botaoMais.addEventListener("click", function () {
+        expandido = !expandido;
+        aplicarLimite();
+        if (hasGsap) ScrollTrigger.refresh();
+        if (!expandido) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      aplicarLimite();
+    }
+
     if (filtrosEl && filtros.length) {
       filtrosEl.innerHTML = filtros.map(function (f, i) {
         return '<button class="filtro" type="button" aria-pressed="' + (i === 0) + '" data-filtro="' + esc(f.id) + '">' + esc(f.rotulo) + "</button>";
@@ -385,6 +491,8 @@
             onComplete: function () { ScrollTrigger.refresh(); }
           });
         }
+        expandido = false;
+        aplicarLimite();
       });
     }
   })();
@@ -663,13 +771,18 @@
     var rail = $("rail");
     var railFill = $("railFill");
     var railItens = rail ? Array.prototype.slice.call(rail.querySelectorAll("li")) : [];
-    var rotulos = {
-      posicionamento: "01 / 14 · Posicionamento", servicos: "02 / 14 · Serviços", software: "03 / 14 · Software",
-      automacao: "04 / 14 · Automação", processo: "05 / 14 · Processo", entregaveis: "06 / 14 · Entregáveis",
-      portfolio: "07 / 14 · Portfólio", videos: "08 / 14 · Criativos", equipe: "09 / 14 · Equipe",
-      numeros: "10 / 14 · Resultados", cases: "11 / 14 · Cases", depoimentos: "12 / 14 · Depoimentos",
-      faq: "13 / 14 · FAQ", contato: "14 / 14 · Contato"
-    };
+    // rótulos montados a partir das próprias seções: a mesma lógica serve para a página
+    // curta (5 blocos) e para a completa, sem lista fixa para manter em dia
+    var rotulos = {};
+    var comIdx = Array.prototype.slice.call(document.querySelectorAll("main > section[id] .eyebrow .idx"));
+    comIdx.forEach(function (idxEl) {
+      var eyebrow = idxEl.parentNode;
+      var sec = eyebrow.closest("section[id]");
+      if (!sec) return;
+      var num = idxEl.textContent.trim();
+      var nome = eyebrow.textContent.replace(num, "").trim();
+      rotulos[sec.id] = num + " / " + pad(comIdx.length) + " · " + nome;
+    });
     var atual = null;
     var secObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -951,6 +1064,52 @@
       });
     }
 
+    // faixas de "O que fazemos": entram escalonadas quando a lista aparece
+    var faixas = gsap.utils.toArray("#fazLista .banner");
+    var fazWrap = document.querySelector("#fazemos .scroll-wrap");
+    var listaEl = $("fazLista");
+    if (fazWrap && listaEl && faixas.length) {
+      gsap.set(faixas, { opacity: 0, y: 16 });
+      ScrollTrigger.create({
+        trigger: fazWrap,
+        start: "top 82%",
+        once: true,
+        onEnter: function () {
+          gsap.to(faixas, { opacity: 1, y: 0, duration: motionOff ? 0 : 0.5, stagger: motionOff ? 0 : 0.06, ease: "power3.out", overwrite: true });
+        }
+      });
+
+      // a lista corre junto com a página, revelando os itens por baixo do desfoque.
+      // Ao primeiro toque, roda ou tecla do visitante, o automático desliga e o controle é dele.
+      var manual = false;
+      ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (ev) {
+        listaEl.addEventListener(ev, function () { manual = true; }, { passive: true });
+      });
+      if (window.matchMedia("(min-width: 961px)").matches) {
+        ScrollTrigger.create({
+          trigger: "#fazemos",
+          start: "top 70%",
+          end: "bottom 30%",
+          scrub: 0.6,
+          onUpdate: function (self) {
+            if (manual || motionOff) return;
+            var max = listaEl.scrollHeight - listaEl.clientHeight;
+            // para em 82%: os últimos itens continuam sob o desfoque e o respiro do fim da lista nunca aparece
+            if (max > 0) listaEl.scrollTop = max * 0.82 * Math.min(1, Math.max(0, self.progress));
+          }
+        });
+      }
+    }
+
+    // o card da conversa flutua devagar enquanto a seção passa
+    var fone = $("chatMock");
+    if (fone) {
+      gsap.to(fone, {
+        yPercent: -5, ease: "none",
+        scrollTrigger: { trigger: "#automacao", start: "top 55%", end: "bottom top", scrub: 0.5 }
+      });
+    }
+
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
     window.addEventListener("load", function () { ScrollTrigger.refresh(); });
     ScrollTrigger.refresh();
@@ -988,18 +1147,15 @@
   if (form) form.addEventListener("submit", function (e) {
     e.preventDefault();
     var f = new FormData(form);
-    var msg =
-      "*Solicitação de diagnóstico, site Oliveon*\n\n" +
-      "*Nome:* " + f.get("nome") + "\n" +
-      "*Empresa:* " + f.get("empresa") + "\n" +
-      "*WhatsApp:* " + f.get("whatsapp") + "\n" +
-      "*E-mail:* " + f.get("email") + "\n" +
-      "*Site/Instagram:* " + (f.get("site") || "não informado") + "\n" +
-      "*Investimento atual em marketing:* " + f.get("investimento") + "\n" +
-      "*Precisa primeiro de:* " + f.get("frente") + "\n" +
-      (ficha.lista().length ? "*Frentes marcadas no site:* " + ficha.lista().join(", ") + "\n" : "") +
-      "*O que busca melhorar:* " + f.get("objetivo");
-    window.open(waLink(msg), "_blank", "noopener");
+    // só entra na mensagem o campo que existe no formulário desta página
+    var linhas = [
+      ["Nome", "nome"], ["Empresa", "empresa"], ["WhatsApp", "whatsapp"], ["E-mail", "email"],
+      ["Site/Instagram", "site"], ["Investimento atual em marketing", "investimento"],
+      ["Precisa primeiro de", "frente"], ["O que busca melhorar", "objetivo"]
+    ].filter(function (par) { return form.elements[par[1]]; })
+      .map(function (par) { return "*" + par[0] + ":* " + (f.get(par[1]) || "não informado"); });
+    if (ficha.lista().length) linhas.push("*Frentes marcadas no site:* " + ficha.lista().join(", "));
+    window.open(waLink("*Solicitação de diagnóstico, site Oliveon*\n\n" + linhas.join("\n")), "_blank", "noopener");
   });
 
 })();
