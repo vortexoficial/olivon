@@ -1948,12 +1948,11 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 [data-tema="claro"] .tema-toggle .ic-wrap[data-icon="moon"] { display: inline-flex; }
 
 /* No tema claro o video do hero e uma peca escura: a mascara que o dissolvia no
-   preto passaria a cortar um bloco no branco, entao ele ganha borda e sombra. */
+   preto passaria a cortar um bloco no branco, entao ele fica com o canto arredondado. */
 [data-tema="claro"] .hero-video {
   -webkit-mask-image: none;
   mask-image: none;
   border-radius: var(--radius);
-  box-shadow: 0 24px 60px rgba(10, 11, 13, 0.18);
 }
 
 /* ---------- Hero: vídeo no lugar do carrossel 3D ----------
