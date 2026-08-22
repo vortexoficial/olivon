@@ -556,6 +556,26 @@
   }
 
 
+  /* ---------- Selo que gira sobre o mockup ----------
+     Cada letra é posicionada no seu ângulo do círculo e o conjunto gira devagar,
+     na ideia do texto giratório do MagicUI. O raio vem do CSS, então o selo
+     encolhe junto no celular sem recalcular nada aqui. */
+  (function selo() {
+    var caixa = $("selo");
+    var alvo = $("seloTexto");
+    if (!caixa || !alvo) return;
+    var texto = String(D.seloGirando || "");
+    var letras = texto.split("");
+    if (letras.length < 2) { caixa.remove(); return; }
+    var passo = 360 / letras.length;
+    alvo.innerHTML = letras.map(function (c, i) {
+      var giro = (i * passo).toFixed(2);
+      return '<span style="transform: rotate(' + giro + 'deg) translateY(calc(var(--raio) * -1))">' +
+        (c === " " ? "&nbsp;" : esc(c)) + "</span>";
+    }).join("");
+    caixa.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+  })();
+
   /* ---------- Automação: mockup em imagem ----------
      A seção mostra a imagem informada em `mockupAutomacao` (js/dados.js).
      Sem imagem, fica um marcador no lugar, para o espaço não ir vazio ao ar. */
@@ -1616,22 +1636,17 @@
       });
     }
 
-    // No celular cada ícone ganha vida quando a sua faixa chega: a placa entra
-    // com um salto curto, o traço do ícone é desenhado e o reflexo atravessa o
-    // vidro uma vez. Um cartão de cada vez, no ritmo do dedo.
+    // No celular, quando a faixa chega, a luz atravessa o vidro da placa e o traço
+    // do ícone é desenhado junto. Um cartão de cada vez, no ritmo do dedo.
     if (faixas.length && window.matchMedia("(max-width: 720px)").matches) {
       faixas.forEach(function (faixa) {
-        var placa = faixa.querySelector(".banner-icone");
-        if (!placa) return;
-        var tl = gsap.timeline({ scrollTrigger: { trigger: faixa, start: "top 86%", once: true } });
-        tl.from(placa, {
-          scale: 0.78,
-          rotate: -7,
-          duration: motionOff ? 0 : 0.6,
-          ease: "back.out(1.7)",
-          overwrite: true
+        if (!faixa.querySelector(".banner-icone")) return;
+        ScrollTrigger.create({
+          trigger: faixa,
+          start: "top 86%",
+          once: true,
+          onEnter: function () { faixa.classList.add("desenhado", "brilhou"); }
         });
-        tl.add(function () { faixa.classList.add("desenhado", "brilhou"); }, motionOff ? 0 : 0.18);
       });
     }
 

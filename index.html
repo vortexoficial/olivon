@@ -134,8 +134,15 @@
         </div>
 
         <!-- Mockup da seção: informe o caminho da imagem em `mockupAutomacao` (js/dados.js).
-             Enquanto estiver vazio, aparece um marcador no lugar. -->
-        <figure class="mockup reveal delay-2" id="mockupAutomacao"></figure>
+             Enquanto estiver vazio, aparece um marcador no lugar. O selo gira por cima,
+             como um adesivo colado na imagem; o texto vem de `seloGirando`. -->
+        <div class="mockup-palco reveal delay-2">
+          <figure class="mockup" id="mockupAutomacao"></figure>
+          <div class="selo" id="selo" aria-hidden="true">
+            <span class="selo-texto" id="seloTexto"></span>
+            <span class="selo-centro"><i data-icon="zap"></i></span>
+          </div>
+        </div>
       </div>
     </section>
 

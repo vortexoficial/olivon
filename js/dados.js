@@ -171,6 +171,11 @@ window.OLIVEON = {
     ]
   },
 
+  /* Selo que gira sobre o mockup da automação. Use um separador entre as palavras
+     (o "·" fica bom) e termine com ele, para o texto fechar a volta sem emenda.
+     Vazio = o selo não aparece. */
+  seloGirando: "Atende · Qualifica · Registra · Avisa · ",
+
   /* Etapas em texto (usadas pela simulação de conversa da página completa) */
   etapasConversa: ["Atração", "Qualificação", "Registro", "Handoff"],
   conversa: [
