@@ -1050,8 +1050,12 @@
       var h1 = $("heroTitle");
       if (h1) splitWords(h1);
       heroTl = gsap.timeline({ defaults: { ease: "power3.out" }, delay: 0.1, onComplete: function () { docEl.classList.remove("intro-pending"); } });
-      heroTl.set("#heroTitle", { opacity: 1 })
-        .fromTo('[data-hero="badge"]', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, 0)
+      heroTl.set("#heroTitle", { opacity: 1 });
+      // o selo existe só na página completa; sem guarda o GSAP avisa "target not found" no console
+      if (document.querySelector('[data-hero="badge"]')) {
+        heroTl.fromTo('[data-hero="badge"]', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, 0);
+      }
+      heroTl
         // y: 0 explícito, o GSAP lê o translateY(110%) do CSS como px e, sem isso, o px ficaria preso ao fim do tween
         .fromTo(".hero h1 .w > span", { yPercent: 110, y: 0 }, { yPercent: 0, y: 0, duration: 0.9, stagger: 0.06, ease: "power4.out" }, 0.15)
         .fromTo('[data-hero="sub"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.7)
