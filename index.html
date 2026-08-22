@@ -101,29 +101,11 @@
           <h2 class="reveal delay-1">O lead chega às 23h. Às 23h01 ele já foi atendido.</h2>
           <p class="lead reveal delay-2">Simulação de um fluxo que colocamos em produção: o anúncio gera o contato, a automação qualifica, o CRM registra e o comercial recebe o resumo, enquanto a equipe dorme.</p>
           <ol class="etapas reveal delay-3" id="etapasConversa" aria-label="Etapas do fluxo"><!-- js/dados.js → etapasConversa --></ol>
-          <button class="replay reveal delay-3" id="chatReplay" type="button"><span class="ic-wrap" data-icon="repeat"></span>Ver de novo</button>
         </div>
 
-        <!-- Lugar do mockup em imagem: preencha `mockupAutomacao` em js/dados.js e a
-             imagem entra aqui, no lugar da conversa animada abaixo. -->
-        <figure class="mockup" id="mockupAutomacao" hidden></figure>
-
-        <div class="phone reveal delay-2" id="chatMock" role="group" aria-label="Simulação de conversa automatizada no WhatsApp">
-          <div class="phone-top">
-            <span class="phone-avatar" aria-hidden="true"><img src="assets/avatar.png" alt="" width="42" height="42"></span>
-            <div class="phone-id">
-              <b>Oliveon</b>
-              <small id="chatStatus">Atendimento automático</small>
-            </div>
-            <span class="phone-live" aria-hidden="true"><i></i>simulação</span>
-          </div>
-          <div class="phone-progress" aria-hidden="true"><b id="chatProgresso"></b></div>
-          <div class="phone-body" id="chatBody"><!-- js/dados.js → conversa --></div>
-          <div class="phone-bar" aria-hidden="true">
-            <span class="phone-campo">Mensagem</span>
-            <span class="phone-enviar"><i data-icon="send"></i></span>
-          </div>
-        </div>
+        <!-- Mockup da seção: informe o caminho da imagem em `mockupAutomacao` (js/dados.js).
+             Enquanto estiver vazio, aparece um marcador no lugar. -->
+        <figure class="mockup reveal delay-2" id="mockupAutomacao"></figure>
       </div>
     </section>
 

@@ -263,27 +263,30 @@
     }
   })();
 
-  /* ---------- Automação: mockup em imagem (opcional) ----------
-     Se `mockupAutomacao` estiver preenchido em js/dados.js, a imagem entra no
-     lugar da conversa animada. Vazio, fica a simulação. */
+  /* ---------- Automação: mockup em imagem ----------
+     A seção mostra a imagem informada em `mockupAutomacao` (js/dados.js).
+     Sem imagem, fica um marcador no lugar, para o espaço não ir vazio ao ar. */
   (function mockup() {
     var caixa = $("mockupAutomacao");
-    var arquivo = String(D.mockupAutomacao || "").trim();
     if (!caixa) return;
-    if (!arquivo) { caixa.remove(); return; }
-    var img = document.createElement("img");
-    img.src = arquivo;
-    img.alt = D.mockupAutomacaoAlt || "";
-    img.loading = "lazy";
-    img.decoding = "async";
-    caixa.appendChild(img);
-    caixa.hidden = false;
-    caixa.classList.add("reveal", "delay-2");
-    var card = $("chatMock");
-    if (card) card.remove();                      // a conversa animada sai de cena
-    var replay = $("chatReplay");
-    if (replay) replay.remove();                  // e o botão de repetir junto
-    // as etapas do fluxo continuam: com a imagem parada, aparecem todas concluídas
+    var arquivo = String(D.mockupAutomacao || "").trim();
+    if (arquivo) {
+      var img = document.createElement("img");
+      img.src = arquivo;
+      img.alt = D.mockupAutomacaoAlt || "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      caixa.appendChild(img);
+    } else {
+      caixa.classList.add("mockup-vazio");
+      caixa.innerHTML =
+        '<span class="ic-wrap" data-icon="smartphone"></span>' +
+        "<b>Mockup da conversa</b>" +
+        "<small>Coloque o PNG em <code>assets/</code> e escreva o caminho em " +
+        "<code>mockupAutomacao</code>, no arquivo <code>js/dados.js</code>.</small>";
+      caixa.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+    }
+    // as etapas do fluxo continuam, todas concluídas, já que a imagem é parada
     var etapasEl = $("etapasConversa");
     if (etapasEl) {
       etapasEl.innerHTML = (D.etapasConversa || []).map(function (e) {

@@ -2112,6 +2112,40 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
    nesse caso o arredondamento e a sombra do quadro atrapalham */
 .mockup.solto img { border-radius: 0; }
 
+/* marcador enquanto a imagem não foi informada */
+.mockup-vazio {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: min(440px, 100%);
+  min-height: 340px;
+  padding: 32px 28px;
+  margin: 0 auto;
+  text-align: center;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.mockup-vazio .ic { font-size: 1.8rem; color: var(--steel-dim); }
+.mockup-vazio b {
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.mockup-vazio small { font-size: 0.82rem; line-height: 1.5; color: var(--steel-dim); max-width: 34ch; }
+.mockup-vazio code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  color: var(--steel);
+  background: var(--elevated);
+  border-radius: var(--radius-sm);
+  padding: 1px 5px;
+}
+
 /* ---------- 03 Portfólio: o resto das fichas fica atrás de um botão ---------- */
 .pf-oculto { display: none !important; }
 .pf-mais { display: flex; justify-content: center; margin-top: 40px; }
