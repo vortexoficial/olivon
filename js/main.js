@@ -289,6 +289,11 @@
     espaco.className = "phone-espaco";
     espaco.setAttribute("aria-hidden", "true");
     body.appendChild(espaco);
+    // divisor de data: fica visível desde o começo, então o card nunca aparece vazio
+    var divisor = document.createElement("div");
+    divisor.className = "divisor-data";
+    divisor.textContent = "hoje";
+    body.appendChild(divisor);
     conversa.forEach(function (m, i) {
       var typing = null;
       if (m.de === "bot") {
@@ -310,7 +315,7 @@
         texto.textContent = m.texto;
         var meta = document.createElement("span");
         meta.className = "msg-meta";
-        meta.innerHTML = "<span>" + hora() + "</span>" + (m.de === "bot" ? '<span class="ic-wrap" data-icon="check"></span>' : "");
+        meta.innerHTML = "<span>" + hora() + "</span>" + (m.de === "bot" ? '<span class="ic-wrap" data-icon="check-check"></span>' : "");
         el.appendChild(texto);
         el.appendChild(meta);
         if (i) minuto += 1;

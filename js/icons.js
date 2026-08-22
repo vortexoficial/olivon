@@ -1,7 +1,7 @@
 /* ============================================================
    OLIVEON · ÍCONES (Lucide, ISC) · gerado a partir de lucide-static
    Uso: OLIVEON_ICON("zap") devolve um <svg> inline monocromático.
-   Ícones: arrow-right, arrow-up-right, badge-check, bell, blocks, bot, braces, brain-circuit, calendar, chart-column, check, chevron-left, chevron-right, circle-dot, clapperboard, cloud-upload, code-xml, cpu, database, file-check, funnel, gauge, git-branch, instagram, layers, layout-template, link, list-checks, lock, mail, megaphone, message-square, minus, monitor, mouse-pointer-click, pause, pen-tool, phone, play, plus, repeat, rocket, scan-search, search, send, server, shield-check, shopping-cart, sliders-horizontal, smartphone, sparkles, store, target, timer, trending-up, truck, user-round, users, whatsapp, workflow, wrench, x, zap
+   Ícones: arrow-right, arrow-up-right, badge-check, bell, blocks, bot, braces, brain-circuit, calendar, chart-column, check, check-check, chevron-left, chevron-right, circle-dot, clapperboard, cloud-upload, code-xml, cpu, database, file-check, funnel, gauge, git-branch, instagram, layers, layout-template, link, list-checks, lock, mail, megaphone, message-square, minus, monitor, mouse-pointer-click, pause, pen-tool, phone, play, plus, repeat, rocket, scan-search, search, send, server, shield-check, shopping-cart, sliders-horizontal, smartphone, sparkles, store, target, timer, trending-up, truck, user-round, users, whatsapp, workflow, wrench, x, zap
    ============================================================ */
 window.OLIVEON_ICONS = {
   "arrow-right": "<path d=\"M5 12h14\" /><path d=\"m12 5 7 7-7 7\" />",
@@ -15,6 +15,7 @@ window.OLIVEON_ICONS = {
   "calendar": "<path d=\"M8 2v3\" /><path d=\"M16 2v3\" /><rect x=\"3\" y=\"3\" width=\"18\" height=\"18\" rx=\"2\" /><path d=\"M3 9h18\" />",
   "chart-column": "<path d=\"M3 3v16a2 2 0 0 0 2 2h16\" /><path d=\"M18 17V9\" /><path d=\"M13 17V5\" /><path d=\"M8 17v-3\" />",
   "check": "<path d=\"M20 6 9 17l-5-5\" />",
+  "check-check": "<path d=\"M18 6 7 17l-5-5\" /><path d=\"m22 10-7.5 7.5L13 16\" />",
   "chevron-left": "<path d=\"m15 18-6-6 6-6\" />",
   "chevron-right": "<path d=\"m9 18 6-6-6-6\" />",
   "circle-dot": "<circle cx=\"12\" cy=\"12\" r=\"10\" /><circle cx=\"12\" cy=\"12\" r=\"1\" />",
