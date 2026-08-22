@@ -1102,8 +1102,11 @@
     }
 
     // o anel da lâmina gira discretamente conforme o hero sai de cena
-    gsap.to("#heroRing", { rotation: 9, transformOrigin: "50% 50%", ease: "none",
-      scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: true } });
+    // o anel existe só na página completa; sem guarda o GSAP avisa "target not found"
+    if ($("heroRing")) {
+      gsap.to("#heroRing", { rotation: 9, transformOrigin: "50% 50%", ease: "none",
+        scrollTrigger: { trigger: "#hero", start: "top top", end: "bottom top", scrub: true } });
+    }
 
     // módulos de software sobem em sequência conforme entram na tela
     var mods = gsap.utils.toArray(".mod");
