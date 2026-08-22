@@ -196,66 +196,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 
 /* Luz correndo na borda do botão, o mesmo efeito do quadro do formulário.
    Usada só no CTA principal do hero, para não virar ruído em todo botão vermelho. */
-/* Botão com luz percorrendo a borda (recriação do Hover Border Gradient, Aceternity).
-   A moldura é uma camada de luz atrás do miolo: um clarão radial muda de lado a
-   cada volta e, como as quatro paradas têm a mesma estrutura de gradiente, o
-   navegador interpola entre elas e a luz parece girar. No hover o clarão abre
-   e a borda inteira acende. */
-.btn-luz-borda {
-  position: relative;
-  display: inline-flex;
-  padding: 2px;                          /* a espessura da borda de luz */
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.1);   /* borda de repouso, para a luz ter sobre o que correr */
-  text-decoration: none;
-  overflow: hidden;
-  isolation: isolate;
-}
-.btn-luz-borda .luz {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  /* desfoque baixo: num anel de 2px um blur grande dilui a luz e ela some */
-  filter: blur(1px);
-  animation: luz-volta 3.2s linear infinite;
-}
-.btn-luz-borda .miolo {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  height: 44px;                          /* 44 + 2px de borda dos dois lados = os mesmos 48 do .btn */
-  padding: 0 26px;
-  border-radius: 3px;
-  background: var(--red);
-  color: #fff;
-  font-family: var(--display);
-  font-stretch: 112%;
-  font-weight: 600;
-  font-size: 0.8125rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: background var(--dur-1) var(--ease);
-}
-.btn-luz-borda:hover .miolo { background: var(--red-hover); }
-.btn-luz-borda:active .miolo { background: var(--red-pressed); }
-/* no hover a luz para de girar e a borda inteira acende */
-.btn-luz-borda:hover .luz {
-  animation: none;
-  background: radial-gradient(75% 181.15% at 50% 50%, #fff 0%, rgba(255, 255, 255, 0) 100%);
-}
-.btn-luz-borda:focus-visible { outline: 2px solid var(--steel); outline-offset: 3px; }
-
-@keyframes luz-volta {
-  0%   { background: radial-gradient(34% 160% at 50% 0%,   #fff 0%, rgba(255, 255, 255, 0) 100%); }
-  25%  { background: radial-gradient(34% 160% at 100% 50%, #fff 0%, rgba(255, 255, 255, 0) 100%); }
-  50%  { background: radial-gradient(34% 160% at 50% 100%, #fff 0%, rgba(255, 255, 255, 0) 100%); }
-  75%  { background: radial-gradient(34% 160% at 0% 50%,   #fff 0%, rgba(255, 255, 255, 0) 100%); }
-  100% { background: radial-gradient(34% 160% at 50% 0%,   #fff 0%, rgba(255, 255, 255, 0) 100%); }
-}
 .btn-ghost:hover { border-color: var(--steel); }
 
 .btn-sm { height: 38px; padding: 0 18px; font-size: 0.75rem; }
@@ -1640,7 +1580,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   gap: 10px;
   height: 52px;
   color: #fff;
-  background: linear-gradient(225deg, transparent 9px, var(--red) 9px);
+  background: var(--red);            /* reto, igual aos demais botões vermelhos */
   border-radius: var(--radius-sm);
   font-family: var(--display);
   font-stretch: 112%;
@@ -1734,8 +1674,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .marquee-track, .faixa-track, .border-beam i, .msg.typing i { animation: none; }
   .section-head .eyebrow::after, .numero::after { transform: none; animation: none; }
   .vslide, .depo { transition: none; }
-  /* luz da borda para de girar e a faixa de foco fica toda nítida */
-  .btn-luz-borda .luz { animation: none; background: rgba(255, 255, 255, 0.22); }
+  /* a faixa de foco fica toda nítida */
   .foco-palavra { filter: blur(0); opacity: 1; transition: none; }
   .foco-moldura { transition: none; }
   .motion-toggle { display: none; }
@@ -2238,7 +2177,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .foco { padding: 76px 0; }
   .foco-frase { gap: 10px 20px; }
   .foco-apoio { margin-top: 26px; font-size: 0.98rem; }
-  .foco .btn { margin-top: 28px; }
+  /* no celular o CTA fixo no rodapé já cobre esta faixa: um segundo botão só repetiria */
+  .foco .btn { display: none; }
   .foco-moldura i { width: 12px; height: 12px; border-width: 2px; }
   .foco-moldura i:nth-child(1) { top: -8px; left: -8px; }
   .foco-moldura i:nth-child(2) { top: -8px; right: -8px; }
