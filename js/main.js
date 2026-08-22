@@ -404,69 +404,157 @@
       if (!(D.bancada || []).length) lista.closest(".bancada").remove();
     }
   })();
+  /* ---------- Rolagem com inércia ----------
+     A roda do mouse deixa de empurrar a página de uma vez: ela move um alvo e a
+     página persegue esse alvo quadro a quadro. Por mais forte que seja o giro, o
+     movimento chega amortecido. Vale só onde existe roda de mouse: no celular a
+     rolagem do dedo já é suave, e mexer nela costuma piorar.
+     Teclado, barra de rolagem e âncoras continuam nativos. */
+  (function rolagemSuave() {
+    if (reduceMotion) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
 
-  /* ---------- Esteira da automação: etapas ligadas por feixes ----------
-     Cada etapa é uma placa de vidro com o ícone e o nome. Entre uma e outra corre
-     uma luz, na ideia do feixe animado do MagicUI: a linha é desenhada medindo os
-     próprios nós, então serve tanto na fila de quatro do computador quanto no
-     dois por dois do celular, e é refeita quando a tela muda de tamanho. */
+    var alvo = window.scrollY;
+    var atual = alvo;
+    var rodando = false;
+    var LERP = 0.085;        // quanto da distância que falta é vencida a cada quadro
+    var PASSO_MAX = 180;     // teto por evento: é isto que impede o arranco
+
+    function teto() { return Math.max(0, docEl.scrollHeight - window.innerHeight); }
+
+    function loop() {
+      atual += (alvo - atual) * LERP;
+      if (Math.abs(alvo - atual) < 0.5) { atual = alvo; rodando = false; }
+      // "instant" é obrigatório: o CSS tem scroll-behavior: smooth (para as âncoras),
+      // e sem isto cada quadro abriria uma rolagem suave nova, brigando com a anterior
+      window.scrollTo({ top: atual, left: 0, behavior: "instant" });
+      if (rodando) requestAnimationFrame(loop);
+    }
+
+    // uma lista com rolagem própria (as frentes de "O que fazemos") tem preferência
+    function rolaSozinho(el, dir) {
+      while (el && el !== document.body && el !== docEl) {
+        if (el.scrollHeight > el.clientHeight + 1) {
+          var estilo = getComputedStyle(el).overflowY;
+          if (estilo === "auto" || estilo === "scroll") {
+            var fim = el.scrollHeight - el.clientHeight;
+            if ((dir < 0 && el.scrollTop > 0) || (dir > 0 && el.scrollTop < fim - 1)) return true;
+          }
+        }
+        el = el.parentElement;
+      }
+      return false;
+    }
+
+    window.addEventListener("wheel", function (e) {
+      if (e.ctrlKey || motionOff) return;                        // zoom do navegador, ou animações pausadas
+      if (docEl.classList.contains("lbox-on")) return;           // vídeo em tela cheia: a página está travada
+      if (rolaSozinho(e.target, e.deltaY)) return;
+      e.preventDefault();
+      var passo = e.deltaY * (e.deltaMode === 1 ? 18 : 1);
+      passo = Math.max(-PASSO_MAX, Math.min(PASSO_MAX, passo));
+      if (!rodando) atual = window.scrollY;
+      alvo = Math.max(0, Math.min(atual + (alvo - atual) + passo, teto()));
+      if (!rodando) { rodando = true; requestAnimationFrame(loop); }
+    }, { passive: false });
+
+    // quem rolou por fora (barra, teclado, âncora) manda: o alvo acompanha
+    window.addEventListener("scroll", function () {
+      if (!rodando) { alvo = window.scrollY; atual = alvo; }
+    }, { passive: true });
+  })();
+
+  /* ---------- Mapa do fluxo da automação ----------
+     Na ideia do feixe animado do MagicUI: as portas de entrada convergem no nó do
+     atendimento e de lá saem para o CRM e para o comercial, com uma luz correndo
+     por cada fio. As curvas são medidas dos próprios nós, então o desenho se
+     ajusta a qualquer largura e é refeito quando a tela muda de tamanho. */
   var desenhaFeixes = function () {};
-  (function feixes() {
+  (function fluxoAutomacao() {
     var caixa = $("fluxo");
+    var mapa = $("fluxoMapa");
     var svg = $("fluxoFeixes");
-    if (!caixa || !svg) return;
+    var F = D.fluxoAutomacao;
+    if (!caixa || !mapa || !svg) return;
+    if (!F || !F.centro) { caixa.remove(); return; }
+
+    var entradas = (F.entrada && F.entrada.nos) || [];
+    var saidas = F.saidas || [];
+
+    function no(item, classe, i) {
+      return '<span class="fluxo-no' + (classe ? " " + classe : "") + '" data-no="' + i + '"' +
+        (item.titulo ? ' title="' + esc(item.titulo) + '"' : "") + ' aria-hidden="true">' +
+        '<span class="ic-wrap" data-icon="' + esc(item.icone || "circle-dot") + '"></span></span>';
+    }
+
+    var i = 0;
+    var htmlEntradas = entradas.map(function (e) { return no(e, "min", i++); }).join("");
+    var iCentro = i;
+    var htmlCentro = no(F.centro, "max", i++);
+    var htmlSaidas = saidas.map(function (s) {
+      return '<div class="fluxo-saida">' + no(s, "", i++) +
+        '<span class="fluxo-rotulo">' + esc(s.rotulo) + "</span></div>";
+    }).join("");
+
+    mapa.innerHTML =
+      '<div class="fluxo-col">' +
+        '<div class="fluxo-pilha">' + htmlEntradas + "</div>" +
+        '<span class="fluxo-rotulo">' + esc((F.entrada && F.entrada.rotulo) || "") + "</span>" +
+      "</div>" +
+      '<div class="fluxo-col fluxo-col-centro">' + htmlCentro +
+        '<span class="fluxo-rotulo">' + esc(F.centro.rotulo || "") + "</span>" +
+      "</div>" +
+      '<div class="fluxo-col fluxo-col-saida">' + htmlSaidas + "</div>";
+    mapa.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+
+    // quem liga em quem: toda entrada vai ao centro, e o centro vai a cada saída
+    var ligacoes = [];
+    for (var e = 0; e < entradas.length; e++) ligacoes.push([e, iCentro, e * 0.22]);
+    for (var s = 0; s < saidas.length; s++) ligacoes.push([iCentro, iCentro + 1 + s, 1.05 + s * 0.22]);
 
     desenhaFeixes = function () {
-      var nos = Array.prototype.slice.call(caixa.querySelectorAll(".fluxo-no"));
+      var nos = caixa.querySelectorAll(".fluxo-no");
       var base = caixa.getBoundingClientRect();
       if (nos.length < 2 || !base.width) return;
       svg.setAttribute("viewBox", "0 0 " + Math.round(base.width) + " " + Math.round(base.height));
       var partes = "";
-      for (var i = 0; i < nos.length - 1; i++) {
-        var a = nos[i].getBoundingClientRect();
-        var b = nos[i + 1].getBoundingClientRect();
-        var ay = a.top + a.height / 2 - base.top;
-        var by = b.top + b.height / 2 - base.top;
-        var d;
-        if (Math.abs(ay - by) < 4) {
-          // mesma linha: reta de uma placa até a outra
-          d = "M" + (a.right - base.left + 6) + " " + ay + " L" + (b.left - base.left - 6) + " " + by;
-        } else if (b.left <= a.left) {
-          // quebra de linha para trás (o dois por dois do celular): sem fio, senão
-          // ele passaria por cima dos rótulos. Cada linha guarda o próprio feixe.
-          continue;
-        } else {
-          // a etapa caiu para a linha de baixo, mais à direita: a curva desce e volta
-          var ax = a.left - base.left + a.width / 2;
-          var bx = b.left - base.left + b.width / 2;
-          var y1 = a.bottom - base.top + 6;
-          var y2 = b.top - base.top - 6;
-          d = "M" + ax + " " + y1 + " C" + ax + " " + (y1 + (y2 - y1) * 0.6) + ", " + bx + " " + (y2 - (y2 - y1) * 0.6) + ", " + bx + " " + y2;
-        }
+      ligacoes.forEach(function (lig) {
+        var a = nos[lig[0]], b = nos[lig[1]];
+        if (!a || !b) return;
+        var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+        var x1 = ra.right - base.left + 5;
+        var y1 = ra.top + ra.height / 2 - base.top;
+        var x2 = rb.left - base.left - 5;
+        var y2 = rb.top + rb.height / 2 - base.top;
+        var dx = Math.max(18, (x2 - x1) * 0.55);        // quanto a curva sai na horizontal antes de virar
+        var d = "M" + x1.toFixed(1) + " " + y1.toFixed(1) +
+          " C" + (x1 + dx).toFixed(1) + " " + y1.toFixed(1) + ", " +
+          (x2 - dx).toFixed(1) + " " + y2.toFixed(1) + ", " + x2.toFixed(1) + " " + y2.toFixed(1);
         partes += '<path class="feixe-base" d="' + d + '"/>' +
-          '<path class="feixe-luz" pathLength="100" d="' + d + '" style="animation-delay:' + (i * 0.6).toFixed(2) + 's"/>';
-      }
+          '<path class="feixe-luz" pathLength="100" d="' + d + '" style="animation-delay:' + lig[2].toFixed(2) + 's"/>';
+      });
       svg.innerHTML = partes;
     };
 
+    desenhaFeixes();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(desenhaFeixes);
     var t;
     window.addEventListener("resize", function () {
       clearTimeout(t);
       t = setTimeout(desenhaFeixes, 160);
     }, { passive: true });
+    onVisible(caixa, function (vis) { caixa.classList.toggle("correndo", vis); }, 0.2);
   })();
 
+  /* a página completa continua com as etapas em texto, ao lado da conversa simulada */
   function montaEtapas(el, itens, feitas) {
     if (!el) return;
     el.innerHTML = (itens || []).map(function (e) {
-      var etapa = typeof e === "string" ? { nome: e } : e;      // aceita a lista antiga, só com nomes
-      return '<li class="etapa' + (feitas ? " done" : "") + '">' +
-        '<span class="fluxo-no"><span class="ic-wrap" data-icon="' + esc(etapa.icone || "circle-dot") + '"></span></span>' +
-        '<span class="fluxo-rotulo">' + esc(etapa.nome) + "</span></li>";
+      var etapa = typeof e === "string" ? { nome: e } : e;
+      return '<li class="etapa' + (feitas ? " done" : "") + '">' + esc(etapa.nome) + "</li>";
     }).join("");
-    el.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
-    desenhaFeixes();
   }
+
 
   /* ---------- Automação: mockup em imagem ----------
      A seção mostra a imagem informada em `mockupAutomacao` (js/dados.js).
@@ -1525,6 +1613,25 @@
         onEnter: function (lote) {
           gsap.to(lote, { opacity: 1, y: 0, duration: motionOff ? 0 : 0.55, stagger: motionOff ? 0 : 0.07, ease: "power3.out", overwrite: true });
         }
+      });
+    }
+
+    // No celular cada ícone ganha vida quando a sua faixa chega: a placa entra
+    // com um salto curto, o traço do ícone é desenhado e o reflexo atravessa o
+    // vidro uma vez. Um cartão de cada vez, no ritmo do dedo.
+    if (faixas.length && window.matchMedia("(max-width: 720px)").matches) {
+      faixas.forEach(function (faixa) {
+        var placa = faixa.querySelector(".banner-icone");
+        if (!placa) return;
+        var tl = gsap.timeline({ scrollTrigger: { trigger: faixa, start: "top 86%", once: true } });
+        tl.from(placa, {
+          scale: 0.78,
+          rotate: -7,
+          duration: motionOff ? 0 : 0.6,
+          ease: "back.out(1.7)",
+          overwrite: true
+        });
+        tl.add(function () { faixa.classList.add("desenhado", "brilhou"); }, motionOff ? 0 : 0.18);
       });
     }
 

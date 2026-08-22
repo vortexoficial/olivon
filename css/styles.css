@@ -136,6 +136,21 @@
 
 html { scroll-behavior: smooth; }
 
+/* ---------- Barra de rolagem na cor da marca ----------
+   A borda transparente com background-clip afina a barra sem precisar saber a
+   cor do fundo, então serve tanto na página quanto nas listas internas. */
+:root { scrollbar-width: thin; scrollbar-color: var(--red) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--red);
+  background-clip: padding-box;
+  border: 3px solid transparent;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--red-hover); background-clip: padding-box; }
+::-webkit-scrollbar-corner { background: transparent; }
+
 body {
   font-family: var(--font);
   font-size: 1.0625rem;
@@ -922,8 +937,11 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .automacao-texto h2 { max-width: 16ch; }
 .automacao-texto .lead { margin-top: 22px; }
-/* ---------- Esteira da automação: placas ligadas por feixes ---------- */
-.fluxo { position: relative; margin-top: 36px; }
+/* ---------- Mapa do fluxo da automação ----------
+   Três portas de entrada convergem no nó do atendimento e de lá saem para o CRM
+   e para o comercial, com uma luz correndo por cada fio (ideia do feixe animado
+   do MagicUI). O bloco encosta na esquerda, alinhado com o texto da seção. */
+.fluxo { position: relative; margin-top: 40px; }
 .fluxo-feixes {
   position: absolute;
   inset: 0;
@@ -940,21 +958,33 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   stroke-linecap: round;
   stroke-dasharray: 16 100;
   stroke-dashoffset: 16;
+  opacity: 0;
   filter: drop-shadow(0 0 5px var(--red-glow));
-  animation: feixe-corre 2.4s linear infinite;
 }
+/* a luz só corre enquanto a seção está na tela */
+.fluxo.correndo .feixe-luz { opacity: 1; animation: feixe-corre 2.6s linear infinite; }
 @keyframes feixe-corre { from { stroke-dashoffset: 16; } to { stroke-dashoffset: -100; } }
 
-.etapas { list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px 12px; }
-.etapas li { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; min-width: 0; }
-/* a mesma placa de vidro dos ícones de "O que fazemos", em tamanho de nó */
-.fluxo-no {
+.fluxo-mapa {
   position: relative;
   z-index: 1;
-  width: 54px;
-  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 58px;
+}
+.fluxo-col { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+.fluxo-pilha { display: flex; flex-direction: column; gap: 14px; }
+.fluxo-col-saida { gap: 22px; }
+.fluxo-saida { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+
+/* placa de vidro, a mesma linguagem dos ícones de "O que fazemos" */
+.fluxo-no {
+  position: relative;
   display: grid;
   place-items: center;
+  width: 46px;
+  height: 46px;
   border: 1px solid var(--border-strong);
   border-radius: 6px;
   background:
@@ -962,9 +992,28 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
     var(--card);
   box-shadow: inset 0 1px 0 var(--vidro-topo), 0 10px 20px -14px var(--vidro-sombra);
   color: var(--steel);
-  transition: color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
-.fluxo-no .ic { width: 24px; height: 24px; }
+.fluxo-no .ic { width: 21px; height: 21px; }
+.fluxo-no.min { width: 38px; height: 38px; }
+.fluxo-no.min .ic { width: 17px; height: 17px; }
+/* o motor: maior, no vermelho da marca e com um halo que respira */
+.fluxo-no.max { width: 64px; height: 64px; color: var(--red-text); border-color: var(--red); }
+.fluxo-no.max .ic { width: 29px; height: 29px; }
+.fluxo-no.max::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 10px;
+  border: 1px solid var(--red);
+  opacity: 0;
+}
+.fluxo.correndo .fluxo-no.max::after { animation: halo-respira 2.6s var(--ease) infinite; }
+@keyframes halo-respira {
+  0% { opacity: 0.55; transform: scale(0.94); }
+  60% { opacity: 0; transform: scale(1.12); }
+  100% { opacity: 0; transform: scale(1.12); }
+}
+
 .fluxo-rotulo {
   font-family: var(--mono);
   font-size: 0.62rem;
@@ -973,13 +1022,10 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   text-transform: uppercase;
   color: var(--steel-dim);
   line-height: 1.3;
-  transition: color var(--dur-2) var(--ease);
+  white-space: nowrap;
 }
-.etapas li.done .fluxo-rotulo { color: var(--text-2); }
-.etapas li.done .fluxo-no { color: var(--steel); }
-/* etapa em curso na simulação da página completa */
-.etapas li.on .fluxo-rotulo { color: var(--text); }
-.etapas li.on .fluxo-no { color: var(--red-text); border-color: var(--red); }
+.fluxo-col-centro .fluxo-rotulo { color: var(--text-2); }
+
 .replay {
   display: inline-flex; align-items: center; gap: 8px;
   margin-top: 28px;
@@ -1133,10 +1179,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   flex-direction: column;
   gap: 10px;
   scrollbar-width: thin;
-  scrollbar-color: rgba(201, 204, 210, 0.18) transparent;
 }
-.scroll-area::-webkit-scrollbar { width: 6px; }
-.scroll-area::-webkit-scrollbar-thumb { background: rgba(201, 204, 210, 0.18); border-radius: 6px; }
+.scroll-area::-webkit-scrollbar { width: 8px; }
 .scroll-area:focus-visible { outline: 2px solid var(--steel); outline-offset: -4px; }
 .banner {
   display: grid;
@@ -1899,7 +1943,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .grid-servicos .card:nth-last-child(2) { grid-column: span 2; }
 }
 @media (max-width: 1040px) {
-  .etapas { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 12px; }
 }
 /* Indicador de seção: logo 140 + rótulo ~220 + nav ~720 + gaps só cabem a partir de 1300px */
 @media (max-width: 1299px) {
@@ -2272,6 +2315,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   transition: transform 1s var(--ease);
 }
 .banner:hover .banner-icone::after { transform: translateX(130%); }
+/* no celular não há cursor: o reflexo atravessa uma vez, quando o GSAP solta a faixa */
+.banner.brilhou .banner-icone::after { animation: vidro-passa 1.1s var(--ease) 1; }
+@keyframes vidro-passa { from { transform: translateX(-130%); } to { transform: translateX(130%); } }
 .banner-icone .ic { width: 30px; height: 30px; }
 /* o traco do icone e desenhado quando a faixa entra na tela */
 .banner-icone .ic * { transition: stroke-dashoffset 0.9s var(--ease); }
@@ -2764,6 +2810,17 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .barra-num-item small { font-size: 0.74rem; }
   .barra-num-sep { margin: 0 22px; }
 
+  /* mapa do fluxo: tudo menor e encostado na esquerda, como o texto */
+  .fluxo-mapa { gap: 34px; }
+  .fluxo-no { width: 42px; height: 42px; }
+  .fluxo-no .ic { width: 19px; height: 19px; }
+  .fluxo-no.min { width: 34px; height: 34px; }
+  .fluxo-no.min .ic { width: 15px; height: 15px; }
+  .fluxo-no.max { width: 54px; height: 54px; }
+  .fluxo-no.max .ic { width: 25px; height: 25px; }
+  .fluxo-pilha { gap: 10px; }
+  .fluxo-col-saida { gap: 16px; }
+  .fluxo-rotulo { font-size: 0.56rem; letter-spacing: 0.08em; }
   /* as garantias empilham: lado a lado no celular o texto quebraria em três linhas */
   .garantias { grid-template-columns: minmax(0, 1fr); max-width: none; }
 
@@ -2782,7 +2839,10 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .banner { gap: 8px 12px; padding: 12px; min-height: 0; }
   /* o quadrado atravessa as duas linhas: fica com a altura do texto que esta ao lado */
   /* o quadrado acompanha a altura do texto, com um teto para nao espremer a coluna */
-  .banner-icone { grid-row: 1 / span 2; align-self: stretch; width: auto; height: auto; aspect-ratio: 1; min-width: 62px; max-height: 100px; }
+  /* quadrado fixo: chega na altura do selo e mantem os tres cartoes iguais.
+     Deixar ele esticar sozinho vira bola de neve (quadrado maior aperta o texto,
+     o texto ganha linhas e o quadrado cresce de novo). */
+  .banner-icone { grid-row: 1 / span 2; align-self: start; width: 116px; height: 116px; }
   .banner-icone .ic { width: 38px; height: 38px; }
   .banner-num { width: 22px; }
   .banner h3 { font-size: 0.95rem; }
