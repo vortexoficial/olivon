@@ -104,17 +104,8 @@
     }
     if (btn) btn.addEventListener("click", function () { aplica(atual() === "claro" ? "escuro" : "claro"); });
 
-    // enquanto o visitante não escolher, o site acompanha a preferência do sistema
-    var mq = window.matchMedia("(prefers-color-scheme: light)");
-    var ouve = function (e) {
-      var salvo;
-      try { salvo = localStorage.getItem("oliveon-tema"); } catch (err) {}
-      if (salvo === "claro" || salvo === "escuro") return;
-      docEl.setAttribute("data-tema", e.matches ? "claro" : "escuro");
-      aoTrocarTema.forEach(function (f) { f(atual()); });
-    };
-    if (mq.addEventListener) mq.addEventListener("change", ouve);
-    else if (mq.addListener) mq.addListener(ouve);
+    // o padrão do site é o tema claro, mesmo em aparelho no modo escuro: quem
+    // quiser o escuro troca no botão, e a escolha fica salva neste navegador
 
     // a barra do navegador no celular acompanha o fundo do tema
     var meta = $("metaTemaCor");
@@ -1094,6 +1085,47 @@
   }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
   document.querySelectorAll(".reveal").forEach(function (el) { revealObserver.observe(el); });
 
+  /* ---------- Menu do computador: a luz que corre entre os itens ----------
+     Ela vai até o item sob o cursor e, quando o cursor sai, volta para o item
+     da seção que está sendo lida. No celular o menu é a gaveta, e ela não existe. */
+  var marcaNavAtual = function () {};
+  (function navLuz() {
+    var nav = $("nav");
+    var luz = $("navLuz");
+    if (!nav || !luz) return;
+    var links = Array.prototype.slice.call(nav.querySelectorAll("a:not(.nav-cta)"));
+    if (!links.length) return;
+    var atual = null;
+    var mq = window.matchMedia("(min-width: 1041px)");
+
+    function move(link) {
+      if (!link || !mq.matches) { luz.style.opacity = 0; return; }
+      var base = nav.getBoundingClientRect();
+      var r = link.getBoundingClientRect();
+      luz.style.width = r.width + "px";
+      luz.style.transform = "translateX(" + (r.left - base.left) + "px)";
+      luz.style.opacity = 1;
+    }
+
+    links.forEach(function (a) {
+      a.addEventListener("pointerenter", function () { move(a); });
+      a.addEventListener("focus", function () { move(a); });
+    });
+    nav.addEventListener("pointerleave", function () { move(atual); });
+    window.addEventListener("resize", function () { move(atual); }, { passive: true });
+
+    marcaNavAtual = function (id) {
+      var alvo = null;
+      links.forEach(function (a) {
+        var on = !!id && a.getAttribute("href") === "#" + id;
+        a.classList.toggle("is-atual", on);
+        if (on) alvo = a;
+      });
+      atual = alvo;
+      if (!nav.matches(":hover")) move(atual);
+    };
+  })();
+
   /* ---------- Indicador de seção no header + trilho de produção ---------- */
   (function indicadores() {
     var headerIdx = $("headerIdx");
@@ -1118,10 +1150,11 @@
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) {
           // a seção mostrada saiu da faixa de leitura e nenhuma outra entrou (rodapé, topo): apaga o indicador
-          if (headerIdx && entry.target.id === atual) { atual = null; headerIdx.classList.remove("on"); }
+          if (headerIdx && entry.target.id === atual) { atual = null; headerIdx.classList.remove("on"); marcaNavAtual(null); }
           return;
         }
         atual = entry.target.id;
+        marcaNavAtual(atual);
         var r = rotulos[entry.target.id];
         if (headerIdx) {
           headerIdx.textContent = r || "";

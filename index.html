@@ -6,15 +6,14 @@
   <meta name="color-scheme" content="dark light">
   <!-- barra do navegador na cor do tema; js/main.js troca ao mudar de tema -->
   <meta name="theme-color" content="#0a0b0d" id="metaTemaCor">
-  <!-- Roda antes da primeira pintura: aplica o tema salvo (ou o preferido do sistema)
-       e marca a entrada do hero. Sem isto, a página piscaria no tema errado. -->
+  <!-- Roda antes da primeira pintura: aplica o tema salvo e marca a entrada do hero.
+       Sem isto, a página piscaria no tema errado. Quem chega pela primeira vez vê o
+       tema claro, mesmo com o celular no modo escuro; a escolha no botão manda. -->
   <script>
     (function () {
       var t;
       try { t = localStorage.getItem("oliveon-tema"); } catch (e) {}
-      if (t !== "claro" && t !== "escuro") {
-        t = window.matchMedia("(prefers-color-scheme: light)").matches ? "claro" : "escuro";
-      }
+      if (t !== "claro" && t !== "escuro") t = "claro";
       document.documentElement.setAttribute("data-tema", t);
       document.documentElement.classList.add("intro-pending");
     })();
@@ -45,21 +44,26 @@
   <!-- ================= HEADER ================= -->
   <header class="header" id="header">
     <div class="header-inner">
-      <a href="#hero" class="header-logo" aria-label="Oliveon Performance, início">
-        <img class="logo-escuro" src="assets/logo-branco.png" alt="Oliveon Performance" width="180" height="60">
-        <img class="logo-claro" src="assets/logo-preto-vermelho.png" alt="" aria-hidden="true" width="180" height="60">
-      </a>
-      <span class="header-idx" id="headerIdx" aria-hidden="true"></span>
+      <div class="header-esq">
+        <a href="#hero" class="header-logo" aria-label="Oliveon Performance, início">
+          <img class="logo-escuro" src="assets/logo-branco.png" alt="Oliveon Performance" width="180" height="60">
+          <img class="logo-claro" src="assets/logo-preto-vermelho.png" alt="" aria-hidden="true" width="180" height="60">
+        </a>
+        <span class="header-idx" id="headerIdx" aria-hidden="true"></span>
+      </div>
       <nav class="nav" id="nav" aria-label="Principal">
+        <span class="nav-luz" id="navLuz" aria-hidden="true"></span>
         <a href="#fazemos">O que fazemos</a>
         <a href="#automacao">Automação</a>
         <a href="#portfolio">Portfólio</a>
         <a href="#clientes">Clientes</a>
         <a href="#contato">Contato</a>
+        <!-- este botão aparece só no menu do celular; no computador ele fica à direita -->
         <a href="#" class="btn btn-red btn-sm nav-cta" data-whats>Falar no WhatsApp</a>
       </nav>
-      <!-- tema e menu juntos, no canto direito -->
+      <!-- botão, tema e menu juntos, no canto direito -->
       <div class="header-acoes">
+        <a href="#" class="btn btn-red btn-sm header-cta" data-whats>Falar no WhatsApp</a>
         <button class="tema-toggle" id="temaToggle" type="button" aria-label="Alternar entre tema claro e escuro">
           <span class="ic-wrap" data-icon="sun"></span>
           <span class="ic-wrap" data-icon="moon"></span>
