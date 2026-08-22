@@ -81,11 +81,13 @@
           <ul class="hero-stats" id="heroStats" data-hero="stats" aria-label="Números da Oliveon"><!-- js/dados.js → heroStats --></ul>
         </div>
 
-        <!-- Vídeo do sistema. A máscara de gradiente do .hero-marquee some com as quatro bordas. -->
+        <!-- Vídeo do sistema, um por tema. A máscara de gradiente do .hero-marquee some com
+             as quatro bordas. O arquivo é escolhido por js/main.js conforme o tema, para o
+             navegador não baixar os dois. -->
         <div class="hero-marquee hero-video" data-hero="marquee" aria-hidden="true">
-          <video id="heroVideo" poster="assets/hero-sistema.jpg" autoplay muted loop playsinline preload="metadata">
-            <source src="assets/hero-sistema.mp4" type="video/mp4">
-          </video>
+          <video id="heroVideo" autoplay muted loop playsinline preload="metadata"
+                 data-escuro="assets/hero-sistema.mp4" data-claro="assets/hero-claro.mp4"
+                 data-poster-escuro="assets/hero-sistema.jpg" data-poster-claro="assets/hero-claro.jpg"></video>
         </div>
       </div>
     </section>

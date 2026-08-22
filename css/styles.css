@@ -1947,13 +1947,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 [data-tema="escuro"] .tema-toggle .ic-wrap[data-icon="sun"] { display: inline-flex; }
 [data-tema="claro"] .tema-toggle .ic-wrap[data-icon="moon"] { display: inline-flex; }
 
-/* No tema claro o video do hero e uma peca escura: a mascara que o dissolvia no
-   preto passaria a cortar um bloco no branco, entao ele fica com o canto arredondado. */
-[data-tema="claro"] .hero-video {
-  -webkit-mask-image: none;
-  mask-image: none;
-  border-radius: var(--radius);
-}
+/* Cada tema tem o seu video: o escuro nasce em fundo preto, o claro em fundo branco.
+   Nos dois casos a mascara de gradiente do .hero-marquee dissolve as quatro bordas
+   no fundo da pagina, entao o video nao tem canto visivel em nenhum dos temas. */
 
 /* ---------- Hero: vídeo no lugar do carrossel 3D ----------
    Fica dentro do .hero-marquee, que já apaga as quatro bordas com máscara de

@@ -122,9 +122,25 @@
   (function heroVideo() {
     var v = $("heroVideo");
     if (!v) return;
+    var tenta = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+
+    // um arquivo por tema: o escuro tem fundo preto, o claro tem fundo branco.
+    // A fonte só é definida aqui, então o navegador baixa apenas o do tema em uso.
+    function fonteDoTema() {
+      var claro = docEl.getAttribute("data-tema") === "claro";
+      var arquivo = v.getAttribute(claro ? "data-claro" : "data-escuro");
+      var poster = v.getAttribute(claro ? "data-poster-claro" : "data-poster-escuro");
+      if (!arquivo || v.getAttribute("src") === arquivo) return;
+      if (poster) v.setAttribute("poster", poster);
+      v.setAttribute("src", arquivo);
+      v.load();
+      if (!reduceMotion) tenta();
+    }
+    fonteDoTema();
+    aoTrocarTema.push(fonteDoTema);
+
     if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); return; }
     // navegador que bloqueia o autoplay: tenta de novo no primeiro toque da página
-    var tenta = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
     tenta();
     document.addEventListener("pointerdown", tenta, { once: true, passive: true });
     restarts.push(tenta);
