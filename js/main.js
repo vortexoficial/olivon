@@ -263,6 +263,35 @@
     }
   })();
 
+  /* ---------- Automação: mockup em imagem (opcional) ----------
+     Se `mockupAutomacao` estiver preenchido em js/dados.js, a imagem entra no
+     lugar da conversa animada. Vazio, fica a simulação. */
+  (function mockup() {
+    var caixa = $("mockupAutomacao");
+    var arquivo = String(D.mockupAutomacao || "").trim();
+    if (!caixa) return;
+    if (!arquivo) { caixa.remove(); return; }
+    var img = document.createElement("img");
+    img.src = arquivo;
+    img.alt = D.mockupAutomacaoAlt || "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    caixa.appendChild(img);
+    caixa.hidden = false;
+    caixa.classList.add("reveal", "delay-2");
+    var card = $("chatMock");
+    if (card) card.remove();                      // a conversa animada sai de cena
+    var replay = $("chatReplay");
+    if (replay) replay.remove();                  // e o botão de repetir junto
+    // as etapas do fluxo continuam: com a imagem parada, aparecem todas concluídas
+    var etapasEl = $("etapasConversa");
+    if (etapasEl) {
+      etapasEl.innerHTML = (D.etapasConversa || []).map(function (e) {
+        return '<li class="done">' + e + "</li>";
+      }).join("");
+    }
+  })();
+
   /* ---------- 04 Automação em ação: conversa simulada ---------- */
   var playChat = function () {};
   (function automacao() {

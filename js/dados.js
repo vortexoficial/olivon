@@ -23,6 +23,21 @@ window.OLIVEON = {
   instagram: "https://instagram.com/oliveonperformance",
   email: "contato@oliveonperformance.com.br",
 
+  /* ---------------- MOCKUP DA SEÇÃO AUTOMAÇÃO ----------------
+     Coloque a imagem (PNG com fundo transparente funciona melhor)
+     dentro da pasta assets/ e escreva o caminho aqui.
+     Ex.: mockupAutomacao: "assets/mockup-conversa.png"
+
+     Enquanto ficar vazio (""), a seção continua mostrando a
+     simulação de conversa animada. Assim que você preencher,
+     a imagem entra no lugar dela.
+
+     Tamanho sugerido: 900px de largura ou mais, altura livre. */
+  mockupAutomacao: "",
+
+  /* Texto alternativo da imagem acima (acessibilidade e SEO) */
+  mockupAutomacaoAlt: "Conversa automática da Oliveon atendendo um lead no WhatsApp",
+
   /* ---------------- STATS DO HERO (3 itens) ----------------
      EXEMPLO · troque pelos números reais da agência.
      valor: texto livre (ex.: "+8", "120", "24/7") */

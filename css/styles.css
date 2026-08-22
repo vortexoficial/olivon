@@ -2098,6 +2098,20 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 #chatMock .phone-bar .ic { color: #0b141a; font-size: 1.05rem; }
 
+/* ---------- Automação: mockup em imagem (entra pelo js/dados.js) ---------- */
+.mockup { margin: 0; display: flex; justify-content: center; }
+.mockup[hidden] { display: none; }
+.mockup img {
+  display: block;
+  width: min(440px, 100%);
+  height: auto;
+  border-radius: 22px;
+  filter: drop-shadow(0 28px 60px rgba(0, 0, 0, 0.5));
+}
+/* mockup que já vem com moldura de aparelho costuma ter fundo transparente:
+   nesse caso o arredondamento e a sombra do quadro atrapalham */
+.mockup.solto img { border-radius: 0; }
+
 /* ---------- 03 Portfólio: o resto das fichas fica atrás de um botão ---------- */
 .pf-oculto { display: none !important; }
 .pf-mais { display: flex; justify-content: center; margin-top: 40px; }
