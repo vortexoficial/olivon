@@ -52,23 +52,42 @@ window.OLIVEON = {
   /* ---------------- STATS DO HERO (3 itens) ----------------
      EXEMPLO · troque pelos números reais da agência.
      valor: texto livre (ex.: "+8", "120", "24/7") */
+  /* ---------------- VÍDEO DO TOPO (hero) ----------------
+     Um arquivo por tema: o do tema claro precisa ter fundo claro, senão a borda
+     desfocada não disfarça os cantos. Coloque em assets/ e escreva o caminho.
+     Só o vídeo do tema em uso é baixado. Vazio nos dois = fica o marcador.
+     poster: imagem parada que aparece antes de o vídeo carregar (opcional). */
+  heroVideo: "",
+  heroPoster: "",
+  heroVideoClaro: "",
+  heroPosterClaro: "",
+
   heroStats: [
     { valor: "+8",   label: "anos entregando sistemas de aquisição" },
     { valor: "+120", label: "projetos no ar" },
     { valor: "+40",  label: "automações em produção" }
   ],
 
-  /* ---------------- LOGOS DE CLIENTES (faixa abaixo do hero) ----------------
+  /* ---------------- LOGOS DE CLIENTES (seção "Alguns clientes") ----------------
      Coloque os arquivos em assets/clientes/ (PNG ou SVG com fundo transparente,
      de preferência em branco). Ex.:
        { nome: "Empresa X", logo: "assets/clientes/empresa-x.png", url: "https://..." }
      Enquanto a lista estiver vazia, o site mostra os SEGMENTOS abaixo. */
   clientes: [],
 
-  /* Segmentos atendidos (aparecem na faixa enquanto não há logos) */
+  /* Segmentos atendidos (aparecem na grade enquanto não há logos)
+     icone: nome do ícone Lucide em js/icons.js · entrega: o que foi montado ali */
   segmentos: [
-    "Delivery", "E-commerce", "Clínicas", "Imobiliárias", "Infoprodutos",
-    "Indústria", "Serviços B2B", "Negócios locais", "Lançamentos", "Educação"
+    { nome: "Delivery",        icone: "truck",           entrega: "Cardápio, pedido e painel do dono" },
+    { nome: "E-commerce",      icone: "shopping-cart",   entrega: "Tráfego, checkout e recuperação" },
+    { nome: "Clínicas",        icone: "stethoscope",     entrega: "Agenda cheia e confirmação automática" },
+    { nome: "Imobiliárias",    icone: "building-2",      entrega: "Lead qualificado antes do corretor" },
+    { nome: "Infoprodutos",    icone: "clapperboard",    entrega: "Criativo, página e esteira de venda" },
+    { nome: "Indústria",       icone: "factory",         entrega: "Orçamento e follow-up sem planilha" },
+    { nome: "Serviços B2B",    icone: "briefcase",       entrega: "Prospecção com registro no CRM" },
+    { nome: "Negócios locais", icone: "store",           entrega: "Mapa, anúncio e atendimento no zap" },
+    { nome: "Lançamentos",     icone: "rocket",          entrega: "Captação, aquecimento e carrinho" },
+    { nome: "Educação",        icone: "graduation-cap",  entrega: "Matrícula com jornada acompanhada" }
   ],
 
   /* ---------------- DORES → RESPOSTA (abertura do posicionamento) ----------------

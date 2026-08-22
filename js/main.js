@@ -115,24 +115,67 @@
     };
     if (mq.addEventListener) mq.addEventListener("change", ouve);
     else if (mq.addListener) mq.addListener(ouve);
+
+    // a barra do navegador no celular acompanha o fundo do tema
+    var meta = $("metaTemaCor");
+    if (meta) {
+      var pintaBarra = function () {
+        meta.setAttribute("content", getComputedStyle(docEl).getPropertyValue("--bg").trim() || "#0a0b0d");
+      };
+      pintaBarra();
+      aoTrocarTema.push(pintaBarra);
+    }
   })();
 
   /* ---------- Hero: vídeo ----------
      Quem pediu menos movimento no sistema vê o pôster parado, não o loop. */
   (function heroVideo() {
-    var v = $("heroVideo");
-    if (!v) return;
+    var caixa = $("heroMidia");
+    if (!caixa) return;
+
+    // um arquivo por tema (o do tema claro precisa ter fundo claro). Sem arquivo
+    // nenhum, fica o marcador no lugar, para o espaço não ir vazio ao ar.
+    function fonte() {
+      var claro = docEl.getAttribute("data-tema") === "claro";
+      var arquivo = String((claro ? D.heroVideoClaro : D.heroVideo) || "").trim();
+      var poster = String((claro ? D.heroPosterClaro : D.heroPoster) || "").trim();
+      if (!arquivo) {   // só um dos temas tem vídeo: o mesmo serve para os dois
+        arquivo = String(D.heroVideo || D.heroVideoClaro || "").trim();
+        poster = String(D.heroPoster || D.heroPosterClaro || "").trim();
+      }
+      return { video: arquivo, poster: poster };
+    }
+    if (!fonte().video) {
+      caixa.classList.add("mockup-vazio");
+      caixa.removeAttribute("aria-hidden");
+      caixa.innerHTML =
+        '<span class="ic-wrap" data-icon="play"></span>' +
+        "<b>Vídeo do topo</b>" +
+        "<small>Coloque o arquivo em <code>assets/</code> e escreva o caminho em " +
+        "<code>heroVideo</code> (e <code>heroVideoClaro</code>, para o tema claro), " +
+        "no arquivo <code>js/dados.js</code>.</small>";
+      caixa.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+      return;
+    }
+
+    var v = document.createElement("video");
+    v.id = "heroVideo";
+    v.muted = true;
+    v.loop = true;
+    v.playsInline = true;
+    v.setAttribute("muted", "");
+    v.setAttribute("loop", "");
+    v.setAttribute("playsinline", "");
+    v.setAttribute("preload", "metadata");
+    caixa.appendChild(v);
     var tenta = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
 
-    // um arquivo por tema: o escuro tem fundo preto, o claro tem fundo branco.
-    // A fonte só é definida aqui, então o navegador baixa apenas o do tema em uso.
+    // a fonte só é definida aqui, então o navegador baixa apenas a do tema em uso
     function fonteDoTema() {
-      var claro = docEl.getAttribute("data-tema") === "claro";
-      var arquivo = v.getAttribute(claro ? "data-claro" : "data-escuro");
-      var poster = v.getAttribute(claro ? "data-poster-claro" : "data-poster-escuro");
-      if (!arquivo || v.getAttribute("src") === arquivo) return;
-      if (poster) v.setAttribute("poster", poster);
-      v.setAttribute("src", arquivo);
+      var f = fonte();
+      if (!f.video || v.getAttribute("src") === f.video) return;
+      if (f.poster) v.setAttribute("poster", f.poster);
+      v.setAttribute("src", f.video);
       v.load();
       if (!reduceMotion) tenta();
     }
@@ -182,36 +225,61 @@
     });
   }
 
-  /* ---------- Faixa de confiança: logos de clientes ou segmentos ---------- */
-  (function faixa() {
-    var wrap = $("faixaMarquee");
-    var rotulo = $("faixaRotulo");
-    if (!wrap) return;
+  /* ---------- Alguns clientes: grade de segmentos (ou logos) ----------
+     Enquanto nenhuma marca está liberada, a grade mostra os segmentos atendidos,
+     cada um com ícone e a entrega típica. Quando D.clientes for preenchido, a
+     mesma grade passa a exibir as logos, sem mexer no CSS. */
+  (function paredeClientes() {
+    var caixa = $("parede");
+    var grade = $("paredeGrade");
+    if (!caixa || !grade) return;
     var clientes = D.clientes || [];
-    var itens;
+    var cartoes;
+
     if (clientes.length) {
-      itens = clientes.map(function (c) {
-        var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy" height="34">';
-        return '<span class="faixa-item">' + (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>" : img) + "</span>";
+      caixa.classList.add("com-logo");
+      cartoes = clientes.map(function (c, i) {
+        var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">';
+        return '<article class="seg seg-marca" style="--i:' + i + '">' +
+          (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>" : img) +
+          "</article>";
       });
     } else {
-      // sem logo de cliente ainda: a faixa mostra os segmentos atendidos
-      if (rotulo) rotulo.textContent = "Segmentos atendidos";
       var lead = $("clientesLead");
       if (lead) lead.textContent = "Segmentos em que já colocamos sistemas de aquisição em produção. As marcas entram aqui conforme cada cliente libera o uso.";
-      itens = (D.segmentos || []).map(function (s) { return '<span class="faixa-item">' + esc(s) + "</span>"; });
+      cartoes = (D.segmentos || []).map(function (s, i) {
+        var seg = typeof s === "string" ? { nome: s } : s;   // aceita a lista antiga, só com nomes
+        return '<article class="seg" style="--i:' + i + '">' +
+          '<span class="seg-icone" aria-hidden="true">' + ICON(seg.icone || "circle-dot") + "</span>" +
+          '<span class="seg-corpo"><b>' + esc(seg.nome) + "</b>" +
+          (seg.entrega ? "<small>" + esc(seg.entrega) + "</small>" : "") + "</span>" +
+          "</article>";
+      });
     }
-    if (!itens.length) {
-      var caixa = wrap.closest(".faixa") || wrap.closest("section");
-      if (caixa) caixa.remove();
-      return;
+
+    if (!cartoes.length) { var sec = caixa.closest("section"); if (sec) sec.remove(); return; }
+    grade.innerHTML = cartoes.join("");
+
+    // o traço de cada ícone começa apagado e é desenhado quando a grade entra na tela
+    var partes = grade.querySelectorAll(".seg-icone path, .seg-icone circle, .seg-icone rect, .seg-icone line, .seg-icone polyline, .seg-icone polygon");
+    Array.prototype.forEach.call(partes, function (el) {
+      if (reduceMotion || !el.getTotalLength) return;
+      var len = 0;
+      try { len = el.getTotalLength(); } catch (e) { return; }
+      if (!len) return;
+      el.style.strokeDasharray = len;
+      el.style.strokeDashoffset = len;
+    });
+    onVisible(caixa, function (vis) { if (vis) caixa.classList.add("dentro"); }, 0.15);
+
+    // luz que segue o cursor pela grade, só onde existe cursor de verdade
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      caixa.addEventListener("pointermove", function (e) {
+        var r = caixa.getBoundingClientRect();
+        caixa.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        caixa.style.setProperty("--my", (e.clientY - r.top) + "px");
+      }, { passive: true });
     }
-    var track = document.createElement("div");
-    track.className = "faixa-track";
-    track.style.setProperty("--duration", Math.max(24, itens.length * 4.5) + "s");
-    track.innerHTML = itens.join("") + '<span class="faixa-copia" aria-hidden="true">' + itens.join("") + "</span>";
-    track.querySelector(".faixa-copia").style.display = "contents";
-    wrap.appendChild(track);
   })();
 
   /* ---------- 01 Dores → resposta ---------- */

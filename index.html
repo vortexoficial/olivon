@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark light">
+  <!-- barra do navegador na cor do tema; js/main.js troca ao mudar de tema -->
+  <meta name="theme-color" content="#0a0b0d" id="metaTemaCor">
   <!-- Roda antes da primeira pintura: aplica o tema salvo (ou o preferido do sistema)
        e marca a entrada do hero. Sem isto, a página piscaria no tema errado. -->
   <script>
@@ -84,14 +86,10 @@
           <ul class="hero-stats" id="heroStats" data-hero="stats" aria-label="Números da Oliveon"><!-- js/dados.js → heroStats --></ul>
         </div>
 
-        <!-- Vídeo do sistema, um por tema. A máscara de gradiente do .hero-marquee some com
-             as quatro bordas. O arquivo é escolhido por js/main.js conforme o tema, para o
-             navegador não baixar os dois. -->
-        <div class="hero-marquee hero-video" data-hero="marquee" aria-hidden="true">
-          <video id="heroVideo" autoplay muted loop playsinline preload="metadata"
-                 data-escuro="assets/hero-sistema.mp4" data-claro="assets/hero-claro.mp4"
-                 data-poster-escuro="assets/hero-sistema.jpg" data-poster-claro="assets/hero-claro.jpg"></video>
-        </div>
+        <!-- Vídeo do hero: os caminhos ficam em js/dados.js (um por tema, para o navegador
+             baixar só o do tema em uso). Enquanto estiverem vazios, aparece o marcador.
+             A máscara de gradiente do .hero-marquee some com as quatro bordas. -->
+        <div class="hero-marquee hero-video" id="heroMidia" data-hero="marquee" aria-hidden="true"></div>
       </div>
     </section>
 
@@ -180,7 +178,12 @@
           <p class="section-lead" id="clientesLead">Do delivery ao e-commerce, da clínica à indústria: sistemas de aquisição em produção, cada um com o seu painel.</p>
         </div>
       </div>
-      <div class="faixa-marquee reveal" id="faixaMarquee"><!-- js/dados.js → clientes ou segmentos --></div>
+      <div class="container">
+        <div class="parede reveal" id="parede">
+          <span class="parede-brilho" aria-hidden="true"></span>
+          <div class="parede-grade" id="paredeGrade"><!-- js/dados.js → clientes ou segmentos --></div>
+        </div>
+      </div>
     </section>
 
     <!-- ================= 05 CONTATO (WhatsApp + e-mail) ================= -->

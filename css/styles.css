@@ -76,6 +76,46 @@
   --flutuante-solido: rgba(255, 255, 255, 0.97);
 }
 
+/* ---------- O mesmo tema claro, agora declarado pelo CSS ----------
+   Navegadores com modo escuro próprio (Samsung Internet, e o Chrome com
+   "forçar modo escuro" ligado) repintam por conta as páginas que não declaram
+   suporte a tema no CSS. Foi isso que, no celular, deixou o tema claro com
+   fundo escuro e o vermelho da marca rosado. Declarar o suporte aqui, e não só
+   no JS, faz o navegador respeitar as cores do site.
+   Os valores são os mesmos do bloco [data-tema="claro"] acima: ao mexer em um,
+   mexa nos dois. O :not() garante que a escolha manual do visitante vence. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-tema="escuro"]) {
+    color-scheme: light;
+    --bg: #f4f5f7;
+    --bg-alt: #ffffff;
+    --card: #ffffff;
+    --elevated: #f0f1f4;
+    --border: #e2e4e9;
+    --border-strong: #cbcfd6;
+    --edge: rgba(10, 11, 13, 0.05);
+    --text: #0a0b0d;
+    --text-2: #3f444c;
+    --muted: #5b616b;
+    --steel: #4a505a;
+    --steel-dim: #6f757f;
+    --red-hover: #c9000f;
+    --red-pressed: #ad000d;
+    --red-text: #c9000f;
+    --red-soft: rgba(230, 0, 18, 0.09);
+    --red-glow: rgba(230, 0, 18, 0.25);
+    --ok: #17914f;
+    --grade: rgba(10, 11, 13, 0.05);
+    --hover-suave: rgba(10, 11, 13, 0.05);
+    --veu: rgba(255, 255, 255, 0.8);
+    --flutuante: rgba(244, 245, 247, 0.82);
+    --flutuante-solido: rgba(255, 255, 255, 0.97);
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) { color-scheme: dark; }
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -1708,6 +1748,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .intro-pending [data-hero], .gsap .msg, .gsap .chip { opacity: 1; }
   .intro-pending .hero h1 .w > span { transform: none; }
   .marquee-track, .faixa-track, .border-beam i, .msg.typing i { animation: none; }
+  /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
+  .seg { opacity: 1; animation: none !important; transform: none; }
+  .parede-brilho { display: none; }
   .section-head .eyebrow::after, .numero::after { transform: none; animation: none; }
   .vslide, .depo { transition: none; }
   /* a faixa de foco fica toda nítida */
@@ -1965,6 +2008,14 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   object-fit: cover;
   display: block;
   border-radius: var(--radius);
+}
+/* marcador enquanto não há vídeo: sem a máscara das bordas e sem a altura do vídeo */
+.hero-video.mockup-vazio {
+  height: auto;
+  overflow: visible;
+  perspective: none;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
 .fazemos { position: relative; }
@@ -2350,11 +2401,99 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .pf-mais { display: flex; justify-content: center; margin-top: 40px; }
 .pf-mais[hidden] { display: none; }
 
-/* ---------- 04 Alguns clientes ---------- */
-.clientes .faixa-marquee { margin-top: 44px; }
-.clientes .faixa-item { font-size: 1rem; color: var(--muted); }
-.clientes .faixa-item img { filter: grayscale(1) brightness(1.8); opacity: 0.75; transition: filter var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease); }
-.clientes .faixa-item:hover img { filter: none; opacity: 1; }
+/* ---------- 04 Alguns clientes: parede de segmentos ----------
+   Cada segmento é um cartão com ícone. O traço do ícone é desenhado quando a
+   grade entra na tela, os cartões sobem em cascata e uma luz suave segue o
+   cursor por cima da parede. Quando as logos entrarem em js/dados.js, os
+   mesmos cartões passam a mostrá-las, sem trocar o CSS. */
+.parede { position: relative; margin-top: 46px; }
+.parede-brilho {
+  position: absolute;
+  inset: 0;                 /* sem sangrar para fora: passar disto cria rolagem lateral no celular */
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(340px circle at var(--mx, 50%) var(--my, 50%), var(--red-soft), transparent 70%);
+  transition: opacity 420ms var(--ease);
+}
+.parede:hover .parede-brilho { opacity: 1; }
+.parede-grade {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.seg {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  opacity: 0;
+  transition: background var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+              transform var(--dur-2) var(--ease);
+}
+.parede.dentro .seg { animation: seg-entra 0.62s var(--ease) forwards; animation-delay: calc(var(--i) * 45ms); }
+@keyframes seg-entra { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+/* fio da marca no topo do cartão, aparece sob o cursor */
+.seg::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  top: -1px;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-2) var(--ease);
+}
+.seg:hover { background: var(--elevated); border-color: var(--border-strong); transform: translateY(-3px); }
+.seg:hover::before { transform: scaleX(1); }
+
+.seg-icone {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--steel);
+  transition: color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease);
+}
+.seg-icone .ic { width: 18px; height: 18px; }
+.seg-icone .ic * { transition: stroke-dashoffset 1s var(--ease); }
+.parede.dentro .seg-icone .ic * { stroke-dashoffset: 0 !important; transition-delay: calc(var(--i) * 45ms); }
+.seg:hover .seg-icone { color: var(--red-text); border-color: var(--red); background: var(--red-soft); }
+
+.seg-corpo { display: block; }
+.seg-corpo b {
+  display: block;
+  font-family: var(--display);
+  font-stretch: 112%;
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--text);
+}
+.seg-corpo small { display: block; margin-top: 4px; font-size: 0.76rem; line-height: 1.4; color: var(--muted); }
+
+/* logos de cliente, quando entrarem em js/dados.js */
+.seg-marca { align-items: center; justify-content: center; min-height: 112px; padding: 18px; }
+.seg-marca img {
+  max-width: 100%;
+  max-height: 46px;
+  width: auto;
+  filter: grayscale(1) brightness(1.8);
+  opacity: 0.72;
+  transition: filter var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease);
+}
+.seg-marca:hover img { filter: none; opacity: 1; }
 
 /* ---------- 05 Contato: WhatsApp e e-mail lado a lado ---------- */
 .contato-canais { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
@@ -2397,13 +2536,28 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .fazemos-inner { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .fazemos-texto { position: static; }
   .fazemos-texto .btn { margin-top: 24px; }
-  .clientes .faixa-marquee { margin-top: 32px; }
+  /* parede: dois por linha e cartão deitado, ícone ao lado do texto */
+  .parede { margin-top: 34px; }
+  .parede-grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .seg { flex-direction: row; align-items: center; gap: 12px; padding: 14px; }
+  .seg:hover { transform: none; }
 }
 
 /* ---------- Celular ---------- */
 @media (max-width: 720px) {
   /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
   .fazemos-texto .btn { display: none; }
+
+  /* no celular fica só o nome ao lado do ícone: a entrega deixaria a parede alta demais */
+  .parede { margin-top: 30px; }
+  .parede-grade { gap: 8px; }
+  .seg { gap: 11px; padding: 13px 12px; }
+  .seg-icone { width: 34px; height: 34px; }
+  .seg-icone .ic { width: 17px; height: 17px; }
+  .seg-corpo b { font-size: 0.86rem; line-height: 1.25; }
+  .seg-corpo small { display: none; }
+  .seg-marca { min-height: 88px; padding: 14px; }
+  .seg-marca img { max-height: 36px; }
   .pblur-secao { height: 150px; }
   .scroll-area { height: 400px; padding: 12px 12px 150px; }
   .banner { gap: 10px 14px; padding: 13px 14px; min-height: 0; }
