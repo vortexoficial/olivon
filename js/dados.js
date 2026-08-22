@@ -151,7 +151,14 @@ window.OLIVEON = {
 
   /* ---------------- AUTOMAÇÃO EM AÇÃO: conversa simulada ----------------
      de: "lead" | "bot" | "sistema"   ·   etapa: 0 Atração · 1 Qualificação · 2 Registro · 3 Handoff */
-  etapasConversa: ["Atração", "Qualificação", "Registro", "Handoff"],
+  /* Etapas da esteira, ligadas pelos feixes animados.
+     icone: nome do ícone Lucide em js/icons.js */
+  etapasConversa: [
+    { nome: "Atração",      icone: "megaphone" },
+    { nome: "Qualificação", icone: "funnel" },
+    { nome: "Registro",     icone: "database" },
+    { nome: "Handoff",      icone: "send" }
+  ],
   conversa: [
     { de: "lead",    etapa: 0, texto: "Oi, vi o anúncio. Vocês atendem empresa?" },
     { de: "bot",     etapa: 1, texto: "Atendemos, sim. Para eu te direcionar certo: quantas pessoas usariam?" },

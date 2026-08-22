@@ -405,6 +405,69 @@
     }
   })();
 
+  /* ---------- Esteira da automação: etapas ligadas por feixes ----------
+     Cada etapa é uma placa de vidro com o ícone e o nome. Entre uma e outra corre
+     uma luz, na ideia do feixe animado do MagicUI: a linha é desenhada medindo os
+     próprios nós, então serve tanto na fila de quatro do computador quanto no
+     dois por dois do celular, e é refeita quando a tela muda de tamanho. */
+  var desenhaFeixes = function () {};
+  (function feixes() {
+    var caixa = $("fluxo");
+    var svg = $("fluxoFeixes");
+    if (!caixa || !svg) return;
+
+    desenhaFeixes = function () {
+      var nos = Array.prototype.slice.call(caixa.querySelectorAll(".fluxo-no"));
+      var base = caixa.getBoundingClientRect();
+      if (nos.length < 2 || !base.width) return;
+      svg.setAttribute("viewBox", "0 0 " + Math.round(base.width) + " " + Math.round(base.height));
+      var partes = "";
+      for (var i = 0; i < nos.length - 1; i++) {
+        var a = nos[i].getBoundingClientRect();
+        var b = nos[i + 1].getBoundingClientRect();
+        var ay = a.top + a.height / 2 - base.top;
+        var by = b.top + b.height / 2 - base.top;
+        var d;
+        if (Math.abs(ay - by) < 4) {
+          // mesma linha: reta de uma placa até a outra
+          d = "M" + (a.right - base.left + 6) + " " + ay + " L" + (b.left - base.left - 6) + " " + by;
+        } else if (b.left <= a.left) {
+          // quebra de linha para trás (o dois por dois do celular): sem fio, senão
+          // ele passaria por cima dos rótulos. Cada linha guarda o próprio feixe.
+          continue;
+        } else {
+          // a etapa caiu para a linha de baixo, mais à direita: a curva desce e volta
+          var ax = a.left - base.left + a.width / 2;
+          var bx = b.left - base.left + b.width / 2;
+          var y1 = a.bottom - base.top + 6;
+          var y2 = b.top - base.top - 6;
+          d = "M" + ax + " " + y1 + " C" + ax + " " + (y1 + (y2 - y1) * 0.6) + ", " + bx + " " + (y2 - (y2 - y1) * 0.6) + ", " + bx + " " + y2;
+        }
+        partes += '<path class="feixe-base" d="' + d + '"/>' +
+          '<path class="feixe-luz" pathLength="100" d="' + d + '" style="animation-delay:' + (i * 0.6).toFixed(2) + 's"/>';
+      }
+      svg.innerHTML = partes;
+    };
+
+    var t;
+    window.addEventListener("resize", function () {
+      clearTimeout(t);
+      t = setTimeout(desenhaFeixes, 160);
+    }, { passive: true });
+  })();
+
+  function montaEtapas(el, itens, feitas) {
+    if (!el) return;
+    el.innerHTML = (itens || []).map(function (e) {
+      var etapa = typeof e === "string" ? { nome: e } : e;      // aceita a lista antiga, só com nomes
+      return '<li class="etapa' + (feitas ? " done" : "") + '">' +
+        '<span class="fluxo-no"><span class="ic-wrap" data-icon="' + esc(etapa.icone || "circle-dot") + '"></span></span>' +
+        '<span class="fluxo-rotulo">' + esc(etapa.nome) + "</span></li>";
+    }).join("");
+    el.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+    desenhaFeixes();
+  }
+
   /* ---------- Automação: mockup em imagem ----------
      A seção mostra a imagem informada em `mockupAutomacao` (js/dados.js).
      Sem imagem, fica um marcador no lugar, para o espaço não ir vazio ao ar. */
@@ -429,12 +492,7 @@
       caixa.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
     }
     // as etapas do fluxo continuam, todas concluídas, já que a imagem é parada
-    var etapasEl = $("etapasConversa");
-    if (etapasEl) {
-      etapasEl.innerHTML = (D.etapasConversa || []).map(function (e) {
-        return '<li class="done">' + e + "</li>";
-      }).join("");
-    }
+    montaEtapas($("etapasConversa"), D.etapasConversa, true);
   })();
 
   /* ---------- 04 Automação em ação: conversa simulada ---------- */
@@ -445,7 +503,7 @@
     var conversa = D.conversa || [];
     var etapas = D.etapasConversa || [];
     if (!body || !conversa.length) return;
-    if (etapasEl) etapasEl.innerHTML = etapas.map(function (e) { return "<li>" + e + "</li>"; }).join("");
+    montaEtapas(etapasEl, etapas, false);
     var etapaItens = etapasEl ? Array.prototype.slice.call(etapasEl.children) : [];
 
     // relógio da simulação: começa 23h00 e anda um minuto a cada troca, para dar a sensação de atendimento imediato
