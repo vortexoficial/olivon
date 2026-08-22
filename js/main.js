@@ -233,17 +233,6 @@
         "<div><h3>" + s.titulo + "</h3><p>" + s.texto + "</p></div>" +
         '<span class="banner-tag">' + esc((s.tags && s.tags[0]) || "Oliveon") + "</span></div>";
     }).join("");
-
-    // a dica de rolagem some quando a lista chega ao fim
-    var wrap = lista.closest(".scroll-wrap");
-    if (!wrap) return;
-    function verFim() {
-      var fim = lista.scrollTop + lista.clientHeight >= lista.scrollHeight - 24;
-      wrap.classList.toggle("no-fim", fim);
-    }
-    lista.addEventListener("scroll", verFim, { passive: true });
-    window.addEventListener("resize", verFim);
-    verFim();
   })();
 
   /* ---------- 03 Software sob medida ---------- */
@@ -1183,41 +1172,17 @@
       });
     }
 
-    // faixas de "O que fazemos": entram escalonadas quando a lista aparece
+    // faixas de "O que fazemos": entram escalonadas conforme cruzam a tela
     var faixas = gsap.utils.toArray("#fazLista .banner");
-    var fazWrap = document.querySelector("#fazemos .scroll-wrap");
-    var listaEl = $("fazLista");
-    if (fazWrap && listaEl && faixas.length) {
-      gsap.set(faixas, { opacity: 0, y: 16 });
-      ScrollTrigger.create({
-        trigger: fazWrap,
-        start: "top 82%",
+    if (faixas.length) {
+      gsap.set(faixas, { opacity: 0, y: 18 });
+      ScrollTrigger.batch(faixas, {
+        start: "top 92%",
         once: true,
-        onEnter: function () {
-          gsap.to(faixas, { opacity: 1, y: 0, duration: motionOff ? 0 : 0.5, stagger: motionOff ? 0 : 0.06, ease: "power3.out", overwrite: true });
+        onEnter: function (lote) {
+          gsap.to(lote, { opacity: 1, y: 0, duration: motionOff ? 0 : 0.55, stagger: motionOff ? 0 : 0.07, ease: "power3.out", overwrite: true });
         }
       });
-
-      // a lista corre junto com a página, revelando os itens por baixo do desfoque.
-      // Ao primeiro toque, roda ou tecla do visitante, o automático desliga e o controle é dele.
-      var manual = false;
-      ["wheel", "touchstart", "keydown", "pointerdown"].forEach(function (ev) {
-        listaEl.addEventListener(ev, function () { manual = true; }, { passive: true });
-      });
-      if (window.matchMedia("(min-width: 961px)").matches) {
-        ScrollTrigger.create({
-          trigger: "#fazemos",
-          start: "top 70%",
-          end: "bottom 30%",
-          scrub: 0.6,
-          onUpdate: function (self) {
-            if (manual || motionOff) return;
-            var max = listaEl.scrollHeight - listaEl.clientHeight;
-            // para em 82%: os últimos itens continuam sob o desfoque e o respiro do fim da lista nunca aparece
-            if (max > 0) listaEl.scrollTop = max * 0.82 * Math.min(1, Math.max(0, self.progress));
-          }
-        });
-      }
     }
 
     // o card da conversa flutua devagar enquanto a seção passa

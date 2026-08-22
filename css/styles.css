@@ -1882,38 +1882,32 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
    ============================================================ */
 
 /* ---------- 01 O que fazemos: lista rolavel com desfoque progressivo ---------- */
+.fazemos { position: relative; }
 .fazemos-inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-  gap: 70px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: 64px;
+  align-items: start;
 }
+/* o argumento fica parado enquanto a lista passa ao lado */
+.fazemos-texto { position: sticky; top: 110px; }
 .fazemos-texto .lead { margin-top: 18px; }
 .fazemos-texto .btn { margin-top: 30px; }
-/* dica de rolagem: fica acima do desfoque, some quando a lista chega ao fim */
-.scroll-dica {
-  position: absolute;
-  right: 16px;
-  bottom: 14px;
-  z-index: 2;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--steel-dim);
-  pointer-events: none;
-  transition: opacity var(--dur-2) var(--ease);
+
+/* a lista vive no fluxo da seção: sem altura fixa, sem rolagem própria */
+.faz-lista { display: flex; flex-direction: column; gap: 12px; }
+
+/* O desfoque progressivo deixou de ser a borda de um card e passou a ser uma
+   faixa presa ao rodapé da tela: enquanto a seção passa, os itens atravessam o
+   desfoque e saem nítidos, sem nenhuma barra de rolagem interna. */
+.pblur-secao {
+  position: sticky;
+  inset: auto 0 0 0;
+  z-index: 3;
+  height: 190px;
+  margin-top: -190px;
 }
-.scroll-wrap.no-fim .scroll-dica { opacity: 0; }
-.scroll-dica .ic { transform: rotate(90deg); animation: dica-desce 1.9s var(--ease) infinite; }
-@keyframes dica-desce {
-  0%, 100% { transform: rotate(90deg) translateX(0); }
-  50% { transform: rotate(90deg) translateX(4px); }
-}
+.pblur-secao::after { background: linear-gradient(to bottom, transparent, var(--bg)); }
 /* a frente responsavel vira acento quando o item esta sob o cursor */
 .banner:hover .banner-tag { color: var(--text); border-color: var(--steel); }
 
@@ -2284,12 +2278,16 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 /* ---------- Tablet ---------- */
 @media (max-width: 960px) {
   .fazemos-inner { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+  .fazemos-texto { position: static; }
   .fazemos-texto .btn { margin-top: 24px; }
   .clientes .faixa-marquee { margin-top: 32px; }
 }
 
 /* ---------- Celular ---------- */
 @media (max-width: 720px) {
+  /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
+  .fazemos-texto .btn { display: none; }
+  .pblur-secao { height: 150px; margin-top: -150px; }
   .scroll-area { height: 400px; padding: 12px 12px 150px; }
   .banner { gap: 12px; padding: 13px 14px; min-height: 0; flex-wrap: wrap; }
   .banner-num { width: 22px; }
