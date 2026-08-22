@@ -283,12 +283,29 @@
     var lista = $("fazLista");
     var itens = D.servicos || [];
     if (!lista || !itens.length) return;
-    lista.innerHTML = itens.map(function (s, i) {
+    lista.innerHTML = itens.map(function (s) {
       return '<div class="banner">' +
-        '<span class="banner-num">' + pad(i + 1) + "</span>" +
-        "<div><h3>" + s.titulo + "</h3><p>" + s.texto + "</p></div>" +
-        '<span class="banner-tag">' + esc((s.tags && s.tags[0]) || "Oliveon") + "</span></div>";
+        '<span class="banner-icone" aria-hidden="true">' + ICON(s.icone) + "</span>" +
+        '<div class="banner-corpo"><h3>' + s.titulo + "</h3><p>" + s.texto + "</p></div>" +
+        '<span class="banner-tag">' + esc((s.tags && s.tags[0]) || "Oliveon") + "</span>" +
+        "</div>";
     }).join("");
+
+    // Ícone desenhado com traço: cada linha do SVG começa "apagada" e é desenhada
+    // quando a faixa entra na tela. É o traço do Lucide, então funciona em qualquer ícone.
+    var faixas = Array.prototype.slice.call(lista.querySelectorAll(".banner"));
+    faixas.forEach(function (faixa) {
+      var partes = faixa.querySelectorAll(".banner-icone path, .banner-icone circle, .banner-icone rect, .banner-icone line, .banner-icone polyline, .banner-icone polygon");
+      Array.prototype.forEach.call(partes, function (el) {
+        if (reduceMotion || !el.getTotalLength) return;
+        var len = 0;
+        try { len = el.getTotalLength(); } catch (e) { return; }
+        if (!len) return;
+        el.style.strokeDasharray = len;
+        el.style.strokeDashoffset = len;
+      });
+      onVisible(faixa, function (vis) { if (vis) faixa.classList.add("desenhado"); }, 0.35);
+    });
   })();
 
   /* ---------- 03 Software sob medida ---------- */
@@ -929,16 +946,17 @@
     var railFill = $("railFill");
     var railItens = rail ? Array.prototype.slice.call(rail.querySelectorAll("li")) : [];
     // rótulos montados a partir das próprias seções: a mesma lógica serve para a página
-    // curta (5 blocos) e para a completa, sem lista fixa para manter em dia
+    // curta e para a completa, sem lista fixa para manter em dia. Os mini títulos não
+    // têm mais numeração, então o indicador mostra só o nome da seção.
     var rotulos = {};
-    var comIdx = Array.prototype.slice.call(document.querySelectorAll("main > section[id] .eyebrow .idx"));
-    comIdx.forEach(function (idxEl) {
-      var eyebrow = idxEl.parentNode;
+    Array.prototype.slice.call(document.querySelectorAll("main > section[id] .eyebrow")).forEach(function (eyebrow) {
       var sec = eyebrow.closest("section[id]");
-      if (!sec) return;
-      var num = idxEl.textContent.trim();
-      var nome = eyebrow.textContent.replace(num, "").trim();
-      rotulos[sec.id] = num + " / " + pad(comIdx.length) + " · " + nome;
+      if (!sec || rotulos[sec.id]) return;
+      var idxEl = eyebrow.querySelector(".idx");          // a página completa ainda numera
+      var nome = eyebrow.textContent;
+      if (idxEl) nome = nome.replace(idxEl.textContent, "");
+      nome = nome.trim();
+      if (nome) rotulos[sec.id] = nome;
     });
     var atual = null;
     var secObserver = new IntersectionObserver(function (entries) {

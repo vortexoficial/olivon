@@ -1813,6 +1813,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .hero-badge { font-size: 0.62rem; letter-spacing: 0.1em; }
   .hero-ring { display: none; }
   .hero-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 12px; margin-top: 44px; }
+  /* no celular o traço do primeiro número fica solto na margem: só os divisores internos ficam */
+  .hero-stats li:first-child { border-left: 0; padding-left: 0; }
   .hero-stats b { font-size: 1.4rem; }
   .hero-stats small { font-size: 0.72rem; }
   .grid-servicos { grid-template-columns: 1fr; }
@@ -1828,7 +1830,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .marquee-col { width: 170px; height: 640px; }
   .form { padding: 26px 20px; }
   .form-row { grid-template-columns: minmax(0, 1fr); }
-  .banner { display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 8px 16px; align-items: baseline; padding: 14px 16px; }
+  .banner { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 10px 14px; align-items: start; padding: 14px 16px; }
   .banner > div { min-width: 0; }
   .banner h4 { line-height: 1.25; }
   .banner-tag { grid-column: 2; justify-self: start; margin-left: 0; }
@@ -1925,6 +1927,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 [data-tema="claro"] .logo-escuro { display: none; }
 [data-tema="claro"] .logo-claro { display: block; }
 
+/* tema e menu andam juntos no canto direito, nesta ordem */
+.header-acoes { display: flex; align-items: center; gap: 8px; flex-shrink: 0; margin-left: auto; }
+
 .tema-toggle {
   flex-shrink: 0;
   width: 40px;
@@ -1995,6 +2000,33 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .pblur-secao::after { background: linear-gradient(to bottom, transparent, var(--bg)); }
 /* a frente responsavel vira acento quando o item esta sob o cursor */
 .banner:hover .banner-tag { color: var(--text); border-color: var(--steel); }
+
+/* ---------- Icone da faixa, no lugar do numero ---------- */
+.banner-icone {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--card);
+  color: var(--steel);
+  transition: color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+              background var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.banner-icone .ic { width: 20px; height: 20px; }
+/* o traco do icone e desenhado quando a faixa entra na tela */
+.banner-icone .ic * { transition: stroke-dashoffset 0.9s var(--ease); }
+.banner.desenhado .banner-icone .ic * { stroke-dashoffset: 0 !important; }
+/* sob o cursor o icone acende no vermelho da marca e sobe um fio */
+.banner:hover .banner-icone {
+  color: var(--red-text);
+  border-color: var(--red);
+  background: var(--red-soft);
+  transform: translateY(-2px);
+}
+.banner-corpo { min-width: 0; }
 
 /* ---------- 02 Automacao: card da conversa, no jeito do WhatsApp ----------
    Este e o unico bloco do site que imita uma interface de verdade, porque e
@@ -2374,12 +2406,12 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .fazemos-texto .btn { display: none; }
   .pblur-secao { height: 150px; }
   .scroll-area { height: 400px; padding: 12px 12px 150px; }
-  .banner { gap: 12px; padding: 13px 14px; min-height: 0; flex-wrap: wrap; }
+  .banner { gap: 10px 14px; padding: 13px 14px; min-height: 0; }
   .banner-num { width: 22px; }
   .banner h3 { font-size: 0.95rem; }
   .banner p { font-size: 0.82rem; }
   /* a frente responsavel desce para a linha de baixo em vez de espremer o titulo */
-  .banner-tag { margin-left: 34px; order: 3; width: auto; }
+  .banner-tag { order: 3; width: auto; margin-top: 2px; }
   .scroll-dica { right: 12px; bottom: 12px; }
 
   .phone#chatMock { width: 100%; border-radius: 18px; }

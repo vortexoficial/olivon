@@ -48,9 +48,6 @@
         <img class="logo-claro" src="assets/logo-preto-vermelho.png" alt="" aria-hidden="true" width="180" height="60">
       </a>
       <span class="header-idx" id="headerIdx" aria-hidden="true"></span>
-      <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false" aria-controls="nav">
-        <span></span><span></span>
-      </button>
       <nav class="nav" id="nav" aria-label="Principal">
         <a href="#fazemos">O que fazemos</a>
         <a href="#automacao">Automação</a>
@@ -59,10 +56,16 @@
         <a href="#contato">Contato</a>
         <a href="#" class="btn btn-red btn-sm nav-cta" data-whats>Falar no WhatsApp</a>
       </nav>
-      <button class="tema-toggle" id="temaToggle" type="button" aria-label="Alternar entre tema claro e escuro">
-        <span class="ic-wrap" data-icon="sun"></span>
-        <span class="ic-wrap" data-icon="moon"></span>
-      </button>
+      <!-- tema e menu juntos, no canto direito -->
+      <div class="header-acoes">
+        <button class="tema-toggle" id="temaToggle" type="button" aria-label="Alternar entre tema claro e escuro">
+          <span class="ic-wrap" data-icon="sun"></span>
+          <span class="ic-wrap" data-icon="moon"></span>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Menu" aria-expanded="false" aria-controls="nav">
+          <span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -96,7 +99,7 @@
     <section class="section fazemos" id="fazemos">
       <div class="container fazemos-inner">
         <div class="fazemos-texto">
-          <p class="eyebrow reveal"><span class="idx">01</span>O que fazemos</p>
+          <p class="eyebrow reveal">O que fazemos</p>
           <h2 class="reveal delay-1">Tudo que uma operação de aquisição precisa. Feito aqui dentro.</h2>
           <p class="lead reveal delay-2">Cada frente abaixo é executada pela mesma equipe, no mesmo projeto, com um único responsável pelo resultado.</p>
           <a href="#" class="btn btn-red reveal delay-3" data-whats data-whats-msg="Olá! Vim pelo site da Oliveon e quero saber mais sobre o que vocês fazem.">Quero um diagnóstico gratuito</a>
@@ -111,7 +114,7 @@
     <section class="section section-alt automacao" id="automacao">
       <div class="container automacao-inner">
         <div class="automacao-texto">
-          <p class="eyebrow reveal"><span class="idx">02</span>Automação em ação</p>
+          <p class="eyebrow reveal">Automação em ação</p>
           <h2 class="reveal delay-1">O lead chega às 23h. Às 23h01 ele já foi atendido.</h2>
           <p class="lead reveal delay-2">Simulação de um fluxo que colocamos em produção: o anúncio gera o contato, a automação qualifica, o CRM registra e o comercial recebe o resumo, enquanto a equipe dorme.</p>
           <ol class="etapas reveal delay-3" id="etapasConversa" aria-label="Etapas do fluxo"><!-- js/dados.js → etapasConversa --></ol>
@@ -138,7 +141,7 @@
       <div class="container">
         <div class="section-head section-head-wide reveal">
           <div>
-            <p class="eyebrow"><span class="idx">03</span>Portfólio</p>
+            <p class="eyebrow">Portfólio</p>
             <h2>O que já saiu da nossa bancada.</h2>
           </div>
           <p class="section-lead">Fichas técnicas de projetos entregues, por tipo. O que importa é o que foi construído e o que passou a funcionar.</p>
@@ -154,7 +157,7 @@
       <div class="container">
         <div class="section-head section-head-wide reveal">
           <div>
-            <p class="eyebrow"><span class="idx">04</span>Alguns clientes</p>
+            <p class="eyebrow">Alguns clientes</p>
             <h2>Operações que rodam com a gente.</h2>
           </div>
           <p class="section-lead" id="clientesLead">Do delivery ao e-commerce, da clínica à indústria: sistemas de aquisição em produção, cada um com o seu painel.</p>
@@ -167,7 +170,7 @@
     <section class="section" id="contato">
       <div class="container contato-inner">
         <div class="contato-info">
-          <p class="eyebrow reveal"><span class="idx">05</span>Contato</p>
+          <p class="eyebrow reveal">Contato</p>
           <h2 class="reveal delay-1">Fale com a gente agora.</h2>
           <p class="reveal delay-2">Conte em duas linhas o que você precisa. Devolvemos uma análise inicial da sua operação, por escrito, sem compromisso.</p>
           <p class="contato-garantia reveal delay-2"><i data-icon="timer"></i>Diagnóstico gratuito · Retorno em até 1 dia útil</p>
