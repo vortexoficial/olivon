@@ -1780,6 +1780,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .motion-toggle:hover { color: var(--text); border-color: var(--steel); }
 .motion-off .marquee-track,
 .motion-off .faixa-track,
+.motion-off .barra-num-track,
 .motion-off .border-beam i,
 .motion-off .msg.typing i { animation-play-state: paused; }
 
@@ -1788,7 +1789,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .reveal, .reveal.visible { opacity: 1; animation: none; }
   .intro-pending [data-hero], .gsap .msg, .gsap .chip { opacity: 1; }
   .intro-pending .hero h1 .w > span { transform: none; }
-  .marquee-track, .faixa-track, .border-beam i, .msg.typing i { animation: none; }
+  .marquee-track, .faixa-track, .barra-num-track, .border-beam i, .msg.typing i { animation: none; }
   /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
   .seg { opacity: 1; animation: none !important; transform: none; }
   .parede-brilho { display: none; }
@@ -2057,6 +2058,54 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   perspective: none;
   -webkit-mask-image: none;
   mask-image: none;
+}
+
+/* ---------- Barra de números, entre a primeira e a segunda dobra ----------
+   Os números saíram do hero e viraram esta faixa, que rola sozinha e para sob
+   o cursor. O conteúdo é repetido e duplicado por js/main.js, então o laço não
+   tem emenda; a máscara nas pontas faz o texto entrar e sair desfocado. */
+.barra-num {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-alt);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+.barra-num-track {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  padding: 22px 0;
+  animation: marquee-x var(--duration, 40s) linear infinite;
+}
+.barra-num:hover .barra-num-track { animation-play-state: paused; }
+.barra-num-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+.barra-num-item b {
+  font-family: var(--display);
+  font-stretch: 125%;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+.barra-num-item small { font-size: 0.82rem; color: var(--muted); }
+/* losango da marca separando um número do outro */
+.barra-num-sep {
+  flex-shrink: 0;
+  width: 7px;
+  height: 7px;
+  margin: 0 34px;
+  background: var(--red);
+  transform: rotate(45deg);
 }
 
 .fazemos { position: relative; }
@@ -2588,6 +2637,13 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 @media (max-width: 720px) {
   /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
   .fazemos-texto .btn { display: none; }
+
+  /* barra de números mais baixa no celular */
+  .barra-num-track { padding: 16px 0; }
+  .barra-num-item { gap: 9px; }
+  .barra-num-item b { font-size: 1.35rem; }
+  .barra-num-item small { font-size: 0.74rem; }
+  .barra-num-sep { margin: 0 22px; }
 
   /* as garantias empilham: lado a lado no celular o texto quebraria em três linhas */
   .garantias { grid-template-columns: minmax(0, 1fr); max-width: none; }

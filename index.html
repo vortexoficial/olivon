@@ -83,7 +83,6 @@
             <a href="#" class="btn btn-red" data-whats><span class="ic-wrap" data-icon="whatsapp"></span>Falar no WhatsApp</a>
             <a href="#" class="btn btn-ghost" id="heroEmail"><span class="ic-wrap" data-icon="mail"></span>Enviar e-mail</a>
           </div>
-          <ul class="hero-stats" id="heroStats" data-hero="stats" aria-label="Números da Oliveon"><!-- js/dados.js → heroStats --></ul>
         </div>
 
         <!-- Vídeo do hero: os caminhos ficam em js/dados.js (um por tema, para o navegador
@@ -92,6 +91,12 @@
         <div class="hero-marquee hero-video" id="heroMidia" data-hero="marquee" aria-hidden="true"></div>
       </div>
     </section>
+
+    <!-- Barra de números, entre a primeira e a segunda dobra. Rola sozinha e para
+         sob o cursor; o conteúdo vem de js/dados.js → heroStats. -->
+    <div class="barra-num" aria-label="Números da Oliveon">
+      <div class="barra-num-track" id="barraNumeros"><!-- js/dados.js → heroStats --></div>
+    </div>
 
     <!-- ================= 01 O QUE FAZEMOS (lista rolável com desfoque progressivo) ================= -->
     <section class="section fazemos" id="fazemos">

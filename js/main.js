@@ -191,12 +191,33 @@
 
   /* ---------- Hero: stats de autoridade ---------- */
   (function heroStats() {
-    var ul = $("heroStats");
     var itens = D.heroStats || [];
-    if (!ul || !itens.length) { if (ul) ul.remove(); return; }
-    ul.innerHTML = itens.map(function (s) {
-      return "<li><b>" + s.valor + "</b><small>" + s.label + "</small></li>";
-    }).join("");
+    var ul = $("heroStats");           // página completa: os números ficam dentro do hero
+    if (ul) {
+      if (!itens.length) { ul.remove(); return; }
+      ul.innerHTML = itens.map(function (s) {
+        return "<li><b>" + s.valor + "</b><small>" + s.label + "</small></li>";
+      }).join("");
+      return;
+    }
+
+    // página curta: viram a barra que rola entre a primeira e a segunda dobra.
+    // A lista é repetida até encher a tela e depois duplicada, para o laço não ter emenda.
+    var track = $("barraNumeros");
+    if (!track) return;
+    var barra = track.parentNode;
+    if (!itens.length) { barra.remove(); return; }
+
+    function itemHTML(s) {
+      return '<span class="barra-num-item"><b>' + s.valor + "</b><small>" + s.label + "</small>" +
+        '<i class="barra-num-sep" aria-hidden="true"></i></span>';
+    }
+    var voltas = Math.max(2, Math.ceil(6 / itens.length));
+    var lista = "";
+    for (var i = 0; i < voltas; i++) lista += itens.map(itemHTML).join("");
+    track.innerHTML = lista + '<span class="barra-num-copia" aria-hidden="true">' + lista + "</span>";
+    track.querySelector(".barra-num-copia").style.display = "contents";
+    track.style.setProperty("--duration", Math.max(22, itens.length * voltas * 4) + "s");
   })();
 
   /* ---------- Hero: h1 palavra a palavra (só com GSAP) ---------- */
@@ -1365,8 +1386,11 @@
         // y: 0 explícito, o GSAP lê o translateY(110%) do CSS como px e, sem isso, o px ficaria preso ao fim do tween
         .fromTo(".hero h1 .w > span", { yPercent: 110, y: 0 }, { yPercent: 0, y: 0, duration: 0.9, stagger: 0.06, ease: "power4.out" }, 0.15)
         .fromTo('[data-hero="sub"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.7)
-        .fromTo('[data-hero="actions"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.85)
-        .fromTo('[data-hero="stats"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 1.0);
+        .fromTo('[data-hero="actions"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.85);
+      // os números só estão dentro do hero na página completa; na curta viraram a barra
+      if (document.querySelector('[data-hero="stats"]')) {
+        heroTl.fromTo('[data-hero="stats"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 1.0);
+      }
       if (motionOff) heroTl.progress(1);
     }
 
