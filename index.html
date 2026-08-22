@@ -66,9 +66,11 @@
           <ul class="hero-stats" id="heroStats" data-hero="stats" aria-label="Números da Oliveon"><!-- js/dados.js → heroStats --></ul>
         </div>
 
-        <!-- Carrossel 3D (cards em js/dados.js → heroCards) -->
-        <div class="hero-marquee" data-hero="marquee" aria-hidden="true">
-          <div class="marquee-stage" id="marqueeStage"></div>
+        <!-- Vídeo do sistema. A máscara de gradiente do .hero-marquee some com as quatro bordas. -->
+        <div class="hero-marquee hero-video" data-hero="marquee" aria-hidden="true">
+          <video id="heroVideo" poster="assets/hero-sistema.jpg" autoplay muted loop playsinline preload="metadata">
+            <source src="assets/hero-sistema.mp4" type="video/mp4">
+          </video>
         </div>
       </div>
     </section>

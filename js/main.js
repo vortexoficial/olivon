@@ -90,6 +90,19 @@
   ["footerInstagram", "footerInstagram2"].forEach(function (id) { var a = $(id); if (a && D.instagram) a.href = D.instagram; });
   $("ano").textContent = new Date().getFullYear();
 
+  /* ---------- Hero: vídeo ----------
+     Quem pediu menos movimento no sistema vê o pôster parado, não o loop. */
+  (function heroVideo() {
+    var v = $("heroVideo");
+    if (!v) return;
+    if (reduceMotion) { v.removeAttribute("autoplay"); v.pause(); return; }
+    // navegador que bloqueia o autoplay: tenta de novo no primeiro toque da página
+    var tenta = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+    tenta();
+    document.addEventListener("pointerdown", tenta, { once: true, passive: true });
+    restarts.push(tenta);
+  })();
+
   /* ---------- Hero: stats de autoridade ---------- */
   (function heroStats() {
     var ul = $("heroStats");
