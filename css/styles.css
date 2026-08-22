@@ -473,7 +473,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .hero-badge .slash { background: var(--steel); } /* a 44px da palavra vermelha do h1: orçamento de vermelho */
 .hero h1 { max-width: 640px; }
 /* Palavras do h1 embrulhadas pelo JS para a entrada em sequência (GSAP) */
-.hero h1 .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+/* uma palavra por caixa, para a entrada desfocada acontecer palavra a palavra.
+   Sem overflow: hidden aqui, senão o desfoque e o deslocamento seriam cortados. */
+.hero h1 .w { display: inline-block; vertical-align: top; padding-bottom: 0.14em; margin-bottom: -0.14em; }
 .hero h1 .w > span { display: inline-block; }
 .hero-sub {
   max-width: 52ch;
@@ -481,11 +483,17 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   font-size: 1.2rem;
   color: var(--text-2);
 }
+/* os dois botões ocupam a mesma largura: em grade de colunas iguais, e não em
+   linha, onde cada um ficava do tamanho do próprio texto */
 .hero-actions {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 14px;
   margin-top: 40px;
-  flex-wrap: wrap;
+  /* a largura precisa ser explícita: sem ela o auto-fit calcula pelo conteúdo e
+     insiste em duas colunas mesmo quando a tela do celular não comporta */
+  width: 100%;
+  max-width: 520px;
 }
 /* Stats de autoridade: três leituras de instrumento sob os botões */
 .hero-stats {
@@ -1756,7 +1764,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 /* Entrada do hero: o <head> marca `intro-pending` antes da primeira pintura; a timeline GSAP revela e remove a classe.
    Sem GSAP (CDN lento/falho ou reduced-motion), js/main.js remove a classe em até 1,5s. O carrossel nunca fica oculto (LCP). */
 .intro-pending [data-hero]:not([data-hero="marquee"]) { opacity: 0; }
-.intro-pending .hero h1 .w > span { transform: translateY(110%); }
+.intro-pending .hero h1 .w > span { opacity: 0; filter: blur(10px); transform: translateY(-50px); will-change: filter, opacity, transform; }
 
 /* Pausa manual de animações (botão no hero) */
 .motion-toggle {
@@ -1788,7 +1796,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   html { scroll-behavior: auto; }
   .reveal, .reveal.visible { opacity: 1; animation: none; }
   .intro-pending [data-hero], .gsap .msg, .gsap .chip { opacity: 1; }
-  .intro-pending .hero h1 .w > span { transform: none; }
+  .intro-pending .hero h1 .w > span { opacity: 1; filter: none; transform: none; }
   .marquee-track, .faixa-track, .barra-num-track, .border-beam i, .msg.typing i { animation: none; }
   /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
   .seg { opacity: 1; animation: none !important; transform: none; }

@@ -1382,9 +1382,21 @@
       if (document.querySelector('[data-hero="badge"]')) {
         heroTl.fromTo('[data-hero="badge"]', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, 0);
       }
+      // Entrada do título palavra a palavra: cada uma chega desfocada e de cima,
+      // passa por um meio-caminho ainda leitoso e assenta nítida no lugar.
+      var palavras = document.querySelectorAll(".hero h1 .w > span");
+      if (palavras.length) {
+        gsap.set(palavras, { filter: "blur(10px)", opacity: 0, y: -50 });
+        heroTl.to(palavras, {
+          keyframes: [
+            { filter: "blur(5px)", opacity: 0.5, y: 5, duration: 0.18 },
+            { filter: "blur(0px)", opacity: 1, y: 0, duration: 0.18 }
+          ],
+          ease: "power2.out",
+          stagger: 0.15
+        }, 0.15);
+      }
       heroTl
-        // y: 0 explícito, o GSAP lê o translateY(110%) do CSS como px e, sem isso, o px ficaria preso ao fim do tween
-        .fromTo(".hero h1 .w > span", { yPercent: 110, y: 0 }, { yPercent: 0, y: 0, duration: 0.9, stagger: 0.06, ease: "power4.out" }, 0.15)
         .fromTo('[data-hero="sub"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.7)
         .fromTo('[data-hero="actions"]', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6 }, 0.85);
       // os números só estão dentro do hero na página completa; na curta viraram a barra
