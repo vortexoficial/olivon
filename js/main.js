@@ -90,6 +90,33 @@
   ["footerInstagram", "footerInstagram2"].forEach(function (id) { var a = $(id); if (a && D.instagram) a.href = D.instagram; });
   $("ano").textContent = new Date().getFullYear();
 
+  /* ---------- Troca de tema ----------
+     O tema já foi aplicado pelo script do <head>, antes da primeira pintura.
+     Aqui fica só o botão, a gravação da escolha e o aviso para quem desenha em canvas. */
+  var aoTrocarTema = [];
+  (function tema() {
+    var btn = $("temaToggle");
+    function atual() { return docEl.getAttribute("data-tema") === "claro" ? "claro" : "escuro"; }
+    function aplica(t) {
+      docEl.setAttribute("data-tema", t);
+      try { localStorage.setItem("oliveon-tema", t); } catch (e) {}
+      aoTrocarTema.forEach(function (f) { f(t); });
+    }
+    if (btn) btn.addEventListener("click", function () { aplica(atual() === "claro" ? "escuro" : "claro"); });
+
+    // enquanto o visitante não escolher, o site acompanha a preferência do sistema
+    var mq = window.matchMedia("(prefers-color-scheme: light)");
+    var ouve = function (e) {
+      var salvo;
+      try { salvo = localStorage.getItem("oliveon-tema"); } catch (err) {}
+      if (salvo === "claro" || salvo === "escuro") return;
+      docEl.setAttribute("data-tema", e.matches ? "claro" : "escuro");
+      aoTrocarTema.forEach(function (f) { f(atual()); });
+    };
+    if (mq.addEventListener) mq.addEventListener("change", ouve);
+    else if (mq.addListener) mq.addListener(ouve);
+  })();
+
   /* ---------- Hero: vídeo ----------
      Quem pediu menos movimento no sistema vê o pôster parado, não o loop. */
   (function heroVideo() {
@@ -1076,6 +1103,14 @@
         }
       }
     }
+    // a cor dos pontos vem do tema: prata no escuro, chumbo no claro
+    var corPontos = "201,204,210";
+    function lerCor() {
+      corPontos = docEl.getAttribute("data-tema") === "claro" ? "74,80,90" : "201,204,210";
+    }
+    lerCor();
+    aoTrocarTema.push(function () { lerCor(); draw(); });
+
     function draw() {
       if (!state) return; // build() roda depois de document.fonts.ready
       var ctx = state.ctx;
@@ -1084,7 +1119,7 @@
         var d = dots[i];
         if (!reduceMotion && Math.random() < 0.03) d.a = 0.08 + Math.random() * 0.75;
         d.a += (0.3 - d.a) * 0.01;
-        ctx.fillStyle = "rgba(201,204,210," + d.a.toFixed(3) + ")";
+        ctx.fillStyle = "rgba(" + corPontos + "," + d.a.toFixed(3) + ")";
         ctx.fillRect(d.x, d.y, d.s, d.s);
       }
     }

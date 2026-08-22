@@ -38,6 +38,42 @@
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
   --dur-1: 180ms;
   --dur-2: 320ms;
+  --grade: rgba(255, 255, 255, 0.025);     /* linhas da grade de fundo */
+  --hover-suave: rgba(255, 255, 255, 0.05); /* realce de item de menu */
+  --veu: rgba(18, 19, 22, 0.78);            /* véu do desfoque progressivo */
+  --flutuante: rgba(10, 11, 13, 0.78);      /* cabeçalho e menu por cima do conteúdo */
+  --flutuante-solido: rgba(13, 14, 17, 0.97);
+}
+
+/* ---------- Tema claro ----------
+   Mesma estrutura, mesmos nomes de variável: só o valor muda. O tema é escolhido
+   no <html data-tema="...">, gravado em js/main.js e aplicado antes da primeira
+   pintura por um script no <head>, para nunca piscar o tema errado. */
+[data-tema="claro"] {
+  color-scheme: light;
+  --bg: #f4f5f7;
+  --bg-alt: #ffffff;
+  --card: #ffffff;
+  --elevated: #f0f1f4;
+  --border: #e2e4e9;
+  --border-strong: #cbcfd6;
+  --edge: rgba(10, 11, 13, 0.05);
+  --text: #0a0b0d;
+  --text-2: #3f444c;
+  --muted: #5b616b;
+  --steel: #4a505a;
+  --steel-dim: #6f757f;
+  --red-hover: #c9000f;
+  --red-pressed: #ad000d;
+  --red-text: #c9000f;                     /* vermelho legível sobre fundo claro */
+  --red-soft: rgba(230, 0, 18, 0.09);
+  --red-glow: rgba(230, 0, 18, 0.25);
+  --ok: #17914f;
+  --grade: rgba(10, 11, 13, 0.05);
+  --hover-suave: rgba(10, 11, 13, 0.05);
+  --veu: rgba(255, 255, 255, 0.8);
+  --flutuante: rgba(244, 245, 247, 0.82);
+  --flutuante-solido: rgba(255, 255, 255, 0.97);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -226,7 +262,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   transition: background var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
 .header.scrolled {
-  background: rgba(10, 11, 13, 0.78);
+  background: var(--flutuante);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-color: var(--border);
@@ -350,8 +386,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(var(--grade) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grade) 1px, transparent 1px);
   background-size: 56px 56px;
   mask-image: linear-gradient(to bottom, #000 55%, transparent);
   -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
@@ -1013,7 +1049,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .pblur i:nth-child(4) { -webkit-backdrop-filter: blur(8px);  backdrop-filter: blur(8px);  -webkit-mask-image: linear-gradient(to bottom, transparent 50%, #000 66%, #000 83%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 50%, #000 66%, #000 83%, transparent 100%); }
 .pblur i:nth-child(5) { -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); -webkit-mask-image: linear-gradient(to bottom, transparent 66%, #000 83%, #000 100%); mask-image: linear-gradient(to bottom, transparent 66%, #000 83%, #000 100%); }
 .pblur i:nth-child(6) { -webkit-backdrop-filter: blur(32px); backdrop-filter: blur(32px); -webkit-mask-image: linear-gradient(to bottom, transparent 83%, #000 100%); mask-image: linear-gradient(to bottom, transparent 83%, #000 100%); }
-.pblur::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, rgba(18, 19, 22, 0.78)); }
+.pblur::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, var(--veu)); }
 
 /* ---------- 07 Portfólio: fichas técnicas com capa desenhada em CSS ---------- */
 .filtros { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
@@ -1153,7 +1189,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .vmeta { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 12px; padding: 0 2px; }
 .vmeta b { font-family: var(--display); font-stretch: 112%; font-weight: 600; font-size: 0.95rem; }
 .vmeta span { font-family: var(--mono); font-stretch: 87.5%; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel-dim); white-space: nowrap; }
-.vcar-btn { position: absolute; top: 45%; z-index: 3; background: rgba(10, 11, 13, 0.7); }
+.vcar-btn { position: absolute; top: 45%; z-index: 3; background: var(--flutuante); }
 .vcar-btn.prev { left: max(24px, calc((100% - var(--container)) / 2 + 24px)); }
 .vcar-btn.next { right: max(24px, calc((100% - var(--container)) / 2 + 24px)); }
 .vcar-dots { display: flex; justify-content: center; gap: 8px; margin-top: 22px; }
@@ -1711,7 +1747,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
     flex-direction: column;
     align-items: stretch;
     gap: 4px;
-    background: rgba(13, 14, 17, 0.97);
+    background: var(--flutuante-solido);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border);
@@ -1725,7 +1761,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   }
   .nav.open { opacity: 1; visibility: visible; transform: none; pointer-events: auto; transition-delay: 0s; }
   .nav a:not(.nav-cta) { padding: 12px 14px; border-radius: var(--radius-sm); font-size: 1rem; }
-  .nav a:not(.nav-cta):hover { background: rgba(255, 255, 255, 0.05); }
+  .nav a:not(.nav-cta):hover { background: var(--hover-suave); }
   .nav a.nav-cta { margin-top: 8px; }
 }
 
@@ -1882,6 +1918,44 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
    ============================================================ */
 
 /* ---------- 01 O que fazemos: lista rolavel com desfoque progressivo ---------- */
+/* ---------- Troca de tema ----------
+   A logo branca serve o tema escuro; a preta com o vermelho serve o claro. As duas
+   ficam no HTML e o CSS mostra a certa, entao a troca e instantanea e sem piscada. */
+.logo-claro { display: none; }
+[data-tema="claro"] .logo-escuro { display: none; }
+[data-tema="claro"] .logo-claro { display: block; }
+
+.tema-toggle {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  cursor: pointer;
+  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+.tema-toggle:hover { color: var(--text); border-color: var(--steel); background: var(--hover-suave); }
+.tema-toggle:focus-visible { outline: 2px solid var(--steel); outline-offset: 2px; }
+.tema-toggle .ic { font-size: 1.05rem; }
+/* mostra o icone do tema para onde o clique leva */
+.tema-toggle .ic-wrap { display: none; line-height: 0; }
+[data-tema="escuro"] .tema-toggle .ic-wrap[data-icon="sun"] { display: inline-flex; }
+[data-tema="claro"] .tema-toggle .ic-wrap[data-icon="moon"] { display: inline-flex; }
+
+/* No tema claro o video do hero e uma peca escura: a mascara que o dissolvia no
+   preto passaria a cortar um bloco no branco, entao ele ganha borda e sombra. */
+[data-tema="claro"] .hero-video {
+  -webkit-mask-image: none;
+  mask-image: none;
+  border-radius: var(--radius);
+  box-shadow: 0 24px 60px rgba(10, 11, 13, 0.18);
+}
+
 /* ---------- Hero: vídeo no lugar do carrossel 3D ----------
    Fica dentro do .hero-marquee, que já apaga as quatro bordas com máscara de
    gradiente; o object-fit cobre a área sem deformar o quadro vertical. */
