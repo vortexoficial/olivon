@@ -978,12 +978,19 @@
     var VEL = 0.2;        // cartões por segundo
     var foco = -1;
     var raf = null, ultimo = 0, visivel = false, sobre = false, arrastando = false;
+    var s0larg = 0, borda = 0;
 
     function mede() {
       var s = slides[0];
       var gap = parseFloat(getComputedStyle(track).getPropertyValue("--gap")) || 24;
-      passo = s.offsetWidth + gap;
+      s0larg = s.offsetWidth;
+      passo = s0larg + gap;
+      borda = (vpLargura() || s0larg) / 2;
       track.style.height = s.offsetHeight + "px";
+    }
+    function vpLargura() {
+      var v = $("pcarViewport");
+      return v ? v.clientWidth : 0;
     }
 
     // distância mais curta de i até a posição atual, indo pelos dois lados da volta
@@ -1001,7 +1008,9 @@
         var giro = Math.max(-2, Math.min(2, d)) * -16;
         var recuo = Math.min(ad, 2) * 130;
         var escala = 1 - Math.min(ad, 2) * 0.07;
-        var op = ad > 2.6 ? 0 : (ad > 1.7 ? (2.6 - ad) / 0.9 : 1);
+        // some por distância; as laterais da área ainda dissolvem por máscara,
+        // então o cartão nunca aparece com a borda cortada ao entrar ou sair
+        var op = ad > 2.4 ? 0 : (ad > 1.2 ? (2.4 - ad) / 1.2 : 1);
         var s = slides[i];
         s.style.transform = "translate3d(" + (d * passo).toFixed(1) + "px, 0, " + (-recuo).toFixed(1) + "px) rotateY(" + giro.toFixed(2) + "deg) scale(" + escala.toFixed(3) + ")";
         s.style.opacity = op.toFixed(2);
@@ -1056,8 +1065,6 @@
       tm = setTimeout(function () { mede(); desenha(); }, 160);
     }, { passive: true });
 
-    if ($("pcarPrev")) $("pcarPrev").addEventListener("click", function () { alvo -= 1; });
-    if ($("pcarNext")) $("pcarNext").addEventListener("click", function () { alvo += 1; });
     if (dots) dots.addEventListener("click", function (e) {
       var b = e.target.closest(".pcar-dot");
       if (b) vaiPara(+b.getAttribute("data-i"));
