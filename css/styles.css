@@ -2971,13 +2971,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
    à altura, o texto mais estreito deixava o card mais alto e a figura crescia junto */
 /* o bloco da nota desce para o pé do card, sobre um véu que garante a leitura
    sem apagar a arte */
-.palco-texto {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 18px 22px 22px;
-}
-.palco-texto h2 { font-size: clamp(1.15rem, 2.1vw, 1.5rem); line-height: 1.18; margin-top: 10px; }
 .google-nota { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
 .google-nota b {
   font-family: var(--display);
@@ -3035,7 +3028,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
        antes de sumir atrás do card, em vez de ser cortado numa aresta seca */
     box-shadow: 0 0 80px 18px var(--veu), 0 28px 64px -20px var(--vidro-sombra);
   }
-  .palco-texto { padding: 20px 24px 24px; }
 }
 
 /* ---------- 05 Contato: WhatsApp e e-mail lado a lado ---------- */
@@ -3097,7 +3089,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
      ficava mais baixo que a foto e cortava a cabeça */
 
 
-  .palco-texto { padding: 16px 18px 20px; }
 
   /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
   .fazemos-texto .btn { display: none; }
