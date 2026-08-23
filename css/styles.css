@@ -3024,12 +3024,12 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   min-height: 100%;
   padding: 32px 26px 32px 44%;
 }
-.palco-texto h2 { font-size: clamp(1.3rem, 2.6vw, 1.9rem); line-height: 1.18; margin-top: 12px; }
+.palco-texto h2 { font-size: clamp(1.15rem, 2.1vw, 1.5rem); line-height: 1.18; margin-top: 10px; }
 .google-nota { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
 .google-nota b {
   font-family: var(--display);
   font-stretch: 125%;
-  font-size: clamp(2.4rem, 5vw, 3.2rem);
+  font-size: clamp(2.1rem, 4vw, 2.7rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
@@ -3080,15 +3080,15 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .palco-frente { width: 100%; pointer-events: none; }
   .palco-card {
     pointer-events: auto;
-    width: min(560px, 46vw);
+    width: min(440px, 36vw);
     aspect-ratio: 824 / 1086;
-    min-height: 560px;
+    min-height: 470px;
     /* sombra aberta para os dois lados: é ela que faz o cartão entrar no escuro
        antes de sumir atrás do card, em vez de ser cortado numa aresta seca */
     box-shadow: 0 0 80px 18px var(--veu), 0 28px 64px -20px var(--vidro-sombra);
   }
   .palco-figura img { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
-  .palco-texto { padding: 40px 32px 40px 42%; }
+  .palco-texto { padding: 32px 26px 32px 42%; }
 }
 
 /* ---------- 05 Contato: WhatsApp e e-mail lado a lado ---------- */
