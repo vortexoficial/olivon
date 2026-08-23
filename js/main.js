@@ -124,6 +124,27 @@
     var caixa = $("heroMidia");
     if (!caixa) return;
 
+    // A arte manda: havendo imagem, ela substitui o vídeo e a caixa troca de papel
+    var IM = D.heroImagem || {};
+    function arteDoTema() {
+      var claro = docEl.getAttribute("data-tema") === "claro";
+      return String((claro ? IM.claro : IM.escuro) || IM.escuro || IM.claro || "").trim();
+    }
+    if (arteDoTema()) {
+      caixa.className = "hero-arte";
+      var arte = document.createElement("img");
+      arte.alt = "";
+      arte.decoding = "async";
+      caixa.appendChild(arte);
+      var trocaArte = function () {
+        var a = arteDoTema();
+        if (a && arte.getAttribute("src") !== a) arte.setAttribute("src", a);
+      };
+      trocaArte();
+      aoTrocarTema.push(trocaArte);
+      return;
+    }
+
     // um arquivo por tema (o do tema claro precisa ter fundo claro). Sem arquivo
     // nenhum, fica o marcador no lugar, para o espaço não ir vazio ao ar.
     function fonte() {

@@ -2210,6 +2210,35 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   display: block;
   border-radius: var(--radius);
 }
+/* ---------- Arte do hero ----------
+   Colada no topo da seção (passa por baixo do cabeçalho, que é translúcido) e
+   preenchendo a direita inteira até a borda da tela. As cordas da imagem saem
+   pelo topo, então nada de máscara ali; à esquerda e embaixo ela dissolve no
+   fundo, para não sobrar um retângulo com o branco (ou o preto) da arte. */
+.hero-arte {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(50%, 760px);
+  z-index: 0;
+  pointer-events: none;
+  /* a faixa de cima entra mais apagada: é onde passa o menu, e as cordas atrás
+     dos links tiravam a leitura deles */
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 26%), linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.3) 24px, #000 100px, #000 74%, transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 26%), linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.3) 24px, #000 100px, #000 74%, transparent);
+  mask-composite: intersect;
+}
+.hero-arte img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;   /* as cordas ficam presas no topo */
+}
+/* o texto do hero passa por cima da arte */
+.hero-inner { z-index: 1; }
+
 /* marcador enquanto não há vídeo: sem a máscara das bordas e sem a altura do vídeo */
 .hero-video.mockup-vazio {
   height: auto;
@@ -2898,6 +2927,22 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .selo-texto span { font-size: 0.54rem; }
   .selo-centro { width: 32px; height: 32px; }
   .selo-centro .ic { width: 16px; height: 16px; }
+  /* a arte do hero sai do canto e entra no fluxo, DEPOIS do texto: no topo ela
+     empurrava o título para fora da primeira tela. Altura limitada, para o hero
+     não virar uma tela só de imagem. */
+  .hero { display: flex; flex-direction: column; }
+  .hero-inner { order: 1; }
+  .hero-arte {
+    order: 2;
+    position: static;
+    width: auto;
+    height: min(42vh, 320px);
+    margin: 30px -20px 0;
+    -webkit-mask-image: linear-gradient(to bottom, #000 74%, transparent);
+    mask-image: linear-gradient(to bottom, #000 74%, transparent);
+  }
+  .hero-arte img { object-position: 50% 44%; }
+
   /* a imagem abre a seção, colada no topo e nas laterais */
   .automacao { padding-top: 0; }
   .abre-secao { display: block; width: 100%; margin-bottom: 40px; }

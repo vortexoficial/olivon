@@ -52,6 +52,17 @@ window.OLIVEON = {
   /* ---------------- STATS DO HERO (3 itens) ----------------
      EXEMPLO · troque pelos números reais da agência.
      valor: texto livre (ex.: "+8", "120", "24/7") */
+  /* ---------------- ARTE DO TOPO (hero) ----------------
+     Uma imagem por tema (a do tema claro precisa ter fundo claro). No computador
+     ela fica colada no topo e preenche a direita inteira; no celular entra
+     abaixo do texto. Preenchendo só uma, ela serve para os dois temas.
+     Se estiver vazia, o site cai para o vídeo abaixo. */
+  heroImagem: {
+    escuro: "assets/hero-megafone-escuro.webp",
+    claro: "assets/hero-megafone-claro.webp",
+    alt: "Megafone cravejado, pendurado por cordas"
+  },
+
   /* ---------------- VÍDEO DO TOPO (hero) ----------------
      Um arquivo por tema: o do tema claro precisa ter fundo claro, senão a borda
      desfocada não disfarça os cantos. Coloque em assets/ e escreva o caminho.

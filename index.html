@@ -79,6 +79,10 @@
 
     <!-- ================= HERO ================= -->
     <section class="hero" id="hero">
+      <!-- Arte do hero: um arquivo por tema, caminhos em js/dados.js (heroImagem ou
+           heroVideo). No computador ela fica colada no topo, preenchendo a direita
+           inteira; no celular entra abaixo do texto. Vazio = fica o marcador. -->
+      <div class="hero-marquee hero-video" id="heroMidia" data-hero="marquee" aria-hidden="true"></div>
       <div class="container hero-inner">
         <div class="hero-texto">
           <h1 id="heroTitle" data-hero="title">Performance que transforma investimento em <span class="red">crescimento</span>.</h1>
@@ -89,10 +93,6 @@
           </div>
         </div>
 
-        <!-- Vídeo do hero: os caminhos ficam em js/dados.js (um por tema, para o navegador
-             baixar só o do tema em uso). Enquanto estiverem vazios, aparece o marcador.
-             A máscara de gradiente do .hero-marquee some com as quatro bordas. -->
-        <div class="hero-marquee hero-video" id="heroMidia" data-hero="marquee" aria-hidden="true"></div>
       </div>
     </section>
 
