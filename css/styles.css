@@ -2945,7 +2945,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
    opaco. É o card que engole os cartões de um lado e devolve do outro; eles
    nunca passam por baixo de fato. As pontas somem por máscara, e sob o cursor
    a faixa para, para dar tempo de ler. */
-.secao-google { position: relative; overflow: hidden; background: var(--bg-alt); }
+/* o fundo é o da página, não o alternativo: no tema claro os dois eram branco e
+   o cartão só existia por causa da borda */
+.secao-google { position: relative; overflow: hidden; background: var(--bg); }
 .palco { position: relative; }
 .palco-faixas { display: grid; gap: 14px; overflow: hidden; }
 .palco-frente { position: relative; z-index: 2; }
@@ -2967,12 +2969,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   flex: 0 0 clamp(260px, 26vw, 316px);
   margin: 0;
   padding: 20px;
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  transition: border-color var(--dur-2) var(--ease);
 }
-.avaliacao:hover { border-color: var(--border-strong); }
 .avaliacao blockquote { margin: 12px 0 0; font-size: 0.88rem; line-height: 1.55; color: var(--text-2); }
 .avaliacao figcaption { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
 .avaliacao-ini {
@@ -3068,12 +3067,17 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
    Depois das regras base de propósito: mesma especificidade, vence quem vem por
    último. As faixas viram a camada de baixo e o card sobe por cima. */
 @media (min-width: 961px) {
-  .palco { display: grid; }
+  /* a coluna precisa ser 1fr: em auto ela encolhe até o tamanho do card e o
+     conjunto inteiro acaba centralizado, em vez de o card ficar à esquerda */
+  .palco { display: grid; grid-template-columns: minmax(0, 1fr); }
   .palco > * { grid-area: 1 / 1; align-self: center; }
   .palco-faixas { z-index: 1; align-content: center; }
   /* o invólucro ocuparia a largura toda e roubaria o cursor das faixas, que
      precisam dele para pausar: só o card recebe eventos */
-  .palco-frente { pointer-events: none; }
+  /* o container tem margin auto: dentro da grade isso o encolhe até o conteúdo
+     em vez de esticar. Com largura cheia ele volta a se comportar como container,
+     e o card fica encostado na margem esquerda do texto da página. */
+  .palco-frente { width: 100%; pointer-events: none; }
   .palco-card {
     pointer-events: auto;
     width: min(560px, 46vw);
