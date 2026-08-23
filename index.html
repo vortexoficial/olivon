@@ -226,10 +226,16 @@
     <!-- Resumo da nota à esquerda e os comentários ao lado; tudo de js/dados.js:
          google (nota, total e link) e depoimentos (os comentários). -->
     <section class="section secao-google" id="avaliacoes">
-      <div class="container">
-        <div class="google-inner">
-          <aside class="google-resumo reveal" id="googleResumo"><!-- js/dados.js → google --></aside>
-          <div class="google-lista" id="googleLista"><!-- js/dados.js → depoimentos --></div>
+      <!-- Palco no formato do site do Benedito: duas faixas de comentários correndo
+           em sentidos opostos por trás, e o card da nota por cima, opaco. É ele que
+           engole os cartões de um lado e devolve do outro. -->
+      <div class="palco">
+        <div class="palco-faixas" aria-hidden="true">
+          <div class="faixa faixa-vai"><div class="faixa-trilho" id="faixaVai"></div></div>
+          <div class="faixa faixa-volta"><div class="faixa-trilho" id="faixaVolta"></div></div>
+        </div>
+        <div class="container palco-frente">
+          <div class="palco-card reveal" id="googleCard"><!-- js/dados.js → google --></div>
         </div>
       </div>
     </section>

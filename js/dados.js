@@ -347,6 +347,10 @@ window.OLIVEON = {
      Os comentários em si saem de `depoimentos`, logo acima. */
   google: {
     titulo: "O que dizem quem já contratou.",
+    /* Foto do card, em retrato e com a figura à esquerda: o texto mora na faixa
+       livre à direita. Hoje está a foto do outro projeto, só para segurar o lugar. */
+    foto: "assets/depoimento-desktop.webp",
+    fotoMobile: "assets/depoimento-mobile.webp",
     nota: "5,0",
     total: "38 avaliações",
     link: ""

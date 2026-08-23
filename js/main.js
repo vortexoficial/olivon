@@ -400,15 +400,19 @@
   })();
 
   /* ---------- Avaliações do Google ----------
-     O resumo (nota, estrelas e total) fica ao lado dos comentários. As estrelas
-     acendem uma a uma quando a seção entra na tela, e os cartões sobem em cascata. */
+     Duas faixas de comentários correm em sentidos opostos por trás, e o card da
+     nota fica por cima, opaco: é ele que engole os cartões de um lado e devolve
+     do outro. Os cartões são repetidos até passar de duas telas, senão o laço
+     abriria buraco em tela larga. Sob o cursor, a faixa para. */
   (function avaliacoes() {
-    var resumo = $("googleResumo");
-    var lista = $("googleLista");
-    if (!resumo || !lista) return;
+    var card = $("googleCard");
+    var vai = $("faixaVai");
+    var volta = $("faixaVolta");
+    if (!card || !vai || !volta) return;
     var G = D.google || {};
     var itens = D.depoimentos || [];
-    if (!itens.length) { var sec = lista.closest("section"); if (sec) sec.remove(); return; }
+    var secao = card.closest("section");
+    if (!itens.length) { if (secao) secao.remove(); return; }
 
     var marcaG =
       '<svg class="google-g" viewBox="0 0 24 24" aria-hidden="true">' +
@@ -424,27 +428,47 @@
       return '<span class="estrelas ' + classe + '" aria-hidden="true">' + s + "</span>";
     }
 
-    resumo.innerHTML =
-      '<p class="eyebrow">Avaliações</p>' +
-      "<h2>" + esc(G.titulo || "O que dizem quem já contratou.") + "</h2>" +
-      '<div class="google-nota"><b>' + esc(G.nota || "5,0") + "</b>" + marcaG + "</div>" +
-      estrelas("grandes") +
-      '<p class="google-total">' + esc(G.total || "") + " no Google</p>" +
-      (G.link ? '<a class="google-link" href="' + esc(G.link) + '" target="_blank" rel="noopener">Ver no Google' + ICON("arrow-up-right") + "</a>" : "");
+    /* o card: a foto cobre o fundo e o texto mora na faixa que ela deixa livre */
+    var foto = String(G.foto || "").trim();
+    var fotoMob = String(G.fotoMobile || foto).trim();
+    card.innerHTML =
+      (foto
+        ? '<picture class="palco-figura" aria-hidden="true">' +
+          '<source media="(min-width: 961px)" srcset="' + esc(foto) + '">' +
+          '<img src="' + esc(fotoMob) + '" alt="" loading="lazy" decoding="async">' +
+          "</picture>"
+        : "") +
+      '<div class="palco-texto">' +
+        '<p class="eyebrow">Avaliações</p>' +
+        "<h2>" + esc(G.titulo || "O que dizem quem já contratou.") + "</h2>" +
+        '<div class="google-nota"><b>' + esc(G.nota || "5,0") + "</b>" + marcaG + "</div>" +
+        estrelas("grandes") +
+        '<p class="google-total">' + esc(G.total || "") + " no Google</p>" +
+        (G.link ? '<a class="google-link" href="' + esc(G.link) + '" target="_blank" rel="noopener">Ver no Google' + ICON("arrow-up-right") + "</a>" : "") +
+      "</div>";
 
-    lista.innerHTML = itens.map(function (d, i) {
+    /* os cartões das faixas */
+    function cartao(d) {
       var iniciais = String(d.nome || "").trim().split(/\s+/).slice(0, 2).map(function (p) { return p.charAt(0); }).join("").toUpperCase();
-      return '<figure class="avaliacao reveal" style="--i:' + i + '">' +
+      return '<figure class="avaliacao">' +
         estrelas("") +
         "<blockquote>" + esc(d.texto) + "</blockquote>" +
-        '<figcaption><span class="avaliacao-ini" aria-hidden="true">' + esc(iniciais) + "</span>" +
+        '<figcaption><span class="avaliacao-ini">' + esc(iniciais) + "</span>" +
         "<span><b>" + esc(d.nome) + "</b><small>" + esc(d.cargo || "") + "</small></span></figcaption>" +
         "</figure>";
-    }).join("");
-    lista.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+    }
 
-    var secao = lista.closest("section");
-    onVisible(secao, function (vis) { if (vis) secao.classList.add("dentro"); }, 0.1);
+    // metade em cada faixa, para as duas não mostrarem a mesma sequência
+    var meio = Math.ceil(itens.length / 2);
+    [[vai, itens.slice(0, meio).concat(itens.slice(meio))], [volta, itens.slice(meio).concat(itens.slice(0, meio))]].forEach(function (par) {
+      var uma = par[1].map(cartao).join("");
+      // repete até passar de duas telas: aí a volta cabe em metade do trilho
+      var voltas = Math.max(2, Math.ceil((window.innerWidth * 2) / Math.max(1, par[1].length * 330)));
+      var conteudo = new Array(voltas + 1).join(uma);
+      par[0].innerHTML = conteudo + conteudo;   // as duas metades iguais fecham o laço
+    });
+
+    onVisible(secao, function (vis) { secao.classList.toggle("correndo", vis); if (vis) secao.classList.add("dentro"); }, 0.05);
   })();
 
   /* ---------- 01 Dores → resposta ---------- */

@@ -2938,37 +2938,119 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .marca:hover { border-color: var(--border-strong); background: var(--elevated); }
 .marca:hover img { filter: none; opacity: 1; }
 
-/* ---------- Avaliações do Google ----------
-   Resumo fixo à esquerda, comentários ao lado. As estrelas acendem uma a uma
-   e os cartões sobem em cascata quando a seção entra. O dourado é o do Google:
-   é o único lugar do site onde outra cor entra, e entra para dar autenticidade. */
-.secao-google { background: var(--bg-alt); }
-.google-inner { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 48px; align-items: start; }
-.google-resumo { position: sticky; top: 100px; }
-.google-resumo h2 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.2; margin-top: 10px; }
-.google-nota { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+/* ---------- Avaliações do Google: palco com card na frente ----------
+   Estrutura vinda do site do Benedito (que por sua vez veio da Delegada
+   Raquel), aqui na nossa paleta: duas faixas de comentários correm em sentidos
+   opostos no fundo, sangrando de ponta a ponta, e o card da nota fica por cima,
+   opaco. É o card que engole os cartões de um lado e devolve do outro; eles
+   nunca passam por baixo de fato. As pontas somem por máscara, e sob o cursor
+   a faixa para, para dar tempo de ler. */
+.secao-google { position: relative; overflow: hidden; background: var(--bg-alt); }
+.palco { position: relative; }
+.palco-faixas { display: grid; gap: 14px; overflow: hidden; }
+.palco-frente { position: relative; z-index: 2; }
+
+.faixa {
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.faixa-trilho { display: flex; width: max-content; gap: 14px; will-change: transform; }
+.secao-google.correndo .faixa-vai .faixa-trilho { animation: palco-x 46s linear infinite; }
+.secao-google.correndo .faixa-volta .faixa-trilho { animation: palco-x 58s linear infinite reverse; }
+@keyframes palco-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.faixa:hover .faixa-trilho { animation-play-state: paused; }
+
+/* o cartão de comentário */
+.avaliacao {
+  flex: 0 0 clamp(260px, 26vw, 316px);
+  margin: 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  transition: border-color var(--dur-2) var(--ease);
+}
+.avaliacao:hover { border-color: var(--border-strong); }
+.avaliacao blockquote { margin: 12px 0 0; font-size: 0.88rem; line-height: 1.55; color: var(--text-2); }
+.avaliacao figcaption { display: flex; align-items: center; gap: 10px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border); }
+.avaliacao-ini {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--red-soft);
+  border: 1px solid rgba(230, 0, 18, 0.35);
+  color: var(--red-text);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+.avaliacao figcaption b { display: block; font-family: var(--display); font-stretch: 112%; font-size: 0.86rem; font-weight: 600; color: var(--text); }
+.avaliacao figcaption small { display: block; margin-top: 2px; font-size: 0.72rem; color: var(--muted); }
+
+/* o card da frente: a foto cobre o fundo e o texto mora na faixa livre dela */
+/* O card é sempre claro, nos dois temas: a foto tem fundo branco, e um card
+   escuro por baixo dela deixaria o texto ilegível de um lado e a emenda visível
+   do outro. A cor é a do próprio fundo do arquivo. */
+.palco-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  border: 1px solid rgba(10, 11, 13, 0.08);
+  background: #fbfbfb;
+  color: #0a0b0d;
+}
+.palco-texto .eyebrow { color: #5b616b; }
+.palco-texto .eyebrow::after { background: rgba(10, 11, 13, 0.18); }
+.palco-texto h2 { color: #0a0b0d; }
+.palco-card .google-nota b { color: #0a0b0d; }
+.palco-card .google-total { color: #5b616b; }
+.palco-card .google-link { color: #0a0b0d; border-color: rgba(10, 11, 13, 0.22); }
+.palco-card .google-link:hover { color: var(--red); border-color: var(--red); }
+.palco-figura { display: block; }
+/* no celular a foto é dimensionada pela LARGURA do card, não pela altura: preso
+   à altura, o texto mais estreito deixava o card mais alto e a figura crescia junto */
+.palco-figura img { position: absolute; left: 0; bottom: 0; z-index: 0; width: 116%; height: auto; max-width: none; }
+.palco-texto {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 100%;
+  padding: 32px 26px 32px 44%;
+}
+.palco-texto h2 { font-size: clamp(1.3rem, 2.6vw, 1.9rem); line-height: 1.18; margin-top: 12px; }
+.google-nota { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
 .google-nota b {
   font-family: var(--display);
   font-stretch: 125%;
-  font-size: clamp(2.6rem, 6vw, 3.6rem);
+  font-size: clamp(2.4rem, 5vw, 3.2rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1;
   color: var(--text);
 }
-.google-g { width: 30px; height: 30px; flex-shrink: 0; }
+.google-g { width: 28px; height: 28px; flex-shrink: 0; }
 .estrelas { display: inline-flex; gap: 3px; margin-top: 10px; }
-.estrelas .ic { width: 15px; height: 15px; fill: #fbbc04; color: #fbbc04; }
-.estrelas.grandes .ic { width: 20px; height: 20px; }
-.estrela { opacity: 0; transform: scale(0.6); display: inline-flex; }
-.secao-google.dentro .estrela { animation: estrela-acende 0.42s var(--ease) forwards; animation-delay: calc(var(--i) * 90ms); }
+.estrelas .ic { width: 14px; height: 14px; fill: #fbbc04; color: #fbbc04; }
+.estrelas.grandes .ic { width: 19px; height: 19px; }
+.estrela { display: inline-flex; opacity: 0; transform: scale(0.6); }
+.secao-google.dentro .palco-card .estrela { animation: estrela-acende 0.42s var(--ease) forwards; animation-delay: calc(var(--i) * 90ms); }
+/* nas faixas as estrelas já entram acesas: elas passam correndo */
+.faixa .estrela { opacity: 1; transform: none; }
 @keyframes estrela-acende { to { opacity: 1; transform: none; } }
-.google-total { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+.google-total { margin-top: 12px; font-size: 0.86rem; color: var(--muted); }
 .google-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-top: 16px;
+  margin-top: 18px;
   font-family: var(--mono);
   font-size: 0.68rem;
   letter-spacing: 0.12em;
@@ -2982,49 +3064,28 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .google-link:hover { color: var(--red-text); border-color: var(--red); }
 .google-link .ic { width: 13px; height: 13px; }
 
-.google-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-.avaliacao {
-  position: relative;
-  margin: 0;
-  padding: 22px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--card);
-  transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+/* SOBREPOSIÇÃO NO COMPUTADOR
+   Depois das regras base de propósito: mesma especificidade, vence quem vem por
+   último. As faixas viram a camada de baixo e o card sobe por cima. */
+@media (min-width: 961px) {
+  .palco { display: grid; }
+  .palco > * { grid-area: 1 / 1; align-self: center; }
+  .palco-faixas { z-index: 1; align-content: center; }
+  /* o invólucro ocuparia a largura toda e roubaria o cursor das faixas, que
+     precisam dele para pausar: só o card recebe eventos */
+  .palco-frente { pointer-events: none; }
+  .palco-card {
+    pointer-events: auto;
+    width: min(560px, 46vw);
+    aspect-ratio: 824 / 1086;
+    min-height: 560px;
+    /* sombra aberta para os dois lados: é ela que faz o cartão entrar no escuro
+       antes de sumir atrás do card, em vez de ser cortado numa aresta seca */
+    box-shadow: 0 0 80px 18px var(--veu), 0 28px 64px -20px var(--vidro-sombra);
+  }
+  .palco-figura img { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+  .palco-texto { padding: 40px 32px 40px 42%; }
 }
-.avaliacao::before {
-  content: "";
-  position: absolute;
-  left: -1px;
-  right: -1px;
-  top: -1px;
-  height: 2px;
-  background: var(--red);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform var(--dur-2) var(--ease);
-}
-.avaliacao:hover { border-color: var(--border-strong); transform: translateY(-3px); }
-.avaliacao:hover::before { transform: scaleX(1); }
-.avaliacao blockquote { margin: 14px 0 0; font-size: 0.92rem; line-height: 1.6; color: var(--text-2); }
-.avaliacao figcaption { display: flex; align-items: center; gap: 11px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
-.avaliacao-ini {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--red-soft);
-  border: 1px solid rgba(230, 0, 18, 0.35);
-  color: var(--red-text);
-  font-family: var(--mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-.avaliacao figcaption b { display: block; font-family: var(--display); font-stretch: 112%; font-size: 0.9rem; font-weight: 600; color: var(--text); }
-.avaliacao figcaption small { display: block; margin-top: 2px; font-size: 0.76rem; color: var(--muted); }
 
 /* ---------- 05 Contato: WhatsApp e e-mail lado a lado ---------- */
 .contato-canais { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
@@ -3064,9 +3125,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 960px) {
-  /* o resumo do Google sobe para cima dos comentários */
-  .google-inner { grid-template-columns: minmax(0, 1fr); gap: 28px; }
-  .google-resumo { position: static; }
+  /* o card apresenta a seção e as faixas correm embaixo dele */
+  .palco { display: flex; flex-direction: column; gap: 26px; }
+  .palco-frente { order: -1; }
   .fazemos-inner { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .fazemos-texto { position: static; }
   .fazemos-texto .btn { margin-top: 24px; }
@@ -3081,9 +3142,12 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 @media (max-width: 720px) {
   /* marcas em duas colunas e comentários em uma */
   .esteira { gap: 10px; }
-  .google-lista { grid-template-columns: minmax(0, 1fr); }
-  .avaliacao { padding: 18px; }
-  .avaliacao blockquote { font-size: 0.88rem; }
+  .avaliacao { flex-basis: 74vw; padding: 18px; }
+  /* a altura mínima é o que garante a figura inteira: presa só ao texto, o card
+     ficava mais baixo que a foto e cortava a cabeça */
+  .palco-card { min-height: 440px; }
+  .palco-figura img { width: 96%; }
+  .palco-texto { padding: 26px 20px 26px 46%; }
 
   /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
   .fazemos-texto .btn { display: none; }
