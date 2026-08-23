@@ -938,6 +938,21 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .automacao-texto h2 { max-width: 16ch; }
 .automacao-texto .lead { margin-top: 22px; }
+/* ---------- Título fatiado em palavras + marca-texto ----------
+   As palavras sobem de dentro da própria caixa (por isso o overflow: hidden) e,
+   logo depois, o traço vermelho é puxado sob a frase que diferencia a agência.
+   O traço é background, e não pseudo-elemento, para sobreviver à quebra de linha. */
+.titulo-fatiado .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+.titulo-fatiado .w > span { display: inline-block; }
+.marca {
+  background-image: linear-gradient(var(--red), var(--red));
+  background-repeat: no-repeat;
+  background-position: 0 96%;
+  background-size: 0% 0.085em;
+  transition: background-size 1.1s var(--ease-lento);
+}
+.destacado .marca { background-size: 100% 0.085em; }
+
 /* ---------- Mapa do fluxo da automação ----------
    Três portas de entrada convergem no nó do atendimento e de lá saem para o CRM
    e para o comercial, com uma luz correndo por cada fio (ideia do feixe animado
@@ -1920,6 +1935,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .reveal, .reveal.visible { opacity: 1; animation: none; }
   .intro-pending [data-hero], .gsap .msg, .gsap .chip { opacity: 1; }
   .intro-pending .hero h1 .w > span { opacity: 1; filter: none; transform: none; }
+  .titulo-fatiado .w > span { transform: none; }
+  .marca { transition: none; }
   .marquee-track, .faixa-track, .barra-num-track, .selo-texto, .border-beam i, .msg.typing i { animation: none; }
   /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
   .seg { opacity: 1; animation: none !important; transform: none; }

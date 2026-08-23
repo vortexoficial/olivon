@@ -232,7 +232,13 @@
           else h.appendChild(wrap(part));
         });
       } else if (n.nodeType === 1) {
-        h.appendChild(wrap(n.textContent, n.className));
+        // trechos marcados (.red, .marca) também viram palavra a palavra, para
+        // entrarem no mesmo ritmo do resto da frase
+        n.textContent.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) h.appendChild(document.createTextNode(" "));
+          else h.appendChild(wrap(part, n.className));
+        });
       }
     });
   }
@@ -370,6 +376,20 @@
         '<span class="banner-tag">' + esc((s.tags && s.tags[0]) || "Oliveon") + "</span>" +
         "</div>";
     }).join("");
+
+    /* Título: entra palavra a palavra e o marca-texto é traçado depois.
+       O GSAP cuida da subida das palavras (em initMotion); o marca-texto é CSS,
+       para funcionar mesmo se o GSAP não carregar. */
+    var titulo = $("fazTitulo");
+    if (titulo) {
+      splitWords(titulo);
+      titulo.classList.add("titulo-fatiado");
+      var marcadas = titulo.querySelectorAll(".marca");
+      Array.prototype.forEach.call(marcadas, function (m, i) {
+        m.style.transitionDelay = (0.55 + i * 0.16).toFixed(2) + "s";
+      });
+      onVisible(titulo, function (vis) { if (vis) titulo.classList.add("destacado"); }, 0.4);
+    }
 
     // Ícone desenhado com traço: cada linha do SVG começa "apagada" e é desenhada
     // quando a faixa entra na tela. É o traço do Lucide, então funciona em qualquer ícone.
@@ -1633,6 +1653,18 @@
         onEnter: function (lote) {
           gsap.to(lote, { opacity: 1, y: 0, duration: motionOff ? 0 : 1.2, stagger: motionOff ? 0 : 0.18, ease: "power2.out", overwrite: true });
         }
+      });
+    }
+
+    // Título de "O que fazemos": as palavras sobem uma a uma quando a seção chega
+    var palavrasFaz = gsap.utils.toArray("#fazTitulo .w > span");
+    if (palavrasFaz.length) {
+      gsap.from(palavrasFaz, {
+        yPercent: 110,
+        duration: motionOff ? 0 : 0.9,
+        stagger: motionOff ? 0 : 0.05,
+        ease: "power3.out",
+        scrollTrigger: { trigger: "#fazTitulo", start: "top 88%", once: true }
       });
     }
 
