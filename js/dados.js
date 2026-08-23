@@ -60,6 +60,10 @@ window.OLIVEON = {
   heroImagem: {
     escuro: "assets/hero-megafone-escuro.webp",
     claro: "assets/hero-megafone-claro.webp",
+    /* versões em pé, para o celular: ocupam a largura toda da tela.
+       Vazio = o celular usa as de cima */
+    escuroMobile: "assets/hero-megafone-escuro-mobile.webp",
+    claroMobile: "assets/hero-megafone-claro-mobile.webp",
     alt: "Megafone cravejado, pendurado por cordas"
   },
 

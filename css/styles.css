@@ -2937,20 +2937,24 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
      não virar uma tela só de imagem. */
   .hero { display: flex; flex-direction: column; }
   .hero-inner { order: 1; }
+  /* a arte em pé ocupa a largura toda da tela, de borda a borda, depois do texto.
+     A altura vem da proporção do arquivo; o topo e o pé dissolvem no fundo, que é
+     onde a borda do PNG encostaria no fundo da página. */
   .hero-arte {
     order: 2;
     position: static;
-    width: auto;
-    height: min(42vh, 320px);
-    aspect-ratio: 1;
+    width: 100vw;
     max-width: none;
-    margin: 30px auto 0;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent), linear-gradient(to bottom, #000 78%, transparent);
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent), linear-gradient(to bottom, #000 78%, transparent);
-    mask-composite: intersect;
+    height: auto;
+    aspect-ratio: auto;
+    margin: 26px 0 0;
+    margin-left: calc(50% - 50vw);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 9%, #000 86%, transparent);
+    -webkit-mask-composite: source-over;
+    mask-image: linear-gradient(to bottom, transparent, #000 9%, #000 86%, transparent);
+    mask-composite: add;
   }
-  .hero-arte img { object-fit: contain; object-position: 50% 0; }
+  .hero-arte img { width: 100%; height: auto; object-fit: fill; }
 
   /* a imagem abre a seção, colada no topo e nas laterais */
   .automacao { padding-top: 0; }

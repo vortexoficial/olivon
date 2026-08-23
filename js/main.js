@@ -126,9 +126,18 @@
 
     // A arte manda: havendo imagem, ela substitui o vídeo e a caixa troca de papel
     var IM = D.heroImagem || {};
+    var mqMobile = window.matchMedia("(max-width: 720px)");
     function arteDoTema() {
       var claro = docEl.getAttribute("data-tema") === "claro";
-      return String((claro ? IM.claro : IM.escuro) || IM.escuro || IM.claro || "").trim();
+      var lista = mqMobile.matches
+        ? [claro ? IM.claroMobile : IM.escuroMobile, claro ? IM.claro : IM.escuro]
+        : [claro ? IM.claro : IM.escuro];
+      lista.push(IM.escuro, IM.claro);
+      for (var i = 0; i < lista.length; i++) {
+        var a = String(lista[i] || "").trim();
+        if (a) return a;
+      }
+      return "";
     }
     if (arteDoTema()) {
       caixa.className = "hero-arte";
@@ -142,6 +151,9 @@
       };
       trocaArte();
       aoTrocarTema.push(trocaArte);
+      // ao girar o aparelho ou redimensionar, a versão certa entra no lugar
+      if (mqMobile.addEventListener) mqMobile.addEventListener("change", trocaArte);
+      else if (mqMobile.addListener) mqMobile.addListener(trocaArte);
       return;
     }
 
