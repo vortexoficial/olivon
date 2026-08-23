@@ -87,18 +87,7 @@ window.OLIVEON = {
      de preferência em branco). Ex.:
        { nome: "Empresa X", logo: "assets/clientes/empresa-x.png", url: "https://..." }
      Enquanto a lista estiver vazia, o site mostra os SEGMENTOS abaixo. */
-  clientes: [
-    { nome: "Levefit", logo: "assets/clientes/levefit.svg" },
-    { nome: "Café com Pizza", logo: "assets/clientes/cafe-com-pizza.svg" },
-    { nome: "GN Sports", logo: "assets/clientes/gn-sports.svg" },
-    { nome: "Waldopel", logo: "assets/clientes/waldopel.svg" },
-    { nome: "Dinda Club", logo: "assets/clientes/dinda-club.svg" },
-    { nome: "Central Dente", logo: "assets/clientes/central-dente.svg" },
-    { nome: "MP Port Solutions", logo: "assets/clientes/mp-port.svg" },
-    { nome: "LT Gloss", logo: "assets/clientes/lt-gloss.svg" },
-    { nome: "Sinal Verde", logo: "assets/clientes/sinal-verde.svg" },
-    { nome: "Matriz Global", logo: "assets/clientes/matriz-global.svg" }
-  ],
+  clientes: [],
 
   /* Segmentos atendidos (aparecem na grade enquanto não há logos)
      icone: nome do ícone Lucide em js/icons.js · entrega: o que foi montado ali */

@@ -1946,7 +1946,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
   .seg { opacity: 1; animation: none !important; transform: none; filter: none; }
   .estrela { opacity: 1; animation: none !important; transform: none; }
-  .logo { opacity: 1; animation: none !important; transform: none; }
+
   .parede-brilho { display: none; }
   .section-head .eyebrow::after, .numero::after { transform: none; animation: none; }
   .vslide, .depo { transition: none; }
@@ -2893,39 +2893,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .seg-marca:hover img { filter: none; opacity: 1; }
 
-/* ---------- Marcas de clientes: logos soltas ----------
-   Sem moldura, sem cartão: só a logo no fundo da seção. Elas ficam paradas e
-   vão se revezando, uma casa por vez (js/main.js). */
-.secao-marcas { padding-top: 0; }
-.marcas-topo { max-width: 46ch; margin-bottom: 38px; }
-.marcas-topo h2 { font-size: clamp(1.3rem, 2.6vw, 1.9rem); line-height: 1.2; margin-top: 10px; }
-.logos {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(20px, 4vw, 56px);
-  min-height: 74px;
-}
-.logo {
-  flex: 1 1 0;
-  display: grid;
-  place-items: center;
-  min-width: 0;
-  opacity: 0;
-}
-.logos.dentro .logo { animation: logo-entra 0.6s var(--ease) forwards; animation-delay: calc(var(--i) * 70ms); }
-@keyframes logo-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-.logo img {
-  max-width: 100%;
-  max-height: clamp(30px, 4.4vw, 46px);
-  width: auto;
-  opacity: 0.72;
-  transition: opacity var(--dur-2) var(--ease), filter var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
-}
-.logo:hover img { opacity: 1; transform: scale(1.05); }
-/* sem GSAP, a troca acontece na transição */
-.logo.saindo img { opacity: 0; transform: translateY(-14px); filter: blur(6px); }
-
 /* ---------- Avaliações do Google: palco com card na frente ----------
    Estrutura vinda do site do Benedito (que por sua vez veio da Delegada
    Raquel), aqui na nossa paleta: duas faixas de comentários correm em sentidos
@@ -3127,8 +3094,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 
 /* ---------- Celular ---------- */
 @media (max-width: 720px) {
-  /* marcas em duas colunas e comentários em uma */
-  .logos { gap: 18px; min-height: 58px; }
+  /* comentários em uma coluna */
   .avaliacao { flex-basis: 74vw; padding: 18px; }
   /* a altura mínima é o que garante a figura inteira: presa só ao texto, o card
      ficava mais baixo que a foto e cortava a cabeça */
