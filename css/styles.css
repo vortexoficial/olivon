@@ -2244,6 +2244,17 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 /* o texto do hero passa por cima da arte */
 .hero-inner { z-index: 1; }
 
+/* Em monitor grande a arte descola do canto: encostada na borda ela fica longe
+   demais do texto. Ao sair da borda, a direita tambem precisa dissolver, senao
+   a lateral do arquivo marca um vinco contra o fundo da pagina. */
+@media (min-width: 1537px) {
+  .hero-arte {
+    right: clamp(0px, (100vw - 1400px) * 0.2, 120px);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 26%, #000 90%, transparent), linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.3) 24px, #000 100px, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 26%, #000 90%, transparent), linear-gradient(to bottom, rgba(0, 0, 0, 0.3) 0, rgba(0, 0, 0, 0.3) 24px, #000 100px, #000 90%, transparent);
+  }
+}
+
 /* marcador enquanto não há vídeo: sem a máscara das bordas e sem a altura do vídeo */
 .hero-video.mockup-vazio {
   height: auto;
