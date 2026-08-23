@@ -125,7 +125,7 @@ window.OLIVEON = {
     { icone: "layout-template", titulo: "Sites e landing pages",  texto: "Rápidos, acessíveis e medidos. Cada página nasce com tracking, SEO técnico e um único objetivo.", tags: ["Performance", "SEO", "Tracking"] },
     { icone: "shopping-cart",   titulo: "E-commerce e delivery",  texto: "Lojas, cardápios e checkouts com painel próprio, para vender sem depender de marketplace.", tags: ["Loja virtual", "Delivery", "Checkout"] },
     { icone: "clapperboard",    titulo: "Criativos",              texto: "Estáticos e vídeos para anúncio e redes, produzidos em volume e testados contra o dado.", tags: ["Estáticos", "Vídeo", "Testes A/B"] },
-    { icone: "code-xml",        titulo: "Software sob medida",    texto: "Quando a ferramenta não existe, nós construímos: painéis administrativos, integrações, APIs e automações com IA, seus, documentados, em produção.", tags: ["Painéis", "APIs", "Integrações", "IA"], destaque: true, link: "#software" }
+    { icone: "code-xml",        titulo: "Software sob medida",    texto: "Quando a ferramenta não existe, nós construímos: painéis administrativos, integrações, APIs e automações com IA.", tags: ["Painéis", "APIs", "Integrações", "IA"], destaque: true, link: "#software" }
   ],
 
   /* ---------------- SOFTWARE SOB MEDIDA: módulos que se empilham ---------------- */
