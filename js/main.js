@@ -584,44 +584,51 @@
   }
 
 
-  /* ---------- Imagem que abre a seção da automação (só no celular) ----------
-     PNG de largura cheia, uma por tema. Só é montada no celular, então no
-     computador o arquivo nem chega a ser baixado. Sem imagem, fica o marcador
-     no lugar, para o espaço não ir vazio ao ar. */
-  (function imagemAutomacao() {
-    var caixa = $("imagemSecao");
-    if (!caixa) return;
-    var I = D.imagemAutomacao || {};
-    if (!window.matchMedia("(max-width: 720px)").matches) { caixa.remove(); return; }
+  /* ---------- Faixa de texto em curva (só no celular) ----------
+     O texto é repetido e corre pelo trilho da curva quadro a quadro, mexendo no
+     startOffset do textPath. Ao andar o tamanho de uma repetição, o valor volta
+     ao começo: a volta é infinita e não tem emenda. Fora da tela, para. */
+  (function faixaCurva() {
+    var caixa = $("curva");
+    var alvo = $("curvaTexto");
+    var trilho = $("curvaTrilho");
+    if (!caixa || !alvo || !trilho) return;
+    var frase = String(D.faixaCurva || "").trim();
+    if (!frase || !window.matchMedia("(max-width: 720px)").matches) { caixa.remove(); return; }
 
-    function arquivoDoTema() {
-      var claro = docEl.getAttribute("data-tema") === "claro";
-      return String((claro ? I.claro : I.escuro) || I.escuro || I.claro || "").trim();
+    var VOLTAS = 10;
+    // o separador entra no vermelho da marca: um respiro de cor no meio do texto
+    var uma = esc(frase).split("·").join('<tspan class="separa">·</tspan>') + " ";
+    alvo.innerHTML = new Array(VOLTAS + 1).join(uma);
+
+    var larguraUma = 0, desl = 0, raf = null, ultimo = 0, visivel = false;
+    var VEL = 34;   // unidades do desenho por segundo
+
+    function mede() {
+      var total = 0;
+      try { total = alvo.getComputedTextLength(); } catch (e) { total = 0; }
+      larguraUma = total / VOLTAS;
     }
 
-    if (!arquivoDoTema()) {
-      caixa.classList.add("mockup-vazio", "imagem-vazia");
-      caixa.removeAttribute("aria-hidden");
-      caixa.innerHTML =
-        '<span class="ic-wrap" data-icon="layout-template"></span>' +
-        "<b>Imagem do topo da seção</b>" +
-        "<small>Coloque o PNG em <code>assets/</code> e escreva o caminho em " +
-        "<code>imagemAutomacao</code>, no arquivo <code>js/dados.js</code>.</small>";
-      caixa.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
-      return;
+    function quadro(t) {
+      if (!ultimo) ultimo = t;
+      var dt = Math.min(0.05, (t - ultimo) / 1000);
+      ultimo = t;
+      if (visivel && !motionOff && !reduceMotion) desl -= VEL * dt;
+      if (larguraUma > 0 && desl <= -larguraUma) desl += larguraUma;
+      alvo.setAttribute("startOffset", desl.toFixed(1));
+      raf = requestAnimationFrame(quadro);
     }
+    function comeca() { if (!raf) { ultimo = 0; raf = requestAnimationFrame(quadro); } }
+    function para() { if (raf) { cancelAnimationFrame(raf); raf = null; } }
 
-    var img = document.createElement("img");
-    img.alt = I.alt || "";
-    img.loading = "lazy";
-    img.decoding = "async";
-    caixa.appendChild(img);
-    function trocaFonte() {
-      var arq = arquivoDoTema();
-      if (arq && img.getAttribute("src") !== arq) img.setAttribute("src", arq);
-    }
-    trocaFonte();
-    aoTrocarTema.push(trocaFonte);
+    mede();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(mede);
+    var tm;
+    window.addEventListener("resize", function () { clearTimeout(tm); tm = setTimeout(mede, 200); }, { passive: true });
+    onVisible(caixa, function (vis) { visivel = vis; if (vis) comeca(); else para(); }, 0.05);
+    restarts.push(comeca);
+    comeca();
   })();
 
 

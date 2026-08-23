@@ -121,9 +121,14 @@
 
     <!-- ================= 02 AUTOMAÇÃO EM AÇÃO (conversa simulada) ================= -->
     <section class="section section-alt automacao" id="automacao">
-      <!-- Só no celular: imagem de largura cheia abrindo a seção, uma por tema.
-           Os caminhos ficam em js/dados.js → imagemAutomacao. -->
-      <div class="abre-secao" id="imagemSecao" aria-hidden="true"></div>
+      <!-- Só no celular: faixa de texto correndo numa curva, abrindo a seção.
+           O texto vem de js/dados.js → faixaCurva. -->
+      <div class="curva" id="curva" aria-hidden="true">
+        <svg viewBox="0 0 1000 168" preserveAspectRatio="xMidYMid meet">
+          <defs><path id="curvaTrilho" d="M -20,138 Q 500,26 1020,138" fill="none"></path></defs>
+          <text><textPath id="curvaTexto" href="#curvaTrilho" startOffset="0"></textPath></text>
+        </svg>
+      </div>
       <div class="container automacao-inner">
         <div class="automacao-texto">
           <p class="eyebrow reveal">Automação em ação</p>
