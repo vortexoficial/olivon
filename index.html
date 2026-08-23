@@ -214,24 +214,26 @@
           <p class="eyebrow reveal">Contato</p>
           <h2 class="reveal delay-1">Fale com a gente agora.</h2>
           <p class="reveal delay-2">Conte em duas linhas o que você precisa. Devolvemos uma análise inicial da sua operação, por escrito, sem compromisso.</p>
-          <ul class="garantias reveal delay-2">
-            <li>
-              <span class="garantia-ic" aria-hidden="true"><i data-icon="badge-check"></i></span>
-              <span class="garantia-txt"><small>Diagnóstico</small><b>Gratuito</b></span>
-            </li>
-            <li>
-              <span class="garantia-ic" aria-hidden="true"><i data-icon="timer"></i></span>
-              <span class="garantia-txt"><small>Resposta</small><b>Em até 1 dia útil</b></span>
-            </li>
-          </ul>
-          <div class="contato-canais reveal delay-3">
-            <a href="#" class="whats-direct" data-whats>
-              <i data-icon="whatsapp"></i>
-              Chamar direto no WhatsApp
+          <!-- Um quadro só, em quatro casas do mesmo tamanho: em cima o que a pessoa
+               ganha, embaixo por onde falar. Ícone prata informa, ícone vermelho age. -->
+          <div class="contato-grade reveal delay-2">
+            <div class="cg-item">
+              <span class="cg-ic" aria-hidden="true"><i data-icon="badge-check"></i></span>
+              <span class="cg-txt"><small>Diagnóstico</small><b>Gratuito</b></span>
+            </div>
+            <div class="cg-item">
+              <span class="cg-ic" aria-hidden="true"><i data-icon="timer"></i></span>
+              <span class="cg-txt"><small>Resposta</small><b>Em até 1 dia útil</b></span>
+            </div>
+            <a href="#" class="cg-item cg-acao" data-whats>
+              <span class="cg-ic" aria-hidden="true"><i data-icon="whatsapp"></i></span>
+              <span class="cg-txt"><small>WhatsApp</small><b>Chamar agora</b></span>
+              <i class="cg-seta" data-icon="arrow-up-right" aria-hidden="true"></i>
             </a>
-            <a href="#" class="canal-email" id="contatoEmail">
-              <i data-icon="mail"></i>
-              <span><small>E-mail</small><b id="contatoEmailTexto">contato@oliveonperformance.com.br</b></span>
+            <a href="#" class="cg-item cg-acao" id="contatoEmail">
+              <span class="cg-ic" aria-hidden="true"><i data-icon="mail"></i></span>
+              <span class="cg-txt"><small>E-mail</small><b>Escrever agora</b></span>
+              <i class="cg-seta" data-icon="arrow-up-right" aria-hidden="true"></i>
             </a>
           </div>
         </div>
