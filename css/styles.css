@@ -2935,6 +2935,19 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   opacity: 0.62;
   transition: filter var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease);
 }
+/* enquanto o arquivo da logo não chega, o nome escrito segura o lugar */
+.marca-nome {
+  font-family: var(--display);
+  font-stretch: 112%;
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-align: center;
+  line-height: 1.2;
+  color: var(--muted);
+  transition: color var(--dur-2) var(--ease);
+}
+.marca-texto:hover .marca-nome { color: var(--text); }
 .marca:hover { border-color: var(--border-strong); background: var(--elevated); }
 .marca:hover img { filter: none; opacity: 1; }
 

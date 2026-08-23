@@ -347,9 +347,14 @@
     var secao = caixa.closest("section");
     if (!lista.length) { if (secao) secao.remove(); return; }
 
+    // com arquivo, entra a logo; sem arquivo, entra o nome escrito, para a esteira
+    // já funcionar antes de as marcas liberarem os arquivos
     function chip(c) {
-      var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">';
-      return '<span class="marca">' + img + "</span>";
+      var arq = String(c.logo || "").trim();
+      var miolo = arq
+        ? '<img src="' + esc(arq) + '" alt="' + esc(c.nome) + '" loading="lazy">'
+        : '<b class="marca-nome">' + esc(c.nome) + "</b>";
+      return '<span class="marca' + (arq ? "" : " marca-texto") + '">' + miolo + "</span>";
     }
 
     var filas = Array.prototype.slice.call(caixa.querySelectorAll(".esteira-fila"));
@@ -608,8 +613,9 @@
     var alvo = window.scrollY;
     var atual = alvo;
     var rodando = false;
-    var LERP = 0.085;        // quanto da distância que falta é vencida a cada quadro
-    var PASSO_MAX = 180;     // teto por evento: é isto que impede o arranco
+    var LERP = 0.072;        // quanto da distância que falta é vencida a cada quadro
+    var PASSO_MAX = 150;     // teto por evento: é isto que impede o arranco
+    var FORCA = 0.85;        // quanto de cada giro da roda vira caminho
 
     function teto() { return Math.max(0, docEl.scrollHeight - window.innerHeight); }
 
@@ -642,7 +648,7 @@
       if (docEl.classList.contains("lbox-on")) return;           // vídeo em tela cheia: a página está travada
       if (rolaSozinho(e.target, e.deltaY)) return;
       e.preventDefault();
-      var passo = e.deltaY * (e.deltaMode === 1 ? 18 : 1);
+      var passo = e.deltaY * (e.deltaMode === 1 ? 18 : 1) * FORCA;
       passo = Math.max(-PASSO_MAX, Math.min(PASSO_MAX, passo));
       if (!rodando) atual = window.scrollY;
       alvo = Math.max(0, Math.min(atual + (alvo - atual) + passo, teto()));
