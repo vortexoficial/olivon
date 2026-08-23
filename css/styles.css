@@ -2627,10 +2627,10 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 
 /* ---------- Automação: mockup em imagem (entra pelo js/dados.js) ---------- */
-/* ---------- Vídeo que abre a seção da automação (só no celular) ----------
+/* ---------- Imagem que abre a seção da automação (só no celular) ----------
    Largura cheia, altura na proporção do arquivo. Sem cantos, sem sombra e sem
-   máscara: o vídeo entra cru, encostado nas duas bordas da tela. */
-.video-secao { display: none; }
+   máscara: a imagem entra crua, encostada nas duas bordas da tela. */
+.abre-secao { display: none; }
 
 /* ---------- Selo giratório colado no mockup ----------
    Cada letra é rodada para o seu ângulo e empurrada para fora pelo raio; o
@@ -2898,10 +2898,14 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .selo-texto span { font-size: 0.54rem; }
   .selo-centro { width: 32px; height: 32px; }
   .selo-centro .ic { width: 16px; height: 16px; }
-  /* o vídeo abre a seção, colado no topo e nas laterais */
+  /* a imagem abre a seção, colada no topo e nas laterais */
   .automacao { padding-top: 0; }
-  .video-secao { display: block; width: 100%; margin-bottom: 40px; }
-  .video-secao video { display: block; width: 100%; height: auto; }
+  .abre-secao { display: block; width: 100%; margin-bottom: 40px; }
+  .abre-secao img { display: block; width: 100%; height: auto; }
+  /* enquanto o PNG não chega, o marcador precisa das margens de volta */
+  /* o .mockup-vazio conta com um pai flex: aqui o pai é block, então o display vem junto */
+  .abre-secao.imagem-vazia { display: flex; width: auto; min-height: 200px; margin: 34px 20px 40px; }
+  .automacao:has(.imagem-vazia) { padding-top: 0; }
 
   /* a sobra depois do último bloco estava grande demais: a faixa de desfoque
      encolhe e a seção fecha mais cedo */

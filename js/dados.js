@@ -171,14 +171,14 @@ window.OLIVEON = {
     ]
   },
 
-  /* ---------------- VÍDEO QUE ABRE A SEÇÃO DA AUTOMAÇÃO (só no celular) ----------------
-     Um arquivo por tema, largura cheia e altura na proporção do vídeo. Vazio nos
-     dois = a seção começa direto no texto, sem vídeo. */
-  videoAutomacao: {
-    escuro: "assets/aperto-escuro.mp4",
-    escuroPoster: "assets/aperto-escuro.jpg",
-    claro: "assets/aperto-claro.mp4",
-    claroPoster: "assets/aperto-claro.jpg"
+  /* ---------------- IMAGEM QUE ABRE A SEÇÃO DA AUTOMAÇÃO (só no celular) ----------------
+     PNG de largura cheia, altura na proporção do arquivo. Coloque em assets/ e
+     escreva o caminho aqui. Uma por tema; preenchendo só uma, ela serve para os
+     dois. Vazio nas duas = a seção começa direto no texto. */
+  imagemAutomacao: {
+    escuro: "",
+    claro: "",
+    alt: "Automação da Oliveon atendendo um lead"
   },
 
   /* Selo que gira sobre o mockup da automação. Use um separador entre as palavras
