@@ -6,14 +6,18 @@
   <meta name="color-scheme" content="light dark">
   <!-- barra do navegador na cor do tema; js/main.js troca ao mudar de tema -->
   <meta name="theme-color" content="#0a0b0d" id="metaTemaCor">
-  <!-- Roda antes da primeira pintura: aplica o tema salvo e marca a entrada do hero.
-       Sem isto, a página piscaria no tema errado. Quem chega pela primeira vez vê o
-       tema claro, mesmo com o celular no modo escuro; a escolha no botão manda. -->
+  <!-- Roda antes da primeira pintura: aplica o tema e marca a entrada do hero.
+       Sem isto, a página piscaria no tema errado. Ordem: a escolha salva no botão
+       manda; sem escolha, o site segue o tema do navegador (o celular no modo
+       escuro abre no escuro). Forçar o claro fazia o navegador com "sites
+       escuros" ligado repintar a página por conta e quebrar as cores. -->
   <script>
     (function () {
       var t;
       try { t = localStorage.getItem("oliveon-tema"); } catch (e) {}
-      if (t !== "claro" && t !== "escuro") t = "claro";
+      if (t !== "claro" && t !== "escuro") {
+        t = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "escuro" : "claro";
+      }
       document.documentElement.setAttribute("data-tema", t);
       document.documentElement.classList.add("intro-pending");
     })();

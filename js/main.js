@@ -104,8 +104,23 @@
     }
     if (btn) btn.addEventListener("click", function () { aplica(atual() === "claro" ? "escuro" : "claro"); });
 
-    // o padrão do site é o tema claro, mesmo em aparelho no modo escuro: quem
-    // quiser o escuro troca no botão, e a escolha fica salva neste navegador
+    // Sem escolha salva, o site segue o tema do navegador, inclusive se ele
+    // mudar com a página aberta. Depois do primeiro clique no botão a escolha
+    // do visitante manda e o navegador deixa de mexer.
+    var mqEscuro = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+    if (mqEscuro) {
+      var segue = function (ev) {
+        var salvo;
+        try { salvo = localStorage.getItem("oliveon-tema"); } catch (e) {}
+        if (salvo === "claro" || salvo === "escuro") return;   // escolha do visitante vence
+        var t = ev.matches ? "escuro" : "claro";
+        if (atual() === t) return;
+        docEl.setAttribute("data-tema", t);
+        aoTrocarTema.forEach(function (f) { f(t); });
+      };
+      if (mqEscuro.addEventListener) mqEscuro.addEventListener("change", segue);
+      else if (mqEscuro.addListener) mqEscuro.addListener(segue);
+    }
 
     // a barra do navegador no celular acompanha o fundo do tema
     var meta = $("metaTemaCor");

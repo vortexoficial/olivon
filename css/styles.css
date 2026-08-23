@@ -3140,9 +3140,18 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   }
   .hero-arte img { width: 100%; height: auto; object-fit: fill; }
 
-  /* a imagem abre a seção, colada no topo e nas laterais */
-  .automacao { padding-top: 0; }
-  .abre-secao { display: block; width: 100%; margin-bottom: 40px; }
+  /* a imagem abre a seção dentro de uma moldura leve: contorno de 1px, cantos
+     arredondados e uma sombra baixa, só para descolar do fundo */
+  .automacao { padding-top: 40px; }
+  .abre-secao {
+    display: block;
+    margin: 0 20px 38px;
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--card);
+    box-shadow: 0 10px 24px -14px var(--vidro-sombra);
+  }
   .abre-secao img { display: block; width: 100%; height: auto; }
   /* enquanto o PNG não chega, o marcador precisa das margens de volta */
   /* o .mockup-vazio conta com um pai flex: aqui o pai é block, então o display vem junto */

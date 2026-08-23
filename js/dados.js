@@ -191,9 +191,9 @@ window.OLIVEON = {
      escreva o caminho aqui. Uma por tema; preenchendo só uma, ela serve para os
      dois. Vazio nas duas = a seção começa direto no texto. */
   imagemAutomacao: {
-    escuro: "",
-    claro: "",
-    alt: "Automação da Oliveon atendendo um lead"
+    escuro: "assets/crm-escuro.webp",
+    claro: "assets/crm-claro.webp",
+    alt: "Mão robótica tocando a palavra CRM"
   },
 
   /* Selo que gira sobre o mockup da automação. Use um separador entre as palavras
