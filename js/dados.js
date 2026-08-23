@@ -171,6 +171,16 @@ window.OLIVEON = {
     ]
   },
 
+  /* ---------------- VÍDEO QUE ABRE A SEÇÃO DA AUTOMAÇÃO (só no celular) ----------------
+     Um arquivo por tema, largura cheia e altura na proporção do vídeo. Vazio nos
+     dois = a seção começa direto no texto, sem vídeo. */
+  videoAutomacao: {
+    escuro: "assets/aperto-escuro.mp4",
+    escuroPoster: "assets/aperto-escuro.jpg",
+    claro: "assets/aperto-claro.mp4",
+    claroPoster: "assets/aperto-claro.jpg"
+  },
+
   /* Selo que gira sobre o mockup da automação. Use um separador entre as palavras
      (o "·" fica bom) e termine com ele, para o texto fechar a volta sem emenda.
      Vazio = o selo não aparece. */

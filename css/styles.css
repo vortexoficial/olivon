@@ -2627,6 +2627,11 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 
 /* ---------- Automação: mockup em imagem (entra pelo js/dados.js) ---------- */
+/* ---------- Vídeo que abre a seção da automação (só no celular) ----------
+   Largura cheia, altura na proporção do arquivo. Sem cantos, sem sombra e sem
+   máscara: o vídeo entra cru, encostado nas duas bordas da tela. */
+.video-secao { display: none; }
+
 /* ---------- Selo giratório colado no mockup ----------
    Cada letra é rodada para o seu ângulo e empurrada para fora pelo raio; o
    conjunto gira devagar. O raio é a única medida a mexer para mudar o tamanho. */
@@ -2893,6 +2898,15 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .selo-texto span { font-size: 0.54rem; }
   .selo-centro { width: 32px; height: 32px; }
   .selo-centro .ic { width: 16px; height: 16px; }
+  /* o vídeo abre a seção, colado no topo e nas laterais */
+  .automacao { padding-top: 0; }
+  .video-secao { display: block; width: 100%; margin-bottom: 40px; }
+  .video-secao video { display: block; width: 100%; height: auto; }
+
+  /* a sobra depois do último bloco estava grande demais: a faixa de desfoque
+     encolhe e a seção fecha mais cedo */
+  .pblur-secao { height: 84px; }
+  .fazemos { padding-bottom: 28px; }
   /* mapa do fluxo: ocupa a largura toda da seção, com as três colunas abertas
      de ponta a ponta. Os fios ficam longos, que é o que dá leitura de esteira. */
   .fluxo-mapa { gap: 12px; justify-content: space-between; }
@@ -2918,7 +2932,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .seg-corpo small { display: none; }
   .seg-marca { min-height: 88px; padding: 14px; }
   .seg-marca img { max-height: 36px; }
-  .pblur-secao { height: 150px; }
   .scroll-area { height: 400px; padding: 12px 12px 150px; }
   .banner { gap: 8px 12px; padding: 12px; min-height: 0; }
   /* o quadrado atravessa as duas linhas: fica com a altura do texto que esta ao lado */

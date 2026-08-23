@@ -576,6 +576,48 @@
   }
 
 
+  /* ---------- Vídeo que abre a seção da automação (só no celular) ----------
+     Largura cheia, altura na proporção do arquivo, um vídeo por tema. Só é
+     montado no celular, então no computador nem chega a ser baixado. Fora da
+     tela ele pausa, para não gastar bateria à toa. */
+  (function videoAutomacao() {
+    var caixa = $("videoAutomacao");
+    if (!caixa) return;
+    var V = D.videoAutomacao || {};
+    if (!window.matchMedia("(max-width: 720px)").matches) { caixa.remove(); return; }
+    if (!String(V.escuro || V.claro || "").trim()) { caixa.remove(); return; }
+
+    var v = document.createElement("video");
+    v.muted = true;
+    v.loop = true;
+    v.playsInline = true;
+    v.setAttribute("muted", "");
+    v.setAttribute("loop", "");
+    v.setAttribute("playsinline", "");
+    v.setAttribute("preload", "metadata");
+    caixa.appendChild(v);
+
+    function tenta() { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+    function fonteDoTema() {
+      var claro = docEl.getAttribute("data-tema") === "claro";
+      var arquivo = String((claro ? V.claro : V.escuro) || V.escuro || V.claro || "").trim();
+      var poster = String((claro ? V.claroPoster : V.escuroPoster) || "").trim();
+      if (!arquivo || v.getAttribute("src") === arquivo) return;
+      if (poster) v.setAttribute("poster", poster);
+      v.setAttribute("src", arquivo);
+      v.load();
+      if (!reduceMotion) tenta();
+    }
+    fonteDoTema();
+    aoTrocarTema.push(fonteDoTema);
+
+    if (reduceMotion) { v.pause(); return; }
+    tenta();
+    document.addEventListener("pointerdown", tenta, { once: true, passive: true });
+    onVisible(caixa, function (vis) { if (vis && !motionOff) tenta(); else v.pause(); }, 0.1);
+    restarts.push(tenta);
+  })();
+
   /* ---------- Selo que gira sobre o mockup ----------
      Cada letra é posicionada no seu ângulo do círculo e o conjunto gira devagar,
      na ideia do texto giratório do MagicUI. O raio vem do CSS, então o selo
