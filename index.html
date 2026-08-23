@@ -127,11 +127,10 @@
         <p class="eyebrow">Quem confia</p>
         <h2 id="marcasTitulo">Marcas que colocaram a operação na nossa mão.</h2>
       </div>
-      <!-- Duas faixas correndo em sentidos opostos, de borda a borda. O GSAP
-           acelera, inclina e inverte conforme a rolagem; js/dados.js → clientes. -->
-      <div class="esteira" id="esteira" aria-hidden="true">
-        <div class="esteira-fila" data-dir="1"><div class="esteira-trilho"></div></div>
-        <div class="esteira-fila" data-dir="-1"><div class="esteira-trilho"></div></div>
+      <!-- Logos soltas, sem moldura: elas ficam paradas e vão se revezando, uma
+           casa por vez, com o GSAP. Os arquivos ficam em js/dados.js → clientes. -->
+      <div class="container">
+        <div class="logos" id="logos" aria-label="Marcas atendidas"></div>
       </div>
     </section>
     <!-- ================= 02 AUTOMAÇÃO EM AÇÃO (conversa simulada) ================= -->

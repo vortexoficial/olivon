@@ -1946,7 +1946,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
   .seg { opacity: 1; animation: none !important; transform: none; filter: none; }
   .estrela { opacity: 1; animation: none !important; transform: none; }
-  .esteira-trilho { animation: none !important; }
+  .logo { opacity: 1; animation: none !important; transform: none; }
   .parede-brilho { display: none; }
   .section-head .eyebrow::after, .numero::after { transform: none; animation: none; }
   .vslide, .depo { transition: none; }
@@ -2893,63 +2893,38 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .seg-marca:hover img { filter: none; opacity: 1; }
 
-/* ---------- Marcas de clientes: esteira de duas faixas ----------
-   Duas faixas de borda a borda, correndo em sentidos opostos. As pontas
-   dissolvem por máscara; a inclinação e a velocidade vêm do GSAP, conforme a
-   rolagem. Sem GSAP, a animação de CSS assume e as faixas continuam andando. */
-.secao-marcas { padding-top: 0; overflow: hidden; }
-.marcas-topo { max-width: 46ch; margin-bottom: 34px; }
+/* ---------- Marcas de clientes: logos soltas ----------
+   Sem moldura, sem cartão: só a logo no fundo da seção. Elas ficam paradas e
+   vão se revezando, uma casa por vez (js/main.js). */
+.secao-marcas { padding-top: 0; }
+.marcas-topo { max-width: 46ch; margin-bottom: 38px; }
 .marcas-topo h2 { font-size: clamp(1.3rem, 2.6vw, 1.9rem); line-height: 1.2; margin-top: 10px; }
-.esteira {
+.logos {
   display: flex;
-  flex-direction: column;
-  gap: 14px;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(20px, 4vw, 56px);
+  min-height: 74px;
 }
-.esteira-fila { overflow: hidden; }
-.esteira-trilho { display: flex; width: max-content; will-change: transform; }
-/* sem GSAP: a volta é feita por animação de CSS */
-.esteira.correndo:not(.com-gsap) .esteira-fila[data-dir="1"] .esteira-trilho { animation: esteira-x 34s linear infinite; }
-.esteira.correndo:not(.com-gsap) .esteira-fila[data-dir="-1"] .esteira-trilho { animation: esteira-x 42s linear infinite reverse; }
-@keyframes esteira-x { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-
-.marca {
-  flex: 0 0 auto;
+.logo {
+  flex: 1 1 0;
   display: grid;
   place-items: center;
-  width: clamp(150px, 17vw, 210px);
-  height: clamp(76px, 9vw, 104px);
-  margin-right: 14px;
-  padding: 16px 22px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--card);
-  transition: border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease);
+  min-width: 0;
+  opacity: 0;
 }
-.marca img {
+.logos.dentro .logo { animation: logo-entra 0.6s var(--ease) forwards; animation-delay: calc(var(--i) * 70ms); }
+@keyframes logo-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.logo img {
   max-width: 100%;
-  max-height: 100%;
+  max-height: clamp(30px, 4.4vw, 46px);
   width: auto;
-  filter: grayscale(1) contrast(0.9);
-  opacity: 0.62;
-  transition: filter var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease);
+  opacity: 0.72;
+  transition: opacity var(--dur-2) var(--ease), filter var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
 }
-/* enquanto o arquivo da logo não chega, o nome escrito segura o lugar */
-.marca-nome {
-  font-family: var(--display);
-  font-stretch: 112%;
-  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-  text-align: center;
-  line-height: 1.2;
-  color: var(--muted);
-  transition: color var(--dur-2) var(--ease);
-}
-.marca-texto:hover .marca-nome { color: var(--text); }
-.marca:hover { border-color: var(--border-strong); background: var(--elevated); }
-.marca:hover img { filter: none; opacity: 1; }
+.logo:hover img { opacity: 1; transform: scale(1.05); }
+/* sem GSAP, a troca acontece na transição */
+.logo.saindo img { opacity: 0; transform: translateY(-14px); filter: blur(6px); }
 
 /* ---------- Avaliações do Google: palco com card na frente ----------
    Estrutura vinda do site do Benedito (que por sua vez veio da Delegada
@@ -2963,7 +2938,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .secao-google { position: relative; overflow: hidden; background: var(--bg); }
 .palco { position: relative; }
 .palco-faixas { display: grid; gap: 14px; overflow: hidden; }
-.palco-frente { position: relative; z-index: 2; }
+/* largura cheia sempre: o container tem margin auto, e dentro de grade ou de
+   flex isso o encolhe até o conteúdo em vez de esticar */
+.palco-frente { position: relative; z-index: 2; width: 100%; }
 
 .faixa {
   position: relative;
@@ -3005,40 +2982,37 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .avaliacao figcaption small { display: block; margin-top: 2px; font-size: 0.72rem; color: var(--muted); }
 
 /* o card da frente: a foto cobre o fundo e o texto mora na faixa livre dela */
-/* O card é sempre claro, nos dois temas: a foto tem fundo branco, e um card
-   escuro por baixo dela deixaria o texto ilegível de um lado e a emenda visível
-   do outro. A cor é a do próprio fundo do arquivo. */
+/* O card acompanha o tema, porque a arte também tem uma versão para cada um:
+   --fundo é a cor de fundo do arquivo, e é ela que o véu do pé usa para o texto
+   ler sem apagar a arte. */
 .palco-card {
+  --fundo: #fbfbfb;
   position: relative;
   overflow: hidden;
   border-radius: var(--radius);
-  border: 1px solid rgba(10, 11, 13, 0.08);
-  background: #fbfbfb;
-  color: #0a0b0d;
+  border: 1px solid var(--border);
+  background: var(--fundo);
 }
-.palco-texto .eyebrow { color: #5b616b; }
-.palco-texto .eyebrow::after { background: rgba(10, 11, 13, 0.18); }
-.palco-texto h2 { color: #0a0b0d; }
-.palco-card .google-nota b { color: #0a0b0d; }
-.palco-card .google-total { color: #5b616b; }
-.palco-card .google-link { color: #0a0b0d; border-color: rgba(10, 11, 13, 0.22); }
-.palco-card .google-link:hover { color: var(--red); border-color: var(--red); }
-.palco-figura { display: block; }
+[data-tema="escuro"] .palco-card { --fundo: #000; }
+/* a arte cobre o card inteiro, ancorada no topo: e la que mora o titulo dela */
+.palco-figura { position: absolute; inset: 0; z-index: 0; display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 0; }
 /* no celular a foto é dimensionada pela LARGURA do card, não pela altura: preso
    à altura, o texto mais estreito deixava o card mais alto e a figura crescia junto */
-.palco-figura img { position: absolute; left: 0; bottom: 0; z-index: 0; width: 116%; height: auto; max-width: none; }
+/* o bloco da nota desce para o pé do card, sobre um véu que garante a leitura
+   sem apagar a arte */
 .palco-texto {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-end;
   min-height: 100%;
-  padding: 32px 26px 32px 44%;
+  padding: 26px 24px 22px;
+  background: linear-gradient(to top, var(--fundo) 26%, transparent 64%);
 }
 .palco-texto h2 { font-size: clamp(1.15rem, 2.1vw, 1.5rem); line-height: 1.18; margin-top: 10px; }
-.google-nota { display: flex; align-items: center; gap: 12px; margin-top: 22px; }
+.google-nota { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
 .google-nota b {
   font-family: var(--display);
   font-stretch: 125%;
@@ -3087,10 +3061,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .palco-faixas { z-index: 1; align-content: center; }
   /* o invólucro ocuparia a largura toda e roubaria o cursor das faixas, que
      precisam dele para pausar: só o card recebe eventos */
-  /* o container tem margin auto: dentro da grade isso o encolhe até o conteúdo
-     em vez de esticar. Com largura cheia ele volta a se comportar como container,
-     e o card fica encostado na margem esquerda do texto da página. */
-  .palco-frente { width: 100%; pointer-events: none; }
+  .palco-frente { pointer-events: none; }
   .palco-card {
     pointer-events: auto;
     width: min(440px, 36vw);
@@ -3100,8 +3071,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
        antes de sumir atrás do card, em vez de ser cortado numa aresta seca */
     box-shadow: 0 0 80px 18px var(--veu), 0 28px 64px -20px var(--vidro-sombra);
   }
-  .palco-figura img { inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: left top; }
-  .palco-texto { padding: 32px 26px 32px 42%; }
+  .palco-texto { padding: 30px 28px 26px; }
 }
 
 /* ---------- 05 Contato: WhatsApp e e-mail lado a lado ---------- */
@@ -3158,13 +3128,13 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 /* ---------- Celular ---------- */
 @media (max-width: 720px) {
   /* marcas em duas colunas e comentários em uma */
-  .esteira { gap: 10px; }
+  .logos { gap: 18px; min-height: 58px; }
   .avaliacao { flex-basis: 74vw; padding: 18px; }
   /* a altura mínima é o que garante a figura inteira: presa só ao texto, o card
      ficava mais baixo que a foto e cortava a cabeça */
   .palco-card { min-height: 440px; }
-  .palco-figura img { width: 96%; }
-  .palco-texto { padding: 26px 20px 26px 46%; }
+
+  .palco-texto { padding: 22px 18px 20px; }
 
   /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
   .fazemos-texto .btn { display: none; }

@@ -88,16 +88,16 @@ window.OLIVEON = {
        { nome: "Empresa X", logo: "assets/clientes/empresa-x.png", url: "https://..." }
      Enquanto a lista estiver vazia, o site mostra os SEGMENTOS abaixo. */
   clientes: [
-    { nome: "Levefit", logo: "" },
-    { nome: "Café com Pizza", logo: "" },
-    { nome: "GN Sports", logo: "" },
-    { nome: "Waldopel", logo: "" },
-    { nome: "Dinda Club", logo: "" },
-    { nome: "Central Dente", logo: "" },
-    { nome: "MP Port Solutions", logo: "" },
-    { nome: "LT Gloss", logo: "" },
-    { nome: "Sinal Verde", logo: "" },
-    { nome: "Matriz Global", logo: "" }
+    { nome: "Levefit", logo: "assets/clientes/levefit.svg" },
+    { nome: "Café com Pizza", logo: "assets/clientes/cafe-com-pizza.svg" },
+    { nome: "GN Sports", logo: "assets/clientes/gn-sports.svg" },
+    { nome: "Waldopel", logo: "assets/clientes/waldopel.svg" },
+    { nome: "Dinda Club", logo: "assets/clientes/dinda-club.svg" },
+    { nome: "Central Dente", logo: "assets/clientes/central-dente.svg" },
+    { nome: "MP Port Solutions", logo: "assets/clientes/mp-port.svg" },
+    { nome: "LT Gloss", logo: "assets/clientes/lt-gloss.svg" },
+    { nome: "Sinal Verde", logo: "assets/clientes/sinal-verde.svg" },
+    { nome: "Matriz Global", logo: "assets/clientes/matriz-global.svg" }
   ],
 
   /* Segmentos atendidos (aparecem na grade enquanto não há logos)
@@ -358,10 +358,10 @@ window.OLIVEON = {
      Os comentários em si saem de `depoimentos`, logo acima. */
   google: {
     titulo: "O que dizem quem já contratou.",
-    /* Foto do card, em retrato e com a figura à esquerda: o texto mora na faixa
-       livre à direita. Hoje está a foto do outro projeto, só para segurar o lugar. */
-    foto: "assets/depoimento-desktop.webp",
-    fotoMobile: "assets/depoimento-mobile.webp",
+    /* Arte do card, em retrato, uma por tema (a do tema claro precisa ter fundo
+       claro). Ela cobre o card inteiro; a nota fica no pé, sobre um véu. */
+    foto: "assets/depoimento-claro.webp",
+    fotoEscuro: "assets/depoimento-escuro.webp",
     nota: "5,0",
     total: "38 avaliações",
     link: ""

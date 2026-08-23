@@ -333,75 +333,78 @@
     }
   })();
 
-  /* ---------- Marcas de clientes: esteira de duas faixas ----------
-     Cada faixa corre num sentido, sem parar. O GSAP prende a esteira à rolagem:
-     rolando para baixo ela acelera no sentido natural, para cima ela inverte, e
-     a inclinação acompanha a velocidade, o que dá a sensação de peso. Sem GSAP,
-     as faixas continuam correndo por animação de CSS. Sem logo cadastrada em
-     js/dados.js, a seção inteira sai do ar, para não ficar um vazio no meio. */
-  var puxaEsteira = function () {};
+  /* ---------- Marcas de clientes: logos que se revezam ----------
+     As logos ficam paradas, sem moldura. De tempos em tempos uma casa troca de
+     marca: a que sai some para cima com desfoque, a que entra chega de baixo. O
+     GSAP cuida do movimento; sem ele, a troca acontece na transição do CSS.
+     Uma casa por vez, nunca a fileira inteira. */
+  var giraLogos = function () {};
   (function marcas() {
-    var caixa = $("esteira");
+    var caixa = $("logos");
     if (!caixa) return;
-    var lista = D.clientes || [];
+    var lista = (D.clientes || []).filter(function (c) { return String(c.logo || "").trim(); });
     var secao = caixa.closest("section");
     if (!lista.length) { if (secao) secao.remove(); return; }
 
-    // com arquivo, entra a logo; sem arquivo, entra o nome escrito, para a esteira
-    // já funcionar antes de as marcas liberarem os arquivos
-    function chip(c) {
-      var arq = String(c.logo || "").trim();
-      var miolo = arq
-        ? '<img src="' + esc(arq) + '" alt="' + esc(c.nome) + '" loading="lazy">'
-        : '<b class="marca-nome">' + esc(c.nome) + "</b>";
-      return '<span class="marca' + (arq ? "" : " marca-texto") + '">' + miolo + "</span>";
+    function casas() { return window.matchMedia("(max-width: 720px)").matches ? 3 : (window.matchMedia("(max-width: 960px)").matches ? 4 : 5); }
+
+    var visiveis = [], proximo = 0, slots = [];
+    function monta() {
+      var n = Math.min(casas(), lista.length);
+      visiveis = [];
+      for (var i = 0; i < n; i++) visiveis.push(i % lista.length);
+      proximo = n % lista.length;
+      caixa.innerHTML = visiveis.map(function (idx, casa) {
+        var c = lista[idx];
+        return '<span class="logo" style="--i:' + casa + '">' +
+          '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">' +
+          "</span>";
+      }).join("");
+      slots = Array.prototype.slice.call(caixa.children);
     }
+    monta();
+    onVisible(caixa, function (vis) { if (vis) caixa.classList.add("dentro"); rodando = vis; }, 0.1);
 
-    var filas = Array.prototype.slice.call(caixa.querySelectorAll(".esteira-fila"));
-    filas.forEach(function (fila, f) {
-      var trilho = fila.querySelector(".esteira-trilho");
-      // a segunda faixa começa deslocada, para as duas não ficarem espelhadas
-      var ordem = lista.slice(f % 2 ? Math.ceil(lista.length / 2) : 0).concat(lista.slice(0, f % 2 ? Math.ceil(lista.length / 2) : 0));
-      var uma = ordem.map(chip).join("");
-      // repete até passar de duas telas: aí a volta cabe em metade do trilho
-      var voltas = Math.max(2, Math.ceil((window.innerWidth * 2) / Math.max(1, ordem.length * 190)));
-      var conteudo = new Array(voltas + 1).join(uma);
-      trilho.innerHTML = conteudo + conteudo;   // as duas metades iguais fecham o laço
-    });
+    var rodando = false, casaDaVez = 0, relogio = null;
+    function proximaMarca() {
+      var tentativas = 0;
+      while (visiveis.indexOf(proximo) !== -1 && tentativas++ < lista.length) proximo = (proximo + 1) % lista.length;
+      var idx = proximo;
+      proximo = (proximo + 1) % lista.length;
+      return idx;
+    }
+    function troca() {
+      if (!rodando || motionOff || reduceMotion || lista.length <= slots.length) return;
+      var casa = casaDaVez % slots.length;
+      casaDaVez = (casaDaVez + 1) % slots.length;
+      var slot = slots[casa];
+      var img = slot && slot.querySelector("img");
+      if (!img) return;
+      var idx = proximaMarca();
+      var nova = lista[idx];
+      function poe() {
+        visiveis[casa] = idx;
+        img.setAttribute("src", nova.logo);
+        img.setAttribute("alt", nova.nome);
+      }
+      if (hasGsap) {
+        gsap.timeline()
+          .to(img, { y: -16, filter: "blur(6px)", opacity: 0, duration: 0.34, ease: "power2.in" })
+          .add(poe)
+          .fromTo(img, { y: 16, filter: "blur(6px)", opacity: 0 }, { y: 0, filter: "blur(0px)", opacity: 1, duration: 0.46, ease: "power3.out" });
+      } else {
+        slot.classList.add("saindo");
+        setTimeout(function () { poe(); slot.classList.remove("saindo"); }, 340);
+      }
+    }
+    relogio = setInterval(troca, 2400);
+    giraLogos = function () {};
 
-    onVisible(caixa, function (vis) { caixa.classList.toggle("correndo", vis); }, 0.05);
-
-    // com GSAP, a esteira passa a obedecer à rolagem
-    puxaEsteira = function () {
-      caixa.classList.add("com-gsap");
-      var tweens = filas.map(function (fila, f) {
-        var trilho = fila.querySelector(".esteira-trilho");
-        var dir = +fila.getAttribute("data-dir") || 1;
-        var dur = 34 + f * 8;
-        return dir > 0
-          ? gsap.fromTo(trilho, { xPercent: 0 }, { xPercent: -50, ease: "none", duration: dur, repeat: -1 })
-          : gsap.fromTo(trilho, { xPercent: -50 }, { xPercent: 0, ease: "none", duration: dur, repeat: -1 });
-      });
-      var voltando = null;
-      ScrollTrigger.create({
-        trigger: caixa,
-        start: "top bottom",
-        end: "bottom top",
-        onUpdate: function (self) {
-          if (motionOff || reduceMotion) return;
-          var v = self.getVelocity();
-          var escala = Math.max(1, Math.min(6, 1 + Math.abs(v) / 700));
-          var sinal = v < 0 ? -1 : 1;      // rolando para cima, a esteira volta
-          tweens.forEach(function (t) { t.timeScale(escala * sinal); });
-          gsap.to(caixa, { skewX: Math.max(-8, Math.min(8, -v / 320)), duration: 0.5, ease: "power3.out", overwrite: true });
-          clearTimeout(voltando);
-          voltando = setTimeout(function () {
-            tweens.forEach(function (t) { t.timeScale(1); });
-            gsap.to(caixa, { skewX: 0, duration: 0.6, ease: "power3.out", overwrite: true });
-          }, 160);
-        }
-      });
-    };
+    var t;
+    window.addEventListener("resize", function () {
+      clearTimeout(t);
+      t = setTimeout(function () { if (slots.length !== Math.min(casas(), lista.length)) monta(); }, 200);
+    }, { passive: true });
   })();
 
   /* ---------- Avaliações do Google ----------
@@ -433,19 +436,18 @@
       return '<span class="estrelas ' + classe + '" aria-hidden="true">' + s + "</span>";
     }
 
-    /* o card: a foto cobre o fundo e o texto mora na faixa que ela deixa livre */
-    var foto = String(G.foto || "").trim();
-    var fotoMob = String(G.fotoMobile || foto).trim();
+    /* a arte cobre o card, uma versão por tema; ela troca junto com o botão */
+    function arteDoTema() {
+      var escuro = docEl.getAttribute("data-tema") !== "claro";
+      return String((escuro ? G.fotoEscuro : G.foto) || G.foto || G.fotoEscuro || "").trim();
+    }
+    var arte = arteDoTema();
     card.innerHTML =
-      (foto
-        ? '<picture class="palco-figura" aria-hidden="true">' +
-          '<source media="(min-width: 961px)" srcset="' + esc(foto) + '">' +
-          '<img src="' + esc(fotoMob) + '" alt="" loading="lazy" decoding="async">' +
-          "</picture>"
+      (arte
+        ? '<img class="palco-figura" id="palcoArte" src="' + esc(arte) + '" alt="" loading="lazy" decoding="async">'
         : "") +
       '<div class="palco-texto">' +
         '<p class="eyebrow">Avaliações</p>' +
-        "<h2>" + esc(G.titulo || "O que dizem quem já contratou.") + "</h2>" +
         '<div class="google-nota"><b>' + esc(G.nota || "5,0") + "</b>" + marcaG + "</div>" +
         estrelas("grandes") +
         '<p class="google-total">' + esc(G.total || "") + " no Google</p>" +
@@ -471,6 +473,12 @@
       var voltas = Math.max(2, Math.ceil((window.innerWidth * 2) / Math.max(1, par[1].length * 330)));
       var conteudo = new Array(voltas + 1).join(uma);
       par[0].innerHTML = conteudo + conteudo;   // as duas metades iguais fecham o laço
+    });
+
+    aoTrocarTema.push(function () {
+      var el = $("palcoArte");
+      var a = arteDoTema();
+      if (el && a && el.getAttribute("src") !== a) el.setAttribute("src", a);
     });
 
     onVisible(secao, function (vis) { secao.classList.toggle("correndo", vis); if (vis) secao.classList.add("dentro"); }, 0.05);
@@ -1987,9 +1995,6 @@
         });
       });
     }
-
-    // a esteira das marcas passa a obedecer à rolagem
-    puxaEsteira();
 
     // a linha do tempo troca o modo simples pelo fio preso à rolagem
     pintaLinhaTempo();
