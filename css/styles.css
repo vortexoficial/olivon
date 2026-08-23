@@ -36,6 +36,7 @@
   --container: 1140px;
   --header-w: 1320px;                      /* header mais largo que o container: 6 links + CTA + indicador */
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-lento: cubic-bezier(0.42, 0, 0.28, 1); /* movimentos longos: entra e sai parelho */
   --dur-1: 180ms;
   --dur-2: 320ms;
   --grade: rgba(255, 255, 255, 0.025);     /* linhas da grade de fundo */
@@ -2313,19 +2314,19 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   z-index: -1;
   background: linear-gradient(100deg, transparent 40%, var(--vidro-reflexo) 50%, transparent 60%);
   transform: translateX(-130%);
-  transition: transform 1s var(--ease);
+  transition: transform 2.2s var(--ease-lento);
 }
 .banner:hover .banner-icone::after { transform: translateX(130%); }
 /* no celular não há cursor: quando o GSAP solta a faixa, a luz atravessa o vidro
    uma vez. A faixa clara é mais larga que a do hover, para ler bem no dedo. */
 .banner.brilhou .banner-icone::after {
   background: linear-gradient(100deg, transparent 32%, var(--vidro-reflexo) 50%, transparent 68%);
-  animation: vidro-passa 1.15s var(--ease) 1;
+  animation: vidro-passa 2.8s var(--ease-lento) 1;
 }
 @keyframes vidro-passa { from { transform: translateX(-130%); } to { transform: translateX(130%); } }
 .banner-icone .ic { width: 30px; height: 30px; }
 /* o traco do icone e desenhado quando a faixa entra na tela */
-.banner-icone .ic * { transition: stroke-dashoffset 0.9s var(--ease); }
+.banner-icone .ic * { transition: stroke-dashoffset 2.2s var(--ease-lento); }
 .banner.desenhado .banner-icone .ic * { stroke-dashoffset: 0 !important; }
 /* sob o cursor o icone acende no vermelho da marca e sobe um fio */
 .banner:hover .banner-icone {

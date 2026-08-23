@@ -1631,7 +1631,7 @@
         start: "top 92%",
         once: true,
         onEnter: function (lote) {
-          gsap.to(lote, { opacity: 1, y: 0, duration: motionOff ? 0 : 0.55, stagger: motionOff ? 0 : 0.07, ease: "power3.out", overwrite: true });
+          gsap.to(lote, { opacity: 1, y: 0, duration: motionOff ? 0 : 1.2, stagger: motionOff ? 0 : 0.18, ease: "power2.out", overwrite: true });
         }
       });
     }
