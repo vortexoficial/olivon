@@ -970,12 +970,12 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   z-index: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 58px;
+  justify-content: space-between;   /* as três colunas abrem de ponta a ponta */
+  gap: 16px;
 }
-.fluxo-col { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
-.fluxo-pilha { display: flex; flex-direction: column; gap: 14px; }
-.fluxo-col-saida { gap: 22px; }
+.fluxo-col { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
+.fluxo-pilha { display: flex; flex-direction: column; gap: 18px; }
+.fluxo-col-saida { gap: 30px; }
 .fluxo-saida { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
 
 /* placa de vidro, a mesma linguagem dos ícones de "O que fazemos" */
@@ -983,27 +983,27 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   position: relative;
   display: grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
+  width: 60px;
+  height: 60px;
   border: 1px solid var(--border-strong);
-  border-radius: 6px;
+  border-radius: 8px;
   background:
     linear-gradient(152deg, var(--vidro-topo) 0%, var(--vidro-meio) 46%, var(--vidro-fundo) 100%),
     var(--card);
   box-shadow: inset 0 1px 0 var(--vidro-topo), 0 10px 20px -14px var(--vidro-sombra);
   color: var(--steel);
 }
-.fluxo-no .ic { width: 21px; height: 21px; }
-.fluxo-no.min { width: 38px; height: 38px; }
-.fluxo-no.min .ic { width: 17px; height: 17px; }
+.fluxo-no .ic { width: 27px; height: 27px; }
+.fluxo-no.min { width: 50px; height: 50px; }
+.fluxo-no.min .ic { width: 22px; height: 22px; }
 /* o motor: maior, no vermelho da marca e com um halo que respira */
-.fluxo-no.max { width: 64px; height: 64px; color: var(--red-text); border-color: var(--red); }
-.fluxo-no.max .ic { width: 29px; height: 29px; }
+.fluxo-no.max { width: 84px; height: 84px; border-radius: 10px; color: var(--red-text); border-color: var(--red); }
+.fluxo-no.max .ic { width: 38px; height: 38px; }
 .fluxo-no.max::after {
   content: "";
   position: absolute;
   inset: -6px;
-  border-radius: 10px;
+  border-radius: 14px;
   border: 1px solid var(--red);
   opacity: 0;
 }
@@ -2875,17 +2875,18 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .selo-texto span { font-size: 0.54rem; }
   .selo-centro { width: 32px; height: 32px; }
   .selo-centro .ic { width: 16px; height: 16px; }
-  /* mapa do fluxo: tudo menor e encostado na esquerda, como o texto */
-  .fluxo-mapa { gap: 34px; }
-  .fluxo-no { width: 42px; height: 42px; }
-  .fluxo-no .ic { width: 19px; height: 19px; }
-  .fluxo-no.min { width: 34px; height: 34px; }
-  .fluxo-no.min .ic { width: 15px; height: 15px; }
-  .fluxo-no.max { width: 54px; height: 54px; }
-  .fluxo-no.max .ic { width: 25px; height: 25px; }
-  .fluxo-pilha { gap: 10px; }
-  .fluxo-col-saida { gap: 16px; }
-  .fluxo-rotulo { font-size: 0.56rem; letter-spacing: 0.08em; }
+  /* mapa do fluxo: ocupa a largura toda da seção, com as três colunas abertas
+     de ponta a ponta. Os fios ficam longos, que é o que dá leitura de esteira. */
+  .fluxo-mapa { gap: 12px; justify-content: space-between; }
+  .fluxo-no { width: 48px; height: 48px; }
+  .fluxo-no .ic { width: 22px; height: 22px; }
+  .fluxo-no.min { width: 42px; height: 42px; }
+  .fluxo-no.min .ic { width: 19px; height: 19px; }
+  .fluxo-no.max { width: 64px; height: 64px; }
+  .fluxo-no.max .ic { width: 29px; height: 29px; }
+  .fluxo-pilha { gap: 14px; }
+  .fluxo-col-saida { gap: 24px; }
+  .fluxo-rotulo { font-size: 0.58rem; letter-spacing: 0.08em; }
   /* as garantias empilham: lado a lado no celular o texto quebraria em três linhas */
   .garantias { grid-template-columns: minmax(0, 1fr); max-width: none; }
 
