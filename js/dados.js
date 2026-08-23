@@ -175,11 +175,6 @@ window.OLIVEON = {
     { hora: "08h00", titulo: "Handoff",      texto: "O comercial abre o dia com o resumo na mão e assume a conversa de onde a automação parou." }
   ],
 
-  /* ---------------- FAIXA EM CURVA QUE ABRE A SEÇÃO (só no celular) ----------------
-     O texto corre por uma curva, sem parar. Termine com o separador para a volta
-     fechar sem emenda. Vazio = a faixa não aparece. */
-  faixaCurva: "Automação que não dorme · ",
-
   /* ---------------- IMAGEM QUE ABRE A SEÇÃO DA AUTOMAÇÃO (só no celular) ----------------
      PNG de largura cheia, altura na proporção do arquivo. Coloque em assets/ e
      escreva o caminho aqui. Uma por tema; preenchendo só uma, ela serve para os
