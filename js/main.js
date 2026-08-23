@@ -650,18 +650,41 @@
       reserva.forEach(function (o) { o.disconnect(); });
       marcos.forEach(function (m) { m.classList.remove("on"); });
       gsap.set(luz, { height: "0%" });
+
+      /* Onde cada marco fica dentro do fio, de 0 a 1. O marco acende quando a
+         luz passa por ele, então os dois andam juntos em qualquer velocidade. */
+      function fracoes() {
+        var caixa = fio.getBoundingClientRect();
+        var alt = caixa.height || 1;
+        return marcos.map(function (m) {
+          var ponto = m.querySelector(".ltempo-ponto") || m;
+          var r = ponto.getBoundingClientRect();
+          var f = (r.top + r.height / 2 - caixa.top) / alt;
+          return f < 0 ? 0 : f > 1 ? 1 : f;
+        });
+      }
+      var pontos = fracoes();
+
+      /* O trecho de rolagem é longo de propósito (da entrada da lista até ela
+         quase sair pelo topo) e o scrub alto arrasta a luz atrás da rolagem:
+         é o que deixa o preenchimento lento no computador e no celular. */
       gsap.to(luz, {
         height: "100%",
         ease: "none",
-        scrollTrigger: { trigger: lista, start: "top 74%", end: "bottom 78%", scrub: 0.45 }
-      });
-      marcos.forEach(function (m) {
-        ScrollTrigger.create({
-          trigger: m,
-          start: "top 68%",
-          onEnter: function () { m.classList.add("on"); },
-          onLeaveBack: function () { m.classList.remove("on"); }
-        });
+        scrollTrigger: {
+          trigger: lista,
+          start: "top 92%",
+          end: "bottom 12%",
+          scrub: 1.2,
+          invalidateOnRefresh: true,
+          onRefresh: function () { pontos = fracoes(); },
+          onUpdate: function (self) {
+            for (var i = 0; i < marcos.length; i++) {
+              var aceso = self.progress >= pontos[i] - 0.015;
+              marcos[i].classList.toggle("on", aceso);
+            }
+          }
+        }
       });
     };
   })();

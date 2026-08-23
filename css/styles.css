@@ -999,7 +999,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   border-radius: 50%;
   border: 2px solid var(--border-strong);
   background: var(--bg-alt);
-  transition: border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+  /* o marco acende devagar, no mesmo ritmo do fio */
+  transition: border-color 620ms var(--ease-lento), box-shadow 620ms var(--ease-lento), transform 620ms var(--ease-lento);
 }
 .ltempo-item.on .ltempo-ponto {
   border-color: var(--red);
