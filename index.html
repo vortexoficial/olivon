@@ -119,6 +119,21 @@
       <div class="pblur pblur-secao" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     </section>
 
+    <!-- ================= MARCAS DE CLIENTES ================= -->
+    <!-- Painel de logos em fio de um pixel; o conteúdo vem de js/dados.js → clientes.
+         Sem logo cadastrada, ficam as casas vazias, esperando o arquivo. -->
+    <section class="section secao-marcas" id="marcas">
+      <div class="container">
+        <div class="marcas-topo reveal">
+          <p class="eyebrow">Quem confia</p>
+          <h2 id="marcasTitulo">Marcas que colocaram a operação na nossa mão.</h2>
+        </div>
+        <div class="marcas-painel reveal delay-1" id="marcasPainel">
+          <span class="marcas-brilho" aria-hidden="true"></span>
+          <div class="marcas-grade" id="marcasGrade"><!-- js/dados.js → clientes --></div>
+        </div>
+      </div>
+    </section>
     <!-- ================= 02 AUTOMAÇÃO EM AÇÃO (conversa simulada) ================= -->
     <section class="section section-alt automacao" id="automacao">
       <!-- Só no celular: imagem de largura cheia abrindo a seção, uma por tema.
@@ -207,6 +222,17 @@
       </div>
     </section>
 
+    <!-- ================= AVALIAÇÕES DO GOOGLE ================= -->
+    <!-- Resumo da nota à esquerda e os comentários ao lado; tudo de js/dados.js:
+         google (nota, total e link) e depoimentos (os comentários). -->
+    <section class="section secao-google" id="avaliacoes">
+      <div class="container">
+        <div class="google-inner">
+          <aside class="google-resumo reveal" id="googleResumo"><!-- js/dados.js → google --></aside>
+          <div class="google-lista" id="googleLista"><!-- js/dados.js → depoimentos --></div>
+        </div>
+      </div>
+    </section>
     <!-- ================= 05 CONTATO (WhatsApp + e-mail) ================= -->
     <section class="section" id="contato">
       <div class="container contato-inner">

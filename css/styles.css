@@ -1945,6 +1945,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .marquee-track, .faixa-track, .barra-num-track, .selo-texto, .border-beam i, .msg.typing i { animation: none; }
   /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
   .seg { opacity: 1; animation: none !important; transform: none; filter: none; }
+  .marca, .estrela { opacity: 1; animation: none !important; transform: none; }
   .parede-brilho { display: none; }
   .section-head .eyebrow::after, .numero::after { transform: none; animation: none; }
   .vslide, .depo { transition: none; }
@@ -2891,6 +2892,153 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .seg-marca:hover img { filter: none; opacity: 1; }
 
+/* ---------- Marcas de clientes ----------
+   Casas do mesmo tamanho num painel só, divididas por fio de um pixel. A logo
+   entra em cinza e ganha cor sob o cursor; uma luz suave segue o ponteiro. */
+.secao-marcas { padding-top: 0; }
+.marcas-topo { max-width: 46ch; margin-bottom: 32px; }
+.marcas-topo h2 { font-size: clamp(1.3rem, 2.6vw, 1.9rem); line-height: 1.2; margin-top: 10px; }
+.marcas-painel {
+  position: relative;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.marcas-brilho {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), var(--red-soft), transparent 70%);
+  transition: opacity 420ms var(--ease);
+}
+.marcas-painel:hover .marcas-brilho { opacity: 1; }
+.marcas-grade {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--border);   /* aparece como o fio entre as casas */
+}
+.marca {
+  display: grid;
+  place-items: center;
+  min-height: 116px;
+  padding: 22px;
+  background: var(--card);
+  opacity: 0;
+}
+.marcas-painel.dentro .marca { animation: marca-entra 0.6s var(--ease) forwards; animation-delay: calc(var(--i) * 55ms); }
+@keyframes marca-entra { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+.marca img {
+  max-width: 100%;
+  max-height: 46px;
+  width: auto;
+  filter: grayscale(1) contrast(0.9);
+  opacity: 0.7;
+  transition: filter var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.marca:hover img { filter: none; opacity: 1; transform: scale(1.04); }
+/* casa esperando o arquivo da logo */
+.marca-vazia span {
+  font-family: var(--mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--steel-dim);
+  opacity: 0.5;
+}
+
+/* ---------- Avaliações do Google ----------
+   Resumo fixo à esquerda, comentários ao lado. As estrelas acendem uma a uma
+   e os cartões sobem em cascata quando a seção entra. O dourado é o do Google:
+   é o único lugar do site onde outra cor entra, e entra para dar autenticidade. */
+.secao-google { background: var(--bg-alt); }
+.google-inner { display: grid; grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: 48px; align-items: start; }
+.google-resumo { position: sticky; top: 100px; }
+.google-resumo h2 { font-size: clamp(1.25rem, 2.4vw, 1.6rem); line-height: 1.2; margin-top: 10px; }
+.google-nota { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+.google-nota b {
+  font-family: var(--display);
+  font-stretch: 125%;
+  font-size: clamp(2.6rem, 6vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--text);
+}
+.google-g { width: 30px; height: 30px; flex-shrink: 0; }
+.estrelas { display: inline-flex; gap: 3px; margin-top: 10px; }
+.estrelas .ic { width: 15px; height: 15px; fill: #fbbc04; color: #fbbc04; }
+.estrelas.grandes .ic { width: 20px; height: 20px; }
+.estrela { opacity: 0; transform: scale(0.6); display: inline-flex; }
+.secao-google.dentro .estrela { animation: estrela-acende 0.42s var(--ease) forwards; animation-delay: calc(var(--i) * 90ms); }
+@keyframes estrela-acende { to { opacity: 1; transform: none; } }
+.google-total { margin-top: 12px; font-size: 0.88rem; color: var(--muted); }
+.google-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 3px;
+  transition: color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+}
+.google-link:hover { color: var(--red-text); border-color: var(--red); }
+.google-link .ic { width: 13px; height: 13px; }
+
+.google-lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.avaliacao {
+  position: relative;
+  margin: 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  transition: border-color var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.avaliacao::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  right: -1px;
+  top: -1px;
+  height: 2px;
+  background: var(--red);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-2) var(--ease);
+}
+.avaliacao:hover { border-color: var(--border-strong); transform: translateY(-3px); }
+.avaliacao:hover::before { transform: scaleX(1); }
+.avaliacao blockquote { margin: 14px 0 0; font-size: 0.92rem; line-height: 1.6; color: var(--text-2); }
+.avaliacao figcaption { display: flex; align-items: center; gap: 11px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--border); }
+.avaliacao-ini {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--red-soft);
+  border: 1px solid rgba(230, 0, 18, 0.35);
+  color: var(--red-text);
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.avaliacao figcaption b { display: block; font-family: var(--display); font-stretch: 112%; font-size: 0.9rem; font-weight: 600; color: var(--text); }
+.avaliacao figcaption small { display: block; margin-top: 2px; font-size: 0.76rem; color: var(--muted); }
+
 /* ---------- 05 Contato: WhatsApp e e-mail lado a lado ---------- */
 .contato-canais { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
 .contato-canais .whats-direct { margin-top: 0; }
@@ -2929,6 +3077,10 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 
 /* ---------- Tablet ---------- */
 @media (max-width: 960px) {
+  /* o resumo do Google sobe para cima dos comentários */
+  .google-inner { grid-template-columns: minmax(0, 1fr); gap: 28px; }
+  .google-resumo { position: static; }
+  .marcas-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .fazemos-inner { grid-template-columns: minmax(0, 1fr); gap: 34px; }
   .fazemos-texto { position: static; }
   .fazemos-texto .btn { margin-top: 24px; }
@@ -2941,6 +3093,13 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 
 /* ---------- Celular ---------- */
 @media (max-width: 720px) {
+  /* marcas em duas colunas e comentários em uma */
+  .marcas-grade { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .marca { min-height: 96px; padding: 18px; }
+  .google-lista { grid-template-columns: minmax(0, 1fr); }
+  .avaliacao { padding: 18px; }
+  .avaliacao blockquote { font-size: 0.88rem; }
+
   /* no celular o CTA fixo do rodapé já cobre esta seção: um segundo botão só repetiria */
   .fazemos-texto .btn { display: none; }
 

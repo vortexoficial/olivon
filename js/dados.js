@@ -341,6 +341,17 @@ window.OLIVEON = {
     { nome: "Marcos Lima",    cargo: "Gerente · Delivery",              texto: "Cardápio, pedidos e anúncios no mesmo sistema. Mudança de preço entra no ar em um minuto, sem chamar ninguém." }
   ],
 
+  /* ---------------- AVALIAÇÕES DO GOOGLE ----------------
+     nota: a média que aparece em destaque · total: quantas avaliações
+     link: a página do perfil no Google (deixe vazio para esconder o botão)
+     Os comentários em si saem de `depoimentos`, logo acima. */
+  google: {
+    titulo: "O que dizem quem já contratou.",
+    nota: "5,0",
+    total: "38 avaliações",
+    link: ""
+  },
+
   /* ---------------- FAQ ---------------- */
   faq: [
     { p: "Vocês garantem resultado?",                 r: "Garantimos método, transparência e velocidade de correção. Volume de vendas depende de oferta, mercado e orçamento, e é exatamente isso que o diagnóstico mede antes de qualquer promessa." },

@@ -333,6 +333,92 @@
     }
   })();
 
+  /* ---------- Marcas de clientes ----------
+     Painel de casas do mesmo tamanho, divididas por fio de um pixel. A logo entra
+     em cinza e ganha cor sob o cursor. Sem logo cadastrada em js/dados.js, ficam
+     as casas vazias esperando o arquivo, e o título avisa disso. */
+  (function marcas() {
+    var painel = $("marcasPainel");
+    var grade = $("marcasGrade");
+    if (!painel || !grade) return;
+    var lista = D.clientes || [];
+    var VAZIAS = 8;
+
+    if (lista.length) {
+      grade.innerHTML = lista.map(function (c, i) {
+        var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">';
+        var miolo = c.url
+          ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>"
+          : img;
+        return '<div class="marca" style="--i:' + i + '">' + miolo + "</div>";
+      }).join("");
+    } else {
+      var titulo = $("marcasTitulo");
+      if (titulo) titulo.textContent = "As marcas entram aqui conforme cada cliente libera o uso.";
+      var casas = "";
+      for (var k = 0; k < VAZIAS; k++) casas += '<div class="marca marca-vazia" style="--i:' + k + '"><span>marca</span></div>';
+      grade.innerHTML = casas;
+    }
+
+    onVisible(painel, function (vis) { if (vis) painel.classList.add("dentro"); }, 0.15);
+    // a luz segue o cursor pelo painel, só onde existe cursor de verdade
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      painel.addEventListener("pointermove", function (e) {
+        var r = painel.getBoundingClientRect();
+        painel.style.setProperty("--mx", (e.clientX - r.left) + "px");
+        painel.style.setProperty("--my", (e.clientY - r.top) + "px");
+      }, { passive: true });
+    }
+  })();
+
+  /* ---------- Avaliações do Google ----------
+     O resumo (nota, estrelas e total) fica ao lado dos comentários. As estrelas
+     acendem uma a uma quando a seção entra na tela, e os cartões sobem em cascata. */
+  (function avaliacoes() {
+    var resumo = $("googleResumo");
+    var lista = $("googleLista");
+    if (!resumo || !lista) return;
+    var G = D.google || {};
+    var itens = D.depoimentos || [];
+    if (!itens.length) { var sec = lista.closest("section"); if (sec) sec.remove(); return; }
+
+    var marcaG =
+      '<svg class="google-g" viewBox="0 0 24 24" aria-hidden="true">' +
+      '<path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.2-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>' +
+      '<path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.29v3.09C3.26 21.3 7.31 24 12 24z"/>' +
+      '<path fill="#FBBC05" d="M5.27 14.29c-.25-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.29A11.86 11.86 0 0 0 0 12c0 1.94.46 3.77 1.29 5.38l3.98-3.09z"/>' +
+      '<path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.62l3.98 3.09C6.22 6.86 8.87 4.75 12 4.75z"/>' +
+      "</svg>";
+
+    function estrelas(classe) {
+      var s = "";
+      for (var i = 0; i < 5; i++) s += '<span class="estrela" style="--i:' + i + '">' + ICON("star") + "</span>";
+      return '<span class="estrelas ' + classe + '" aria-hidden="true">' + s + "</span>";
+    }
+
+    resumo.innerHTML =
+      '<p class="eyebrow">Avaliações</p>' +
+      "<h2>" + esc(G.titulo || "O que dizem quem já contratou.") + "</h2>" +
+      '<div class="google-nota"><b>' + esc(G.nota || "5,0") + "</b>" + marcaG + "</div>" +
+      estrelas("grandes") +
+      '<p class="google-total">' + esc(G.total || "") + " no Google</p>" +
+      (G.link ? '<a class="google-link" href="' + esc(G.link) + '" target="_blank" rel="noopener">Ver no Google' + ICON("arrow-up-right") + "</a>" : "");
+
+    lista.innerHTML = itens.map(function (d, i) {
+      var iniciais = String(d.nome || "").trim().split(/\s+/).slice(0, 2).map(function (p) { return p.charAt(0); }).join("").toUpperCase();
+      return '<figure class="avaliacao reveal" style="--i:' + i + '">' +
+        estrelas("") +
+        "<blockquote>" + esc(d.texto) + "</blockquote>" +
+        '<figcaption><span class="avaliacao-ini" aria-hidden="true">' + esc(iniciais) + "</span>" +
+        "<span><b>" + esc(d.nome) + "</b><small>" + esc(d.cargo || "") + "</small></span></figcaption>" +
+        "</figure>";
+    }).join("");
+    lista.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+
+    var secao = lista.closest("section");
+    onVisible(secao, function (vis) { if (vis) secao.classList.add("dentro"); }, 0.1);
+  })();
+
   /* ---------- 01 Dores → resposta ---------- */
   (function dores() {
     var grid = $("doresGrid");
