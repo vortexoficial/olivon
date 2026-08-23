@@ -2719,13 +2719,18 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 
 .mockup { margin: 0; display: flex; justify-content: center; }
 .mockup[hidden] { display: none; }
+/* a arte já vem pronta: aparece inteira, sem corte, sem canto arredondado e
+   sem sombra por cima */
 .mockup img {
   display: block;
   width: min(440px, 100%);
   height: auto;
-  border-radius: 22px;
-  filter: drop-shadow(0 28px 60px rgba(0, 0, 0, 0.5));
 }
+/* No tema escuro o preto do arquivo (#000) fica um tom abaixo do fundo da seção
+   (#0d0e11) e o retângulo da imagem aparece. Com screen, preto vira exatamente a
+   cor do fundo e a arte flutua sem moldura; o prateado e a tela do celular não
+   mudam. No tema claro a diferença é de um ponto e não precisa de nada. */
+[data-tema="escuro"] .mockup img { mix-blend-mode: screen; }
 /* mockup que já vem com moldura de aparelho costuma ter fundo transparente:
    nesse caso o arredondamento e a sombra do quadro atrapalham */
 .mockup.solto img { border-radius: 0; }

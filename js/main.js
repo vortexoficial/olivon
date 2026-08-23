@@ -651,14 +651,25 @@
   (function mockup() {
     var caixa = $("mockupAutomacao");
     if (!caixa) return;
-    var arquivo = String(D.mockupAutomacao || "").trim();
-    if (arquivo) {
+    var M = D.mockupAutomacao;
+    if (typeof M === "string") M = { claro: M, escuro: M };   // aceita o formato antigo, um caminho só
+    M = M || {};
+    function arquivoDoTema() {
+      var claro = docEl.getAttribute("data-tema") === "claro";
+      return String((claro ? M.claro : M.escuro) || M.escuro || M.claro || "").trim();
+    }
+    if (arquivoDoTema()) {
       var img = document.createElement("img");
-      img.src = arquivo;
       img.alt = D.mockupAutomacaoAlt || "";
       img.loading = "lazy";
       img.decoding = "async";
       caixa.appendChild(img);
+      var trocaMockup = function () {
+        var a = arquivoDoTema();
+        if (a && img.getAttribute("src") !== a) img.setAttribute("src", a);
+      };
+      trocaMockup();
+      aoTrocarTema.push(trocaMockup);
     } else {
       caixa.classList.add("mockup-vazio");
       caixa.innerHTML =

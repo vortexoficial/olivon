@@ -24,16 +24,15 @@ window.OLIVEON = {
   email: "contato@oliveonperformance.com.br",
 
   /* ---------------- MOCKUP DA SEÇÃO AUTOMAÇÃO ----------------
-     Coloque a imagem (PNG com fundo transparente funciona melhor)
-     dentro da pasta assets/ e escreva o caminho aqui.
-     Ex.: mockupAutomacao: "assets/mockup-conversa.png"
-
-     Enquanto ficar vazio (""), a seção continua mostrando a
-     simulação de conversa animada. Assim que você preencher,
-     a imagem entra no lugar dela.
-
+     Uma imagem por tema (a do tema claro precisa ter fundo claro). Coloque em
+     assets/ e escreva o caminho. Preenchendo só uma, ela serve para os dois.
+     Vazio nas duas = fica o marcador no lugar.
+     A imagem aparece inteira, sem corte e sem sombra.
      Tamanho sugerido: 900px de largura ou mais, altura livre. */
-  mockupAutomacao: "",
+  mockupAutomacao: {
+    claro: "assets/conversa-claro.webp",
+    escuro: "assets/conversa-escuro.webp"
+  },
 
   /* Texto alternativo da imagem acima (acessibilidade e SEO) */
   mockupAutomacaoAlt: "Conversa automática da Oliveon atendendo um lead no WhatsApp",
