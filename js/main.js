@@ -919,9 +919,6 @@
     var track = $("pcarTrack");
     var itens = D.portfolio || [];
     if (!track || !itens.length) { var s = $("portfolio"); if (s) s.remove(); return; }
-    var filtros = D.portfolioFiltros || [];
-    var rotuloTipo = {};
-    filtros.forEach(function (f) { rotuloTipo[f.id] = f.rotulo; });
 
     function capaHTML(p) {
       if (p.capa) return '<img src="' + esc(p.capa) + '" alt="" loading="lazy">';
@@ -946,9 +943,6 @@
             : capaHTML(p)) +
           (temVideo ? '<span class="pslide-play" aria-hidden="true"><i data-icon="play"></i></span>' : "") +
         "</div>" +
-        '<div class="pslide-info"><span class="pf-tipo">' + esc(rotuloTipo[p.tipo] || p.tipo) + "</span>" +
-        "<b>" + p.titulo + "</b><p>" + p.descricao + "</p>" +
-        '<ul class="pf-entregas">' + (p.entregas || []).slice(0, 3).map(function (e) { return '<li class="tag">' + esc(e) + "</li>"; }).join("") + "</ul></div>" +
         "</article>";
     }).join("");
 

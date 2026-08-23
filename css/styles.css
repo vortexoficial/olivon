@@ -3054,7 +3054,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .pslide {
   flex: 0 0 auto;
-  width: min(560px, 78vw);
+  width: min(660px, 80vw);
   transform-style: preserve-3d;
   cursor: pointer;
   outline: none;
@@ -3099,20 +3099,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .pslide.is-active .pslide-play { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 .pslide.is-active:hover .pslide-play { background: var(--red); border-color: var(--red); }
 
-/* ficha do projeto, abaixo da tela */
-.pslide-info { padding: 20px 2px 0; opacity: 0.45; transition: opacity var(--dur-2) var(--ease); }
-.pslide.is-active .pslide-info { opacity: 1; }
-.pslide-info b {
-  display: block;
-  margin-top: 10px;
-  font-family: var(--display);
-  font-stretch: 112%;
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--text);
-}
-.pslide-info p { margin-top: 6px; font-size: 0.9rem; color: var(--muted); line-height: 1.5; max-width: 52ch; }
-.pslide-info .pf-entregas { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+/* a ficha do projeto saiu do cartão: só a tela do trabalho fica, e o nome
+   aparece na tela cheia, ao abrir */
 
 .pcar-btn {
   flex-shrink: 0;
@@ -3195,7 +3183,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .lbox-fechar .ic { width: 20px; height: 20px; }
 
 @media (min-width: 961px) and (max-width: 1536px) {
-  .pslide { width: min(480px, 74vw); }
+  .pslide { width: min(560px, 76vw); }
   .pcar-track { gap: 24px; }
 }
 
@@ -3204,9 +3192,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .pcar-track { gap: 16px; }
   .pslide { width: 82vw; }
   .pcar-btn { width: 38px; height: 38px; }
-  .pslide-info { padding-top: 16px; }
-  .pslide-info b { font-size: 1.02rem; }
-  .pslide-info p { font-size: 0.85rem; }
   /* no celular o video ocupa a tela toda e o X fecha */
   .lbox { padding: 0; background: #000; }
   .lbox-palco { width: 100%; height: 100%; gap: 0; justify-content: center; }
