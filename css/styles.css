@@ -6,7 +6,10 @@
    ============================================================ */
 
 :root {
-  color-scheme: dark;
+  /* "only" é o que desliga o modo escuro automático do navegador: sem ele, o
+     Chrome e o Samsung Internet repintam a página por conta quando o aparelho
+     está no escuro, e o vermelho da marca sai rosado */
+  color-scheme: only dark;
   /* Superfícies em três camadas (canvas → card → elevated); neutros frios, do cromo do logo */
   --bg: #0a0b0d;
   --bg-alt: #0d0e11;
@@ -57,7 +60,7 @@
    no <html data-tema="...">, gravado em js/main.js e aplicado antes da primeira
    pintura por um script no <head>, para nunca piscar o tema errado. */
 [data-tema="claro"] {
-  color-scheme: light;
+  color-scheme: only light;
   --bg: #f4f5f7;
   --bg-alt: #ffffff;
   --card: #ffffff;
@@ -98,7 +101,7 @@
    mexa nos dois. O :not() garante que a escolha manual do visitante vence. */
 @media (prefers-color-scheme: light) {
   :root:not([data-tema="escuro"]) {
-    color-scheme: light;
+    color-scheme: only light;
     --bg: #f4f5f7;
     --bg-alt: #ffffff;
     --card: #ffffff;
@@ -130,7 +133,7 @@
   }
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-tema="claro"]) { color-scheme: dark; }
+  :root:not([data-tema="claro"]) { color-scheme: only dark; }
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
