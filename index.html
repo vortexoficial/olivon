@@ -123,15 +123,15 @@
     <!-- Painel de logos em fio de um pixel; o conteúdo vem de js/dados.js → clientes.
          Sem logo cadastrada, ficam as casas vazias, esperando o arquivo. -->
     <section class="section secao-marcas" id="marcas">
-      <div class="container">
-        <div class="marcas-topo reveal">
-          <p class="eyebrow">Quem confia</p>
-          <h2 id="marcasTitulo">Marcas que colocaram a operação na nossa mão.</h2>
-        </div>
-        <div class="marcas-painel reveal delay-1" id="marcasPainel">
-          <span class="marcas-brilho" aria-hidden="true"></span>
-          <div class="marcas-grade" id="marcasGrade"><!-- js/dados.js → clientes --></div>
-        </div>
+      <div class="container marcas-topo reveal">
+        <p class="eyebrow">Quem confia</p>
+        <h2 id="marcasTitulo">Marcas que colocaram a operação na nossa mão.</h2>
+      </div>
+      <!-- Duas faixas correndo em sentidos opostos, de borda a borda. O GSAP
+           acelera, inclina e inverte conforme a rolagem; js/dados.js → clientes. -->
+      <div class="esteira" id="esteira" aria-hidden="true">
+        <div class="esteira-fila" data-dir="1"><div class="esteira-trilho"></div></div>
+        <div class="esteira-fila" data-dir="-1"><div class="esteira-trilho"></div></div>
       </div>
     </section>
     <!-- ================= 02 AUTOMAÇÃO EM AÇÃO (conversa simulada) ================= -->

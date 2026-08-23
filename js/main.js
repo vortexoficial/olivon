@@ -333,42 +333,70 @@
     }
   })();
 
-  /* ---------- Marcas de clientes ----------
-     Painel de casas do mesmo tamanho, divididas por fio de um pixel. A logo entra
-     em cinza e ganha cor sob o cursor. Sem logo cadastrada em js/dados.js, ficam
-     as casas vazias esperando o arquivo, e o título avisa disso. */
+  /* ---------- Marcas de clientes: esteira de duas faixas ----------
+     Cada faixa corre num sentido, sem parar. O GSAP prende a esteira à rolagem:
+     rolando para baixo ela acelera no sentido natural, para cima ela inverte, e
+     a inclinação acompanha a velocidade, o que dá a sensação de peso. Sem GSAP,
+     as faixas continuam correndo por animação de CSS. Sem logo cadastrada em
+     js/dados.js, a seção inteira sai do ar, para não ficar um vazio no meio. */
+  var puxaEsteira = function () {};
   (function marcas() {
-    var painel = $("marcasPainel");
-    var grade = $("marcasGrade");
-    if (!painel || !grade) return;
+    var caixa = $("esteira");
+    if (!caixa) return;
     var lista = D.clientes || [];
-    var VAZIAS = 8;
+    var secao = caixa.closest("section");
+    if (!lista.length) { if (secao) secao.remove(); return; }
 
-    if (lista.length) {
-      grade.innerHTML = lista.map(function (c, i) {
-        var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">';
-        var miolo = c.url
-          ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>"
-          : img;
-        return '<div class="marca" style="--i:' + i + '">' + miolo + "</div>";
-      }).join("");
-    } else {
-      var titulo = $("marcasTitulo");
-      if (titulo) titulo.textContent = "As marcas entram aqui conforme cada cliente libera o uso.";
-      var casas = "";
-      for (var k = 0; k < VAZIAS; k++) casas += '<div class="marca marca-vazia" style="--i:' + k + '"><span>marca</span></div>';
-      grade.innerHTML = casas;
+    function chip(c) {
+      var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">';
+      return '<span class="marca">' + img + "</span>";
     }
 
-    onVisible(painel, function (vis) { if (vis) painel.classList.add("dentro"); }, 0.15);
-    // a luz segue o cursor pelo painel, só onde existe cursor de verdade
-    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
-      painel.addEventListener("pointermove", function (e) {
-        var r = painel.getBoundingClientRect();
-        painel.style.setProperty("--mx", (e.clientX - r.left) + "px");
-        painel.style.setProperty("--my", (e.clientY - r.top) + "px");
-      }, { passive: true });
-    }
+    var filas = Array.prototype.slice.call(caixa.querySelectorAll(".esteira-fila"));
+    filas.forEach(function (fila, f) {
+      var trilho = fila.querySelector(".esteira-trilho");
+      // a segunda faixa começa deslocada, para as duas não ficarem espelhadas
+      var ordem = lista.slice(f % 2 ? Math.ceil(lista.length / 2) : 0).concat(lista.slice(0, f % 2 ? Math.ceil(lista.length / 2) : 0));
+      var uma = ordem.map(chip).join("");
+      // repete até passar de duas telas: aí a volta cabe em metade do trilho
+      var voltas = Math.max(2, Math.ceil((window.innerWidth * 2) / Math.max(1, ordem.length * 190)));
+      var conteudo = new Array(voltas + 1).join(uma);
+      trilho.innerHTML = conteudo + conteudo;   // as duas metades iguais fecham o laço
+    });
+
+    onVisible(caixa, function (vis) { caixa.classList.toggle("correndo", vis); }, 0.05);
+
+    // com GSAP, a esteira passa a obedecer à rolagem
+    puxaEsteira = function () {
+      caixa.classList.add("com-gsap");
+      var tweens = filas.map(function (fila, f) {
+        var trilho = fila.querySelector(".esteira-trilho");
+        var dir = +fila.getAttribute("data-dir") || 1;
+        var dur = 34 + f * 8;
+        return dir > 0
+          ? gsap.fromTo(trilho, { xPercent: 0 }, { xPercent: -50, ease: "none", duration: dur, repeat: -1 })
+          : gsap.fromTo(trilho, { xPercent: -50 }, { xPercent: 0, ease: "none", duration: dur, repeat: -1 });
+      });
+      var voltando = null;
+      ScrollTrigger.create({
+        trigger: caixa,
+        start: "top bottom",
+        end: "bottom top",
+        onUpdate: function (self) {
+          if (motionOff || reduceMotion) return;
+          var v = self.getVelocity();
+          var escala = Math.max(1, Math.min(6, 1 + Math.abs(v) / 700));
+          var sinal = v < 0 ? -1 : 1;      // rolando para cima, a esteira volta
+          tweens.forEach(function (t) { t.timeScale(escala * sinal); });
+          gsap.to(caixa, { skewX: Math.max(-8, Math.min(8, -v / 320)), duration: 0.5, ease: "power3.out", overwrite: true });
+          clearTimeout(voltando);
+          voltando = setTimeout(function () {
+            tweens.forEach(function (t) { t.timeScale(1); });
+            gsap.to(caixa, { skewX: 0, duration: 0.6, ease: "power3.out", overwrite: true });
+          }, 160);
+        }
+      });
+    };
   })();
 
   /* ---------- Avaliações do Google ----------
@@ -1929,6 +1957,9 @@
         });
       });
     }
+
+    // a esteira das marcas passa a obedecer à rolagem
+    puxaEsteira();
 
     // a linha do tempo troca o modo simples pelo fio preso à rolagem
     pintaLinhaTempo();
