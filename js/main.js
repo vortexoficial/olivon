@@ -285,43 +285,110 @@
     var grade = $("paredeGrade");
     if (!caixa || !grade) return;
     var clientes = D.clientes || [];
-    var cartoes;
+    var comLogo = clientes.length > 0;
 
-    if (clientes.length) {
+    // a lista completa; a parede mostra só algumas por vez e vai trocando
+    var itens;
+    if (comLogo) {
       caixa.classList.add("com-logo");
-      cartoes = clientes.map(function (c, i) {
+      itens = clientes.map(function (c) {
         var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">';
-        return '<article class="seg seg-marca" style="--i:' + i + '">' +
-          (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>" : img) +
-          "</article>";
+        return c.url
+          ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>"
+          : img;
       });
     } else {
       var lead = $("clientesLead");
-      if (lead) lead.textContent = "Segmentos em que já colocamos sistemas de aquisição em produção. As marcas entram aqui conforme cada cliente libera o uso.";
-      cartoes = (D.segmentos || []).map(function (s, i) {
+      if (lead) lead.textContent = "Segmentos em que já colocamos sistemas de aquisição em produção.";
+      itens = (D.segmentos || []).map(function (s) {
         var seg = typeof s === "string" ? { nome: s } : s;   // aceita a lista antiga, só com nomes
-        return '<article class="seg" style="--i:' + i + '">' +
-          '<span class="seg-icone" aria-hidden="true">' + ICON(seg.icone || "circle-dot") + "</span>" +
-          '<span class="seg-corpo"><b>' + esc(seg.nome) + "</b>" +
-          (seg.entrega ? "<small>" + esc(seg.entrega) + "</small>" : "") + "</span>" +
-          "</article>";
+        return '<span class="seg-icone" aria-hidden="true">' + ICON(seg.icone || "circle-dot") + "</span>" +
+          '<span class="seg-corpo"><b>' + esc(seg.nome) + "</b></span>";
       });
     }
 
-    if (!cartoes.length) { var sec = caixa.closest("section"); if (sec) sec.remove(); return; }
-    grade.innerHTML = cartoes.join("");
+    if (!itens.length) { var sec = caixa.closest("section"); if (sec) sec.remove(); return; }
 
-    // o traço de cada ícone começa apagado e é desenhado quando a grade entra na tela
-    var partes = grade.querySelectorAll(".seg-icone path, .seg-icone circle, .seg-icone rect, .seg-icone line, .seg-icone polyline, .seg-icone polygon");
-    Array.prototype.forEach.call(partes, function (el) {
-      if (reduceMotion || !el.getTotalLength) return;
-      var len = 0;
-      try { len = el.getTotalLength(); } catch (e) { return; }
-      if (!len) return;
-      el.style.strokeDasharray = len;
-      el.style.strokeDashoffset = len;
-    });
-    onVisible(caixa, function (vis) { if (vis) caixa.classList.add("dentro"); }, 0.15);
+    // quantas casas ficam na tela ao mesmo tempo
+    function casas() {
+      if (window.matchMedia("(max-width: 720px)").matches) return Math.min(4, itens.length);
+      return Math.min(5, itens.length);
+    }
+
+    var visiveis = [];      // qual item está em cada casa
+    var proximo = 0;        // de onde vem o próximo da fila
+    function monta() {
+      var n = casas();
+      visiveis = [];
+      for (var i = 0; i < n; i++) visiveis.push(i % itens.length);
+      proximo = n % itens.length;
+      grade.innerHTML = visiveis.map(function (idx, casa) {
+        return '<article class="seg' + (comLogo ? " seg-marca" : "") + '" style="--i:' + casa + '">' + itens[idx] + "</article>";
+      }).join("");
+      preparaTracos();
+    }
+
+    // o traço do ícone começa apagado e é desenhado quando a casa aparece
+    function preparaTracos() {
+      var partes = grade.querySelectorAll(".seg-icone path, .seg-icone circle, .seg-icone rect, .seg-icone line, .seg-icone polyline, .seg-icone polygon");
+      Array.prototype.forEach.call(partes, function (el) {
+        if (reduceMotion || !el.getTotalLength) return;
+        var len = 0;
+        try { len = el.getTotalLength(); } catch (e) { return; }
+        if (!len) return;
+        el.style.strokeDasharray = len;
+        el.style.strokeDashoffset = len;
+      });
+    }
+
+    monta();
+    // "dentro" entra uma vez e fica: ela é quem revela os cartões (a entrada tem
+    // forwards). Tirar a classe ao sair da tela apagava a parede inteira.
+    onVisible(caixa, function (vis) {
+      if (vis) caixa.classList.add("dentro");
+      rodando = vis;
+    }, 0.05);
+
+    /* Troca com desfoque e giro, na ideia do "logos with blur flip" do Aceternity:
+       uma casa de cada vez gira no eixo horizontal, some desfocada, troca de item
+       e volta. Como só uma muda por vez, a parede nunca pisca inteira. */
+    var rodando = false;
+    var casaDaVez = 0;
+    var relogio = null;
+    function gira() {
+      if (!rodando || motionOff || reduceMotion || itens.length <= casas()) return;
+      var cartoes = grade.children;
+      var alvo = cartoes[casaDaVez % cartoes.length];
+      casaDaVez = (casaDaVez + 1) % cartoes.length;
+      if (!alvo) return;
+      // pula quem já está na parede, para não repetir item
+      var tentativas = 0;
+      while (visiveis.indexOf(proximo) !== -1 && tentativas++ < itens.length) proximo = (proximo + 1) % itens.length;
+      var novoIdx = proximo;
+      proximo = (proximo + 1) % itens.length;
+
+      alvo.classList.add("saindo");
+      setTimeout(function () {
+        var casa = Array.prototype.indexOf.call(cartoes, alvo);
+        if (casa > -1) visiveis[casa] = novoIdx;
+        alvo.innerHTML = itens[novoIdx];
+        preparaTracos();
+        alvo.classList.remove("saindo");
+        alvo.classList.add("entrando");
+        setTimeout(function () { alvo.classList.remove("entrando"); }, 520);
+      }, 340);
+    }
+    if (!reduceMotion) {
+      relogio = setInterval(gira, 2600);
+      restarts.push(function () { rodando = true; });
+    }
+
+    // ao mudar de tamanho, o número de casas muda junto
+    var t;
+    window.addEventListener("resize", function () {
+      clearTimeout(t);
+      t = setTimeout(function () { if (grade.children.length !== casas()) monta(); }, 200);
+    }, { passive: true });
 
     // luz que segue o cursor pela grade, só onde existe cursor de verdade
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -975,9 +1042,14 @@
         var recuo = Math.min(ad, 2) * 130;
         var escala = 1 - Math.min(ad, 2) * 0.07;
         var alvo = { rotationY: giro, z: -recuo, scale: escala, opacity: ad > 2 ? 0 : 1 };
-        if (hasGsap && !motionOff) gsap.to(s, Object.assign({ duration: 0.65, ease: "power3.out", overwrite: true }, alvo));
+        if (hasGsap && !motionOff) {
+          if (s.style.transform && !s._limpo) { s.style.transform = ""; s._limpo = true; }
+          gsap.to(s, Object.assign({ duration: 0.65, ease: "power3.out", overwrite: true }, alvo));
+        }
         else {
-          s.style.transform = "perspective(1400px) rotateY(" + giro + "deg) translateZ(" + -recuo + "px) scale(" + escala + ")";
+          // sem perspective() aqui: ela já vive no .pcar-viewport. Embutida no slide,
+          // o GSAP a decompõe ao assumir e deixa um deslocamento em x que tira o card do centro.
+          s.style.transform = "rotateY(" + giro + "deg) translateZ(" + -recuo + "px) scale(" + escala + ")";
           s.style.opacity = alvo.opacity;
         }
         // só o card em foco toca; os vizinhos ficam carregados e parados

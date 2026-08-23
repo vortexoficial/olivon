@@ -1921,7 +1921,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .marca { transition: none; }
   .marquee-track, .faixa-track, .barra-num-track, .selo-texto, .border-beam i, .msg.typing i { animation: none; }
   /* a parede de segmentos aparece inteira, sem cascata nem luz seguindo o cursor */
-  .seg { opacity: 1; animation: none !important; transform: none; }
+  .seg { opacity: 1; animation: none !important; transform: none; filter: none; }
   .parede-brilho { display: none; }
   .section-head .eyebrow::after, .numero::after { transform: none; animation: none; }
   .vslide, .depo { transition: none; }
@@ -2774,12 +2774,26 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .pf-mais { display: flex; justify-content: center; margin-top: 40px; }
 .pf-mais[hidden] { display: none; }
 
+/* a seção tem uma frase e as marcas, e mais nada */
+.clientes-frase {
+  max-width: 40ch;
+  margin: 0 auto;
+  text-align: center;
+  font-family: var(--display);
+  font-stretch: 112%;
+  font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+  color: var(--text);
+}
+
 /* ---------- 04 Alguns clientes: parede de segmentos ----------
    Cada segmento é um cartão com ícone. O traço do ícone é desenhado quando a
    grade entra na tela, os cartões sobem em cascata e uma luz suave segue o
    cursor por cima da parede. Quando as logos entrarem em js/dados.js, os
    mesmos cartões passam a mostrá-las, sem trocar o CSS. */
-.parede { position: relative; margin-top: 46px; }
+.parede { position: relative; margin-top: 40px; }
 .parede-brilho {
   position: absolute;
   inset: 0;                 /* sem sangrar para fora: passar disto cria rolagem lateral no celular */
@@ -2796,6 +2810,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 10px;
+  perspective: 900px;      /* dá profundidade ao giro da troca */
 }
 
 .seg {
@@ -2812,6 +2827,17 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
               transform var(--dur-2) var(--ease);
 }
 .parede.dentro .seg { animation: seg-entra 0.62s var(--ease) forwards; animation-delay: calc(var(--i) * 45ms); }
+/* Troca no estilo "blur flip": a casa gira no eixo horizontal, some desfocada,
+   recebe o próximo item e volta. Uma casa por vez, nunca a parede inteira. */
+.seg.saindo { animation: seg-sai 0.34s var(--ease-lento) forwards; }
+.seg.entrando { animation: seg-volta 0.52s var(--ease-lento) forwards; }
+@keyframes seg-sai {
+  to { transform: rotateX(-88deg); filter: blur(7px); opacity: 0; }
+}
+@keyframes seg-volta {
+  from { transform: rotateX(88deg); filter: blur(7px); opacity: 0; }
+  to { transform: rotateX(0); filter: blur(0); opacity: 1; }
+}
 @keyframes seg-entra { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
 /* fio da marca no topo do cartão, aparece sob o cursor */
 .seg::before {
@@ -2854,7 +2880,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   letter-spacing: -0.005em;
   color: var(--text);
 }
-.seg-corpo small { display: block; margin-top: 4px; font-size: 0.76rem; line-height: 1.4; color: var(--muted); }
 
 /* logos de cliente, quando entrarem em js/dados.js */
 .seg-marca { align-items: center; justify-content: center; min-height: 112px; padding: 18px; }
@@ -2985,7 +3010,6 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .seg-icone { width: 34px; height: 34px; }
   .seg-icone .ic { width: 17px; height: 17px; }
   .seg-corpo b { font-size: 0.86rem; line-height: 1.25; }
-  .seg-corpo small { display: none; }
   .seg-marca { min-height: 88px; padding: 14px; }
   .seg-marca img { max-height: 36px; }
   .scroll-area { height: 400px; padding: 12px 12px 150px; }
@@ -3054,20 +3078,27 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .pslide {
   flex: 0 0 auto;
-  width: min(660px, 80vw);
+  width: min(400px, 68vw);
   transform-style: preserve-3d;
   cursor: pointer;
   outline: none;
 }
 .pslide:focus-visible .pslide-tela { outline: 2px solid var(--steel); outline-offset: 3px; }
+/* A capa desenhada em CSS foi feita para quadro deitado. No formato em pé ela
+   passa a ocupar o quadro inteiro, como a captura de uma página: conteúdo em
+   cima, respiro embaixo. Some quando o vídeo do projeto entrar. */
+.pslide-tela .capa { inset: 0; }
+.pslide-tela .capa-frame { border: 0; border-radius: 0; }
+.pslide-tela .capa-phone { top: 0; bottom: 0; width: 62%; border: 0; border-radius: 0; }
+
+/* formato de feed do Instagram (4:5, em pé) e nada de sombra */
 .pslide-tela {
   position: relative;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--card);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
 }
 .pslide-video,
 .pslide-tela img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -3183,7 +3214,7 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .lbox-fechar .ic { width: 20px; height: 20px; }
 
 @media (min-width: 961px) and (max-width: 1536px) {
-  .pslide { width: min(560px, 76vw); }
+  .pslide { width: min(340px, 62vw); }
   .pcar-track { gap: 24px; }
 }
 
