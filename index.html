@@ -129,13 +129,9 @@
           <p class="eyebrow reveal">Automação em ação</p>
           <h2 class="reveal delay-1">O lead chega às 23h. Às 23h01 ele já foi atendido.</h2>
           <p class="lead reveal delay-2">Simulação de um fluxo que colocamos em produção: o anúncio gera o contato, a automação qualifica, o CRM registra e o comercial recebe o resumo, enquanto a equipe dorme.</p>
-          <!-- Mapa do fluxo: as três portas de entrada convergem no atendimento
-               automático e saem para o CRM e para o comercial. Os feixes são
-               desenhados por js/main.js a partir da posição dos próprios nós. -->
-          <div class="fluxo reveal delay-3" id="fluxo" aria-label="Caminho do lead, da atração ao handoff">
-            <svg class="fluxo-feixes" id="fluxoFeixes" aria-hidden="true"></svg>
-            <div class="fluxo-mapa" id="fluxoMapa"><!-- js/dados.js → fluxoAutomacao --></div>
-          </div>
+          <!-- Linha do tempo do lead: o fio se preenche conforme a seção passa
+               pela tela e cada marco acende na vez dele (js/main.js). -->
+          <ol class="ltempo reveal delay-3" id="linhaTempo"><!-- js/dados.js → linhaAutomacao --></ol>
         </div>
 
         <!-- Mockup da seção: informe o caminho da imagem em `mockupAutomacao` (js/dados.js).

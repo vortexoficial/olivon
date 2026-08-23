@@ -166,25 +166,15 @@ window.OLIVEON = {
 
   /* ---------------- AUTOMAÇÃO EM AÇÃO: conversa simulada ----------------
      de: "lead" | "bot" | "sistema"   ·   etapa: 0 Atração · 1 Qualificação · 2 Registro · 3 Handoff */
-  /* ---------------- MAPA DO FLUXO (seção Automação) ----------------
-     As portas de entrada convergem no atendimento automático e saem para o CRM
-     e para o comercial. icone: nome do ícone Lucide em js/icons.js.
-     titulo: o que aparece ao parar o cursor sobre o nó. */
-  fluxoAutomacao: {
-    entrada: {
-      rotulo: "Atração",
-      nos: [
-        { icone: "megaphone",       titulo: "Anúncio no Google e no Meta" },
-        { icone: "whatsapp",        titulo: "Mensagem no WhatsApp" },
-        { icone: "layout-template", titulo: "Formulário da landing page" }
-      ]
-    },
-    centro: { rotulo: "Qualificação", icone: "bot", titulo: "Atendimento automático, 24 horas" },
-    saidas: [
-      { rotulo: "Registro", icone: "database",   titulo: "Lead registrado no CRM" },
-      { rotulo: "Handoff",  icone: "user-round", titulo: "Resumo na mão do comercial" }
-    ]
-  },
+  /* ---------------- LINHA DO TEMPO DO LEAD (seção Automação) ----------------
+     Um marco por etapa, na ordem em que acontecem. O fio ao lado se preenche
+     conforme a seção passa pela tela. hora: o relógio da simulação. */
+  linhaAutomacao: [
+    { hora: "23h00", titulo: "Atração",      texto: "O anúncio no Google ou no Meta joga o contato no WhatsApp, na página ou no formulário. A origem fica gravada." },
+    { hora: "23h01", titulo: "Qualificação", texto: "A automação responde na hora, faz as perguntas certas e entende o que a pessoa precisa, sem ninguém acordado." },
+    { hora: "23h02", titulo: "Registro",     texto: "O lead entra no CRM já com o resumo da conversa, o que ele pediu e a etapa em que parou." },
+    { hora: "08h00", titulo: "Handoff",      texto: "O comercial abre o dia com o resumo na mão e assume a conversa de onde a automação parou." }
+  ],
 
   /* ---------------- IMAGEM QUE ABRE A SEÇÃO DA AUTOMAÇÃO (só no celular) ----------------
      PNG de largura cheia, altura na proporção do arquivo. Coloque em assets/ e

@@ -953,95 +953,77 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 }
 .destacado .marca { background-size: 100% 0.085em; }
 
-/* ---------- Mapa do fluxo da automação ----------
-   Três portas de entrada convergem no nó do atendimento e de lá saem para o CRM
-   e para o comercial, com uma luz correndo por cada fio (ideia do feixe animado
-   do MagicUI). O bloco encosta na esquerda, alinhado com o texto da seção. */
-.fluxo { position: relative; margin-top: 40px; }
-.fluxo-feixes {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  pointer-events: none;
-}
-.feixe-base { fill: none; stroke: var(--border-strong); stroke-width: 1.5; }
-.feixe-luz {
-  fill: none;
-  stroke: var(--red);
-  stroke-width: 2.5;
-  stroke-linecap: round;
-  stroke-dasharray: 16 100;
-  stroke-dashoffset: 16;
-  opacity: 0;
-  filter: drop-shadow(0 0 5px var(--red-glow));
-}
-/* a luz só corre enquanto a seção está na tela */
-.fluxo.correndo .feixe-luz { opacity: 1; animation: feixe-corre 2.6s linear infinite; }
-@keyframes feixe-corre { from { stroke-dashoffset: 16; } to { stroke-dashoffset: -100; } }
-
-.fluxo-mapa {
+/* ---------- Linha do tempo do lead ----------
+   Um fio vertical à esquerda dos marcos: o traço apagado é o caminho todo, e a
+   luz vermelha por cima cresce conforme a seção passa pela tela. Cada marco
+   acende quando a luz chega nele. */
+.ltempo {
   position: relative;
-  z-index: 1;
+  list-style: none;
+  margin-top: 40px;
+  padding-left: 34px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;   /* as três colunas abrem de ponta a ponta */
-  gap: 16px;
+  flex-direction: column;
+  gap: 26px;
 }
-.fluxo-col { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
-.fluxo-pilha { display: flex; flex-direction: column; gap: 18px; }
-.fluxo-col-saida { gap: 30px; }
-.fluxo-saida { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
-
-/* placa de vidro, a mesma linguagem dos ícones de "O que fazemos" */
-.fluxo-no {
-  position: relative;
-  display: grid;
-  place-items: center;
-  width: 60px;
-  height: 60px;
-  border: 1px solid var(--border-strong);
-  border-radius: 8px;
-  background:
-    linear-gradient(152deg, var(--vidro-topo) 0%, var(--vidro-meio) 46%, var(--vidro-fundo) 100%),
-    var(--card);
-  box-shadow: inset 0 1px 0 var(--vidro-topo), 0 10px 20px -14px var(--vidro-sombra);
-  color: var(--steel);
-}
-.fluxo-no .ic { width: 27px; height: 27px; }
-.fluxo-no.min { width: 50px; height: 50px; }
-.fluxo-no.min .ic { width: 22px; height: 22px; }
-/* o motor: maior, no vermelho da marca e com um halo que respira */
-.fluxo-no.max { width: 84px; height: 84px; border-radius: 10px; color: var(--red-text); border-color: var(--red); }
-.fluxo-no.max .ic { width: 38px; height: 38px; }
-.fluxo-no.max::after {
-  content: "";
+.ltempo-fio {
   position: absolute;
-  inset: -6px;
-  border-radius: 14px;
-  border: 1px solid var(--red);
-  opacity: 0;
+  left: 7px;
+  top: 10px;
+  bottom: 14px;
+  width: 2px;
+  z-index: 0;
+  background: var(--border-strong);
+  border-radius: 2px;
+  overflow: hidden;
 }
-.fluxo.correndo .fluxo-no.max::after { animation: halo-respira 2.6s var(--ease) infinite; }
-@keyframes halo-respira {
-  0% { opacity: 0.55; transform: scale(0.94); }
-  60% { opacity: 0; transform: scale(1.12); }
-  100% { opacity: 0; transform: scale(1.12); }
+.ltempo-luz {
+  display: block;
+  width: 100%;
+  height: 0;
+  background: linear-gradient(to bottom, var(--red), var(--red-text));
+  box-shadow: 0 0 10px var(--red-glow);
 }
 
-.fluxo-rotulo {
+/* o marco fica na frente do fio, senao a luz atravessa o miolo do circulo */
+.ltempo-item { position: relative; z-index: 1; }
+.ltempo-ponto {
+  position: absolute;
+  left: -34px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: var(--bg-alt);
+  transition: border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.ltempo-item.on .ltempo-ponto {
+  border-color: var(--red);
+  box-shadow: 0 0 0 5px var(--red-soft);
+  transform: scale(1.1);
+}
+
+.ltempo-corpo { display: flex; flex-direction: column; gap: 3px; }
+.ltempo-hora {
   font-family: var(--mono);
-  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.66rem;
   font-weight: 500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--steel-dim);
-  line-height: 1.3;
-  white-space: nowrap;
+  transition: color var(--dur-2) var(--ease);
 }
-.fluxo-col-centro .fluxo-rotulo { color: var(--text-2); }
-
+.ltempo-item.on .ltempo-hora { color: var(--red-text); }
+.ltempo-corpo b {
+  font-family: var(--display);
+  font-stretch: 112%;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--text);
+}
+.ltempo-corpo p { font-size: 0.88rem; line-height: 1.55; color: var(--muted); max-width: 46ch; }
 .replay {
   display: inline-flex; align-items: center; gap: 8px;
   margin-top: 28px;
@@ -2982,18 +2964,12 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
      encolhe e a seção fecha mais cedo */
   .pblur-secao { height: 84px; }
   .fazemos { padding-bottom: 28px; }
-  /* mapa do fluxo: ocupa a largura toda da seção, com as três colunas abertas
-     de ponta a ponta. Os fios ficam longos, que é o que dá leitura de esteira. */
-  .fluxo-mapa { gap: 12px; justify-content: space-between; }
-  .fluxo-no { width: 48px; height: 48px; }
-  .fluxo-no .ic { width: 22px; height: 22px; }
-  .fluxo-no.min { width: 42px; height: 42px; }
-  .fluxo-no.min .ic { width: 19px; height: 19px; }
-  .fluxo-no.max { width: 64px; height: 64px; }
-  .fluxo-no.max .ic { width: 29px; height: 29px; }
-  .fluxo-pilha { gap: 14px; }
-  .fluxo-col-saida { gap: 24px; }
-  .fluxo-rotulo { font-size: 0.58rem; letter-spacing: 0.08em; }
+  /* linha do tempo: marcos um pouco mais juntos e texto menor */
+  .ltempo { margin-top: 32px; padding-left: 30px; gap: 22px; }
+  .ltempo-ponto { left: -30px; width: 14px; height: 14px; }
+  .ltempo-fio { left: 6px; }
+  .ltempo-corpo b { font-size: 0.96rem; }
+  .ltempo-corpo p { font-size: 0.85rem; }
   /* as garantias empilham: lado a lado no celular o texto quebraria em três linhas */
   .garantias { grid-template-columns: minmax(0, 1fr); max-width: none; }
 

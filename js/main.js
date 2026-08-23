@@ -517,87 +517,62 @@
     }, { passive: true });
   })();
 
-  /* ---------- Mapa do fluxo da automação ----------
-     Na ideia do feixe animado do MagicUI: as portas de entrada convergem no nó do
-     atendimento e de lá saem para o CRM e para o comercial, com uma luz correndo
-     por cada fio. As curvas são medidas dos próprios nós, então o desenho se
-     ajusta a qualquer largura e é refeito quando a tela muda de tamanho. */
-  var desenhaFeixes = function () {};
-  (function fluxoAutomacao() {
-    var caixa = $("fluxo");
-    var mapa = $("fluxoMapa");
-    var svg = $("fluxoFeixes");
-    var F = D.fluxoAutomacao;
-    if (!caixa || !mapa || !svg) return;
-    if (!F || !F.centro) { caixa.remove(); return; }
+  /* ---------- Linha do tempo do lead ----------
+     Cada etapa é um marco; o fio ao lado se preenche conforme a seção passa pela
+     tela e o marco acende quando o fio chega nele. O preenchimento é feito pelo
+     GSAP com scrub (fica preso à rolagem); sem GSAP, o fio aparece inteiro e os
+     marcos acendem por IntersectionObserver, então a seção nunca fica capenga. */
+  var pintaLinhaTempo = function () {};
+  (function linhaTempo() {
+    var lista = $("linhaTempo");
+    var itens = D.linhaAutomacao || [];
+    if (!lista) return;
+    if (!itens.length) { lista.remove(); return; }
 
-    var entradas = (F.entrada && F.entrada.nos) || [];
-    var saidas = F.saidas || [];
-
-    function no(item, classe, i) {
-      return '<span class="fluxo-no' + (classe ? " " + classe : "") + '" data-no="' + i + '"' +
-        (item.titulo ? ' title="' + esc(item.titulo) + '"' : "") + ' aria-hidden="true">' +
-        '<span class="ic-wrap" data-icon="' + esc(item.icone || "circle-dot") + '"></span></span>';
-    }
-
-    var i = 0;
-    var htmlEntradas = entradas.map(function (e) { return no(e, "min", i++); }).join("");
-    var iCentro = i;
-    var htmlCentro = no(F.centro, "max", i++);
-    var htmlSaidas = saidas.map(function (s) {
-      return '<div class="fluxo-saida">' + no(s, "", i++) +
-        '<span class="fluxo-rotulo">' + esc(s.rotulo) + "</span></div>";
+    lista.innerHTML = itens.map(function (e) {
+      return '<li class="ltempo-item">' +
+        '<span class="ltempo-ponto" aria-hidden="true"></span>' +
+        '<div class="ltempo-corpo">' +
+          (e.hora ? '<span class="ltempo-hora">' + esc(e.hora) + "</span>" : "") +
+          "<b>" + esc(e.titulo) + "</b>" +
+          "<p>" + esc(e.texto) + "</p>" +
+        "</div></li>";
     }).join("");
 
-    mapa.innerHTML =
-      '<div class="fluxo-col">' +
-        '<div class="fluxo-pilha">' + htmlEntradas + "</div>" +
-        '<span class="fluxo-rotulo">' + esc((F.entrada && F.entrada.rotulo) || "") + "</span>" +
-      "</div>" +
-      '<div class="fluxo-col fluxo-col-centro">' + htmlCentro +
-        '<span class="fluxo-rotulo">' + esc(F.centro.rotulo || "") + "</span>" +
-      "</div>" +
-      '<div class="fluxo-col fluxo-col-saida">' + htmlSaidas + "</div>";
-    mapa.querySelectorAll("[data-icon]").forEach(function (n) { n.innerHTML = ICON(n.getAttribute("data-icon")); });
+    var fio = document.createElement("span");
+    fio.className = "ltempo-fio";
+    fio.setAttribute("aria-hidden", "true");
+    fio.innerHTML = '<i class="ltempo-luz"></i>';
+    lista.appendChild(fio);
+    var luz = fio.firstChild;
+    var marcos = Array.prototype.slice.call(lista.querySelectorAll(".ltempo-item"));
 
-    // quem liga em quem: toda entrada vai ao centro, e o centro vai a cada saída
-    var ligacoes = [];
-    for (var e = 0; e < entradas.length; e++) ligacoes.push([e, iCentro, e * 0.22]);
-    for (var s = 0; s < saidas.length; s++) ligacoes.push([iCentro, iCentro + 1 + s, 1.05 + s * 0.22]);
+    // sem GSAP (ou com movimento reduzido): fio cheio e marcos acendendo na entrada
+    var reserva = marcos.map(function (m) {
+      return onVisible(m, function (vis) { if (vis) m.classList.add("on"); }, 0.6);
+    });
+    if (reduceMotion) { luz.style.height = "100%"; return; }
 
-    desenhaFeixes = function () {
-      var nos = caixa.querySelectorAll(".fluxo-no");
-      var base = caixa.getBoundingClientRect();
-      if (nos.length < 2 || !base.width) return;
-      svg.setAttribute("viewBox", "0 0 " + Math.round(base.width) + " " + Math.round(base.height));
-      var partes = "";
-      ligacoes.forEach(function (lig) {
-        var a = nos[lig[0]], b = nos[lig[1]];
-        if (!a || !b) return;
-        var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
-        var x1 = ra.right - base.left + 5;
-        var y1 = ra.top + ra.height / 2 - base.top;
-        var x2 = rb.left - base.left - 5;
-        var y2 = rb.top + rb.height / 2 - base.top;
-        var dx = Math.max(18, (x2 - x1) * 0.55);        // quanto a curva sai na horizontal antes de virar
-        var d = "M" + x1.toFixed(1) + " " + y1.toFixed(1) +
-          " C" + (x1 + dx).toFixed(1) + " " + y1.toFixed(1) + ", " +
-          (x2 - dx).toFixed(1) + " " + y2.toFixed(1) + ", " + x2.toFixed(1) + " " + y2.toFixed(1);
-        partes += '<path class="feixe-base" d="' + d + '"/>' +
-          '<path class="feixe-luz" pathLength="100" d="' + d + '" style="animation-delay:' + lig[2].toFixed(2) + 's"/>';
+    pintaLinhaTempo = function () {
+      reserva.forEach(function (o) { o.disconnect(); });
+      marcos.forEach(function (m) { m.classList.remove("on"); });
+      gsap.set(luz, { height: "0%" });
+      gsap.to(luz, {
+        height: "100%",
+        ease: "none",
+        scrollTrigger: { trigger: lista, start: "top 74%", end: "bottom 78%", scrub: 0.45 }
       });
-      svg.innerHTML = partes;
+      marcos.forEach(function (m) {
+        ScrollTrigger.create({
+          trigger: m,
+          start: "top 68%",
+          onEnter: function () { m.classList.add("on"); },
+          onLeaveBack: function () { m.classList.remove("on"); }
+        });
+      });
     };
-
-    desenhaFeixes();
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(desenhaFeixes);
-    var t;
-    window.addEventListener("resize", function () {
-      clearTimeout(t);
-      t = setTimeout(desenhaFeixes, 160);
-    }, { passive: true });
-    onVisible(caixa, function (vis) { caixa.classList.toggle("correndo", vis); }, 0.2);
   })();
+
 
   /* a página completa continua com as etapas em texto, ao lado da conversa simulada */
   function montaEtapas(el, itens, feitas) {
@@ -1755,6 +1730,9 @@
         });
       });
     }
+
+    // a linha do tempo troca o modo simples pelo fio preso à rolagem
+    pintaLinhaTempo();
 
     // o card da conversa flutua devagar enquanto a seção passa
     var fone = $("chatMock");
