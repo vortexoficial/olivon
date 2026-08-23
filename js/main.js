@@ -285,110 +285,43 @@
     var grade = $("paredeGrade");
     if (!caixa || !grade) return;
     var clientes = D.clientes || [];
-    var comLogo = clientes.length > 0;
+    var cartoes;
 
-    // a lista completa; a parede mostra só algumas por vez e vai trocando
-    var itens;
-    if (comLogo) {
+    if (clientes.length) {
       caixa.classList.add("com-logo");
-      itens = clientes.map(function (c) {
+      cartoes = clientes.map(function (c, i) {
         var img = '<img src="' + esc(c.logo) + '" alt="' + esc(c.nome) + '" loading="lazy">';
-        return c.url
-          ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>"
-          : img;
+        return '<article class="seg seg-marca" style="--i:' + i + '">' +
+          (c.url ? '<a href="' + esc(c.url) + '" target="_blank" rel="noopener" aria-label="' + esc(c.nome) + '">' + img + "</a>" : img) +
+          "</article>";
       });
     } else {
       var lead = $("clientesLead");
-      if (lead) lead.textContent = "Segmentos em que já colocamos sistemas de aquisição em produção.";
-      itens = (D.segmentos || []).map(function (s) {
+      if (lead) lead.textContent = "Segmentos em que já colocamos sistemas de aquisição em produção. As marcas entram aqui conforme cada cliente libera o uso.";
+      cartoes = (D.segmentos || []).map(function (s, i) {
         var seg = typeof s === "string" ? { nome: s } : s;   // aceita a lista antiga, só com nomes
-        return '<span class="seg-icone" aria-hidden="true">' + ICON(seg.icone || "circle-dot") + "</span>" +
-          '<span class="seg-corpo"><b>' + esc(seg.nome) + "</b></span>";
+        return '<article class="seg" style="--i:' + i + '">' +
+          '<span class="seg-icone" aria-hidden="true">' + ICON(seg.icone || "circle-dot") + "</span>" +
+          '<span class="seg-corpo"><b>' + esc(seg.nome) + "</b>" +
+          (seg.entrega ? "<small>" + esc(seg.entrega) + "</small>" : "") + "</span>" +
+          "</article>";
       });
     }
 
-    if (!itens.length) { var sec = caixa.closest("section"); if (sec) sec.remove(); return; }
+    if (!cartoes.length) { var sec = caixa.closest("section"); if (sec) sec.remove(); return; }
+    grade.innerHTML = cartoes.join("");
 
-    // quantas casas ficam na tela ao mesmo tempo
-    function casas() {
-      if (window.matchMedia("(max-width: 720px)").matches) return Math.min(4, itens.length);
-      return Math.min(5, itens.length);
-    }
-
-    var visiveis = [];      // qual item está em cada casa
-    var proximo = 0;        // de onde vem o próximo da fila
-    function monta() {
-      var n = casas();
-      visiveis = [];
-      for (var i = 0; i < n; i++) visiveis.push(i % itens.length);
-      proximo = n % itens.length;
-      grade.innerHTML = visiveis.map(function (idx, casa) {
-        return '<article class="seg' + (comLogo ? " seg-marca" : "") + '" style="--i:' + casa + '">' + itens[idx] + "</article>";
-      }).join("");
-      preparaTracos();
-    }
-
-    // o traço do ícone começa apagado e é desenhado quando a casa aparece
-    function preparaTracos() {
-      var partes = grade.querySelectorAll(".seg-icone path, .seg-icone circle, .seg-icone rect, .seg-icone line, .seg-icone polyline, .seg-icone polygon");
-      Array.prototype.forEach.call(partes, function (el) {
-        if (reduceMotion || !el.getTotalLength) return;
-        var len = 0;
-        try { len = el.getTotalLength(); } catch (e) { return; }
-        if (!len) return;
-        el.style.strokeDasharray = len;
-        el.style.strokeDashoffset = len;
-      });
-    }
-
-    monta();
-    // "dentro" entra uma vez e fica: ela é quem revela os cartões (a entrada tem
-    // forwards). Tirar a classe ao sair da tela apagava a parede inteira.
-    onVisible(caixa, function (vis) {
-      if (vis) caixa.classList.add("dentro");
-      rodando = vis;
-    }, 0.05);
-
-    /* Troca com desfoque e giro, na ideia do "logos with blur flip" do Aceternity:
-       uma casa de cada vez gira no eixo horizontal, some desfocada, troca de item
-       e volta. Como só uma muda por vez, a parede nunca pisca inteira. */
-    var rodando = false;
-    var casaDaVez = 0;
-    var relogio = null;
-    function gira() {
-      if (!rodando || motionOff || reduceMotion || itens.length <= casas()) return;
-      var cartoes = grade.children;
-      var alvo = cartoes[casaDaVez % cartoes.length];
-      casaDaVez = (casaDaVez + 1) % cartoes.length;
-      if (!alvo) return;
-      // pula quem já está na parede, para não repetir item
-      var tentativas = 0;
-      while (visiveis.indexOf(proximo) !== -1 && tentativas++ < itens.length) proximo = (proximo + 1) % itens.length;
-      var novoIdx = proximo;
-      proximo = (proximo + 1) % itens.length;
-
-      alvo.classList.add("saindo");
-      setTimeout(function () {
-        var casa = Array.prototype.indexOf.call(cartoes, alvo);
-        if (casa > -1) visiveis[casa] = novoIdx;
-        alvo.innerHTML = itens[novoIdx];
-        preparaTracos();
-        alvo.classList.remove("saindo");
-        alvo.classList.add("entrando");
-        setTimeout(function () { alvo.classList.remove("entrando"); }, 520);
-      }, 340);
-    }
-    if (!reduceMotion) {
-      relogio = setInterval(gira, 2600);
-      restarts.push(function () { rodando = true; });
-    }
-
-    // ao mudar de tamanho, o número de casas muda junto
-    var t;
-    window.addEventListener("resize", function () {
-      clearTimeout(t);
-      t = setTimeout(function () { if (grade.children.length !== casas()) monta(); }, 200);
-    }, { passive: true });
+    // o traço de cada ícone começa apagado e é desenhado quando a grade entra na tela
+    var partes = grade.querySelectorAll(".seg-icone path, .seg-icone circle, .seg-icone rect, .seg-icone line, .seg-icone polyline, .seg-icone polygon");
+    Array.prototype.forEach.call(partes, function (el) {
+      if (reduceMotion || !el.getTotalLength) return;
+      var len = 0;
+      try { len = el.getTotalLength(); } catch (e) { return; }
+      if (!len) return;
+      el.style.strokeDasharray = len;
+      el.style.strokeDashoffset = len;
+    });
+    onVisible(caixa, function (vis) { if (vis) caixa.classList.add("dentro"); }, 0.15);
 
     // luz que segue o cursor pela grade, só onde existe cursor de verdade
     if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
@@ -1033,44 +966,136 @@
       else v.pause();
     }
 
-    var car = null;
-    function aplica3D(idx) {
-      slides.forEach(function (s, i) {
-        var d = i - idx;
+    /* ---------- Movimento contínuo em 3D ----------
+       A posição é um número quebrado de cartões, e não um índice: ela anda sozinha a
+       cada quadro, e o desenho de cada cartão sai da distância dele até o centro.
+       Por isso o giro nunca pula de um passo para o outro e a volta é infinita.
+       Setas, pontos e arrasto empurram o alvo; a fita persegue esse alvo. */
+    var n = slides.length;
+    var passo = 1;
+    var pos = 0;          // onde a fita está
+    var alvo = 0;         // para onde ela vai
+    var VEL = 0.2;        // cartões por segundo
+    var foco = -1;
+    var raf = null, ultimo = 0, visivel = false, sobre = false, arrastando = false;
+
+    function mede() {
+      var s = slides[0];
+      var gap = parseFloat(getComputedStyle(track).getPropertyValue("--gap")) || 24;
+      passo = s.offsetWidth + gap;
+      track.style.height = s.offsetHeight + "px";
+    }
+
+    // distância mais curta de i até a posição atual, indo pelos dois lados da volta
+    function volta(d) {
+      d = ((d % n) + n) % n;
+      return d > n / 2 ? d - n : d;
+    }
+
+    function desenha() {
+      var maisPerto = 0, menor = Infinity;
+      for (var i = 0; i < n; i++) {
+        var d = volta(i - pos);
         var ad = Math.abs(d);
+        if (ad < menor) { menor = ad; maisPerto = i; }
         var giro = Math.max(-2, Math.min(2, d)) * -16;
         var recuo = Math.min(ad, 2) * 130;
         var escala = 1 - Math.min(ad, 2) * 0.07;
-        var alvo = { rotationY: giro, z: -recuo, scale: escala, opacity: ad > 2 ? 0 : 1 };
-        if (hasGsap && !motionOff) {
-          if (s.style.transform && !s._limpo) { s.style.transform = ""; s._limpo = true; }
-          gsap.to(s, Object.assign({ duration: 0.65, ease: "power3.out", overwrite: true }, alvo));
+        var op = ad > 2.6 ? 0 : (ad > 1.7 ? (2.6 - ad) / 0.9 : 1);
+        var s = slides[i];
+        s.style.transform = "translate3d(" + (d * passo).toFixed(1) + "px, 0, " + (-recuo).toFixed(1) + "px) rotateY(" + giro.toFixed(2) + "deg) scale(" + escala.toFixed(3) + ")";
+        s.style.opacity = op.toFixed(2);
+        s.style.zIndex = String(200 - Math.round(ad * 20));
+        s.style.visibility = op < 0.02 ? "hidden" : "visible";
+      }
+      if (maisPerto !== foco) {
+        foco = maisPerto;
+        slides.forEach(function (s, i) { s.classList.toggle("is-active", i === foco); });
+        if (dots) Array.prototype.forEach.call(dots.children, function (b, i) { b.classList.toggle("on", i === foco); });
+        for (var k = 0; k < n; k++) {
+          var dk = Math.abs(volta(k - foco));
+          if (dk === 0) ligaVideo(k, true);
+          else if (dk <= 1) ligaVideo(k, false);
         }
-        else {
-          // sem perspective() aqui: ela já vive no .pcar-viewport. Embutida no slide,
-          // o GSAP a decompõe ao assumir e deixa um deslocamento em x que tira o card do centro.
-          s.style.transform = "rotateY(" + giro + "deg) translateZ(" + -recuo + "px) scale(" + escala + ")";
-          s.style.opacity = alvo.opacity;
-        }
-        // só o card em foco toca; os vizinhos ficam carregados e parados
-        if (ad === 0) ligaVideo(i, true);
-        else if (ad <= 1) ligaVideo(i, false);
-        if (dots && dots.children[i]) dots.children[i].classList.toggle("on", i === idx);
-      });
+      }
     }
 
-    car = makeCarousel({
-      viewport: $("pcarViewport"),
-      track: track,
-      prev: $("pcarPrev"),
-      next: $("pcarNext"),
-      onChange: function (idx) { aplica3D(idx); }
-    });
-    if (!car) return;
+    function quadro(t) {
+      if (!ultimo) ultimo = t;
+      var dt = Math.min(0.05, (t - ultimo) / 1000);
+      ultimo = t;
+      var anda = visivel && !sobre && !arrastando && !motionOff && !reduceMotion && !lboxAberto;
+      if (anda) alvo += VEL * dt;
+      pos += (alvo - pos) * Math.min(1, dt * 5);
+      // mantém os dois números curtos, sem perder a distância entre eles
+      if (pos > n) { pos -= n; alvo -= n; }
+      if (pos < -n) { pos += n; alvo += n; }
+      desenha();
+      raf = requestAnimationFrame(quadro);
+    }
+
+    function comeca() {
+      if (raf) return;
+      ultimo = 0;
+      raf = requestAnimationFrame(quadro);
+    }
+    function para() {
+      if (!raf) return;
+      cancelAnimationFrame(raf);
+      raf = null;
+    }
+    function vaiPara(i) { alvo = pos + volta(i - pos); }
+
+    mede();
+    desenha();
+    comeca();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { mede(); desenha(); });
+    var tm;
+    window.addEventListener("resize", function () {
+      clearTimeout(tm);
+      tm = setTimeout(function () { mede(); desenha(); }, 160);
+    }, { passive: true });
+
+    if ($("pcarPrev")) $("pcarPrev").addEventListener("click", function () { alvo -= 1; });
+    if ($("pcarNext")) $("pcarNext").addEventListener("click", function () { alvo += 1; });
     if (dots) dots.addEventListener("click", function (e) {
       var b = e.target.closest(".pcar-dot");
-      if (b) car.go(+b.getAttribute("data-i"));
+      if (b) vaiPara(+b.getAttribute("data-i"));
     });
+
+    var vp = $("pcarViewport");
+    if (vp) {
+      vp.setAttribute("tabindex", "0");
+      vp.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight") { e.preventDefault(); alvo += 1; }
+        if (e.key === "ArrowLeft") { e.preventDefault(); alvo -= 1; }
+      });
+      // o cursor em cima segura a fita, para dar tempo de olhar
+      vp.addEventListener("pointerenter", function () { sobre = true; });
+      vp.addEventListener("pointerleave", function () { sobre = false; });
+
+      // arrasto: a fita anda junto com o dedo e continua de onde parou
+      var x0 = 0, alvo0 = 0, andou = false, id = null;
+      vp.addEventListener("pointerdown", function (e) {
+        if (e.button != null && e.button !== 0) return;
+        id = e.pointerId; x0 = e.clientX; alvo0 = alvo; andou = false; arrastando = true;
+      });
+      vp.addEventListener("pointermove", function (e) {
+        if (!arrastando || e.pointerId !== id) return;
+        var dx = e.clientX - x0;
+        if (!andou && Math.abs(dx) > 6) { andou = true; try { vp.setPointerCapture(id); } catch (err) {} }
+        if (andou) { alvo = alvo0 - dx / passo; e.preventDefault(); }
+      });
+      var solta = function () {
+        if (!arrastando) return;
+        arrastando = false;
+        if (andou) { alvo = Math.round(alvo); try { vp.releasePointerCapture(id); } catch (err) {} }
+        setTimeout(function () { andou = false; }, 0);
+      };
+      vp.addEventListener("pointerup", solta);
+      vp.addEventListener("pointercancel", solta);
+      vp.addEventListener("click", function (e) { if (andou) { e.stopPropagation(); e.preventDefault(); } }, true);
+    }
 
     /* ---------- Tela cheia com som ---------- */
     var lbox = $("lbox");
@@ -1106,26 +1131,30 @@
       docEl.classList.remove("lbox-on");
       lboxAberto = false;
       if (focoAnterior && focoAnterior.focus) focoAnterior.focus();
-      aplica3D(car.index);   // volta a tocar a prévia do card em foco
+      foco = -1;
+      desenha();   // volta a tocar a prévia do card em foco
     }
     if ($("lboxFechar")) $("lboxFechar").addEventListener("click", fecha);
     if (lbox) lbox.addEventListener("click", function (e) { if (e.target === lbox) fecha(); });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape" && lboxAberto) fecha(); });
 
     slides.forEach(function (s, i) {
-      s.addEventListener("click", function () { if (i === car.index) abre(i); });
+      s.addEventListener("click", function () {
+        if (Math.abs(volta(i - pos)) < 0.45) abre(i);
+        else vaiPara(i);
+      });
       s.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (i === car.index) abre(i); else car.go(i); }
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (Math.abs(volta(i - pos)) < 0.45) abre(i); else vaiPara(i); }
       });
     });
 
-    // fora da tela, tudo parado
+    // fora da tela, a fita para e os vídeos também
     onVisible($("pcar"), function (vis) {
-      if (vis) aplica3D(car.index);
-      else videos.forEach(function (v) { if (v) v.pause(); });
+      visivel = vis;
+      if (vis) comeca();
+      else { para(); videos.forEach(function (v) { if (v) v.pause(); }); }
     }, 0.15);
-
-    aplica3D(car.index);
+    restarts.push(comeca);
   })();
 
 
