@@ -3032,8 +3032,9 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .palco-card {
     pointer-events: auto;
     width: min(440px, 36vw);
-    aspect-ratio: 824 / 1086;
-    min-height: 470px;
+    /* a proporção é a do arquivo da arte: com cover, nada fica de fora */
+    aspect-ratio: 1122 / 1402;
+    min-height: 0;
     /* sombra aberta para os dois lados: é ela que faz o cartão entrar no escuro
        antes de sumir atrás do card, em vez de ser cortado numa aresta seca */
     box-shadow: 0 0 80px 18px var(--veu), 0 28px 64px -20px var(--vidro-sombra);
@@ -3098,7 +3099,8 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
   .avaliacao { flex-basis: 74vw; padding: 18px; }
   /* a altura mínima é o que garante a figura inteira: presa só ao texto, o card
      ficava mais baixo que a foto e cortava a cabeça */
-  .palco-card { min-height: 440px; }
+  /* no celular também: a arte aparece inteira, sem corte */
+  .palco-card { aspect-ratio: 1122 / 1402; min-height: 0; }
 
   .palco-texto { padding: 22px 18px 20px; }
 

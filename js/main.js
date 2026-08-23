@@ -373,7 +373,6 @@
         ? '<img class="palco-figura" id="palcoArte" src="' + esc(arte) + '" alt="" loading="lazy" decoding="async">'
         : "") +
       '<div class="palco-texto">' +
-        '<p class="eyebrow">Avaliações</p>' +
         '<div class="google-nota"><b>' + esc(G.nota || "5,0") + "</b>" + marcaG + "</div>" +
         estrelas("grandes") +
         '<p class="google-total">' + esc(G.total || "") + " no Google</p>" +
