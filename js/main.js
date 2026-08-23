@@ -1,7 +1,7 @@
 /* ============================================================
    OLIVEON PERFORMANCE · SCRIPTS · v2
    Dados editáveis em js/dados.js · ícones em js/icons.js.
-   GSAP (gsap + ScrollTrigger + Flip via CDN) é opcional: se não
+   GSAP (gsap + ScrollTrigger via CDN) é opcional: se não
    carregar, o site continua inteiro, só perde as entradas animadas.
    ============================================================ */
 (function () {
@@ -144,6 +144,7 @@
       var arte = document.createElement("img");
       arte.alt = "";
       arte.decoding = "async";
+      arte.setAttribute("fetchpriority", "high");   // é o maior elemento da primeira tela
       caixa.appendChild(arte);
       var trocaArte = function () {
         var a = arteDoTema();
@@ -1810,8 +1811,7 @@
   // Hashes SRI dos arquivos 3.15.0 servidos pelo cdnjs (recalcular ao trocar a versão)
   var GSAP_SRI = {
     "gsap.min.js": "sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly",
-    "ScrollTrigger.min.js": "sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF",
-    "Flip.min.js": "sha384-LY8cG/IUULu4u3V3AhwWBt01HIuO/hlekjkqgBx0DOJ/oquEL0Qk2L6qy+1QeRZM"
+    "ScrollTrigger.min.js": "sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF"
   };
   var introFeita = false;
 
@@ -1825,7 +1825,6 @@
 
   function initMotion() {
     gsap.registerPlugin(ScrollTrigger);
-    if (window.Flip) gsap.registerPlugin(Flip);
     hasGsap = true;
     docEl.classList.add("gsap");
 
@@ -1956,11 +1955,8 @@
     loadScript("gsap.min.js", function (ok) {
       if (!ok) { liberaHero(); return; }
       loadScript("ScrollTrigger.min.js", function (ok2) {
-        if (!ok2) { liberaHero(); return; }
-        loadScript("Flip.min.js", function () {
-          clearTimeout(heroTimer);
-          if (window.gsap && window.ScrollTrigger) initMotion(); else liberaHero();
-        });
+        clearTimeout(heroTimer);
+        if (ok2 && window.gsap && window.ScrollTrigger) initMotion(); else liberaHero();
       });
     });
   }

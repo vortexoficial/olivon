@@ -41,8 +41,15 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Barlow:wght@400;500;600&family=Martian+Mono:wdth,wght@87.5..112.5,400..600&display=swap" rel="stylesheet">
+  <!-- Só o que a página pinta de verdade: Barlow em 400 (os pesos 500 e 600 dela
+       não aparecem em lugar nenhum e custavam 22 KB), Archivo variável em 500 a 700
+       com o eixo de largura, e Martian Mono variável. -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Barlow:wght@400&family=Martian+Mono:wdth,wght@87.5..112.5,400..600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <!-- a arte do topo é o maior elemento da primeira dobra: pedir cedo tira ela do
+       fim da fila. Uma por tamanho de tela; o tema claro é o padrão. -->
+  <link rel="preload" as="image" href="assets/hero-megafone-claro.webp" media="(min-width: 721px)" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/hero-megafone-claro-mobile.webp" media="(max-width: 720px)" fetchpriority="high">
 </head>
 <body>
 
@@ -53,8 +60,8 @@
     <div class="header-inner">
       <div class="header-esq">
         <a href="#hero" class="header-logo" aria-label="Oliveon Performance, início">
-          <img class="logo-escuro" src="assets/logo-branco.png" alt="Oliveon Performance" width="180" height="60">
-          <img class="logo-claro" src="assets/logo-preto-vermelho.png" alt="" aria-hidden="true" width="180" height="60">
+          <img class="logo-escuro" src="assets/logo-branco.webp" alt="Oliveon Performance" width="180" height="60" loading="lazy" decoding="async">
+          <img class="logo-claro" src="assets/logo-preto-vermelho.webp" alt="" aria-hidden="true" width="180" height="60" loading="lazy" decoding="async">
         </a>
         <span class="header-idx" id="headerIdx" aria-hidden="true"></span>
       </div>
@@ -282,8 +289,8 @@
   <footer class="footer">
     <div class="container footer-top">
       <div class="footer-brand">
-        <img class="logo-escuro" src="assets/logo-branco.png" alt="Oliveon Performance" width="170" height="57">
-        <img class="logo-claro" src="assets/logo-preto-vermelho.png" alt="" aria-hidden="true" width="170" height="57">
+        <img class="logo-escuro" src="assets/logo-branco.webp" alt="Oliveon Performance" width="170" height="57" loading="lazy" decoding="async">
+        <img class="logo-claro" src="assets/logo-preto-vermelho.webp" alt="" aria-hidden="true" width="170" height="57" loading="lazy" decoding="async">
         <p>Estratégia, mídia, criação e software para empresas que querem crescer com um sistema, não com sorte.</p>
         <div class="footer-social">
           <a href="#" id="footerInstagram" target="_blank" rel="noopener" aria-label="Instagram"><i data-icon="instagram"></i></a>
@@ -329,9 +336,9 @@
   <!-- CTA fixo no mobile -->
   <a href="#" class="sticky-cta" id="stickyCta" data-whats><i data-icon="whatsapp"></i>Falar com a Oliveon</a>
 
-  <script src="js/icons.js"></script>
-  <script src="js/dados.js"></script>
-  <!-- GSAP (gsap, ScrollTrigger, Flip) é carregado por js/main.js sem bloquear a renderização -->
-  <script src="js/main.js"></script>
+  <script src="js/icons.js" defer></script>
+  <script src="js/dados.js" defer></script>
+  <!-- GSAP (gsap + ScrollTrigger) é carregado por js/main.js sem bloquear a renderização -->
+  <script src="js/main.js" defer></script>
 </body>
 </html>
