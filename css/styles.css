@@ -1777,6 +1777,23 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 .field textarea:focus-visible { outline: 2px solid var(--steel); outline-offset: 4px; }
 .field select:invalid { color: var(--steel-dim); }
 .form-hint { font-family: var(--mono); font-size: 0.66rem; letter-spacing: 0.04em; color: var(--muted); text-align: center; }
+/* Armadilha de robô: fora da tela, sem display:none (robô esperto ignora o que está escondido assim) */
+.mel { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+/* Resposta do envio do formulário: só ocupa espaço quando tem texto */
+.form-status:empty { display: none; }
+.form-status {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+.form-status.ok { color: var(--ok); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.form-status.erro { color: var(--red-text); border-color: color-mix(in srgb, var(--red) 40%, transparent); }
 /* Ficha: frentes marcadas nos serviços aparecem aqui e vão na mensagem */
 .ficha { border: 1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 12px 14px; }
 .ficha small { display: block; font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--steel-dim); }

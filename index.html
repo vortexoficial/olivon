@@ -279,8 +279,15 @@
           </div>
           <div class="field"><label for="fEmail">E-mail</label><input id="fEmail" name="email" type="email" required autocomplete="email"></div>
           <div class="field"><label for="fBusca">O que você precisa?</label><textarea id="fBusca" name="objetivo" rows="3" required placeholder="Ex.: gerar mais leads, reduzir custo por venda, automatizar o atendimento, escalar o e-commerce..."></textarea></div>
+          <!-- Armadilha de robô: fica fora da tela e ninguém preenche à mão.
+               Se vier preenchido, a função descarta o envio em silêncio. -->
+          <div class="mel" aria-hidden="true">
+            <label for="fAssunto">Assunto</label>
+            <input id="fAssunto" name="assunto" type="text" tabindex="-1" autocomplete="off">
+          </div>
           <button type="submit" class="btn btn-red btn-block">Solicitar diagnóstico</button>
-          <p class="form-hint">Ao enviar, você continua a conversa direto no nosso WhatsApp.</p>
+          <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+          <p class="form-hint">Ao enviar, seus dados chegam no nosso e-mail e a conversa continua no WhatsApp.</p>
           <span class="border-beam" style="--size:320px;--duration:7s"><i></i></span>
           <span class="border-beam" style="--size:320px;--duration:7s;--delay:3.5s;--via:#d9d9de;--border-width:1.5px"><i></i></span>
         </form>

@@ -1999,20 +1999,65 @@
     });
   }
 
-  /* ---------- Formulário → WhatsApp ---------- */
+  /* ---------- Formulário: abre o WhatsApp e manda o lead por e-mail ----------
+     O WhatsApp precisa abrir dentro do clique, senão o navegador barra a aba.
+     O e-mail vai em segundo plano, para /api/contato (função do Cloudflare
+     Pages). Se o envio falhar o lead não se perde: a conversa já está aberta. */
   var form = $("formDiagnostico");
-  if (form) form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    var f = new FormData(form);
-    // só entra na mensagem o campo que existe no formulário desta página
-    var linhas = [
+  if (form) {
+    var aviso = $("formStatus");
+    var CAMPOS_FORM = [
       ["Nome", "nome"], ["Empresa", "empresa"], ["WhatsApp", "whatsapp"], ["E-mail", "email"],
       ["Site/Instagram", "site"], ["Investimento atual em marketing", "investimento"],
       ["Precisa primeiro de", "frente"], ["O que busca melhorar", "objetivo"]
-    ].filter(function (par) { return form.elements[par[1]]; })
-      .map(function (par) { return "*" + par[0] + ":* " + (f.get(par[1]) || "não informado"); });
-    if (ficha.lista().length) linhas.push("*Frentes marcadas no site:* " + ficha.lista().join(", "));
-    window.open(waLink("*Solicitação de diagnóstico, site Oliveon*\n\n" + linhas.join("\n")), "_blank", "noopener");
-  });
+    ];
+    var enviando = false;
+
+    function conta(texto, classe) {
+      if (!aviso) return;
+      aviso.textContent = texto || "";
+      aviso.className = "form-status" + (classe ? " " + classe : "");
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (enviando) return;
+      var f = new FormData(form);
+
+      // 1) WhatsApp, com a mesma mensagem de sempre
+      var linhas = CAMPOS_FORM
+        .filter(function (par) { return form.elements[par[1]]; })
+        .map(function (par) { return "*" + par[0] + ":* " + (f.get(par[1]) || "não informado"); });
+      if (ficha.lista().length) linhas.push("*Frentes marcadas no site:* " + ficha.lista().join(", "));
+      window.open(waLink("*Solicitação de diagnóstico, site Oliveon*\n\n" + linhas.join("\n")), "_blank", "noopener");
+
+      // 2) os mesmos dados, por e-mail
+      var dados = {};
+      CAMPOS_FORM.forEach(function (par) {
+        if (form.elements[par[1]]) dados[par[1]] = f.get(par[1]) || "";
+      });
+      dados.assunto = f.get("assunto") || "";          // armadilha de robô
+      if (ficha.lista().length) dados.frentes = ficha.lista().join(", ");
+
+      enviando = true;
+      conta("Enviando seus dados...", "");
+      fetch("/api/contato", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(dados)
+      }).then(function (r) {
+        return r.json().catch(function () { return { ok: false }; });
+      }).then(function (resp) {
+        if (resp && resp.ok) {
+          conta("Recebemos seus dados. Retorno em até 1 dia útil.", "ok");
+          form.reset();
+        } else {
+          conta("Não deu para enviar por aqui, mas a conversa no WhatsApp já abriu. Se preferir, escreva para " + (D.email || "") + ".", "erro");
+        }
+      }).catch(function () {
+        conta("Não deu para enviar por aqui, mas a conversa no WhatsApp já abriu.", "erro");
+      }).then(function () { enviando = false; });
+    });
+  }
 
 })();

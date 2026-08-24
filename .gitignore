@@ -1,0 +1,5 @@
+# chaves e arquivos locais, nunca vão para o repositório
+segredos.env
+.env
+.dev.vars
+node_modules/
