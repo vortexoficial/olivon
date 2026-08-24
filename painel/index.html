@@ -23,6 +23,9 @@
     --ease: cubic-bezier(.22,1,.36,1);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* elemento escondido some de verdade: sem isto, um display: grid mais abaixo
+     anula o hidden e a camada invisivel engole o clique do botao */
+  [hidden] { display: none !important; }
   body { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
   svg { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; display: block; }
   input, select, textarea, button { font: inherit; color: inherit; }
