@@ -2904,15 +2904,22 @@ h3 { font-size: 1.25rem; font-stretch: 112%; }
 
 /* logos de cliente, quando entrarem em js/dados.js */
 .seg-marca { align-items: center; justify-content: center; min-height: 112px; padding: 18px; }
+/* Qualquer logo vira uma silhueta na cor do tema: brightness(0) zera a cor e
+   mantém só o recorte; no tema escuro o invert deixa branca. Assim serve PNG
+   branco, PNG colorido e SVG cinza, com um arquivo só e sem sumir no claro. */
 .seg-marca img {
   max-width: 100%;
   max-height: 46px;
   width: auto;
-  filter: grayscale(1) brightness(1.8);
+  filter: brightness(0) invert(1);
   opacity: 0.72;
-  transition: filter var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease);
+  transition: opacity var(--dur-2) var(--ease);
 }
-.seg-marca:hover img { filter: none; opacity: 1; }
+[data-tema="claro"] .seg-marca img { filter: brightness(0); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-tema="escuro"]) .seg-marca img { filter: brightness(0); }
+}
+.seg-marca:hover img { opacity: 1; }
 
 /* ---------- Avaliações do Google: palco com card na frente ----------
    Estrutura vinda do site do Benedito (que por sua vez veio da Delegada
