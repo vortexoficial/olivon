@@ -311,11 +311,18 @@
     el.className = "recado" + (classe ? " " + classe : "");
   }
 
+  /* O campo precisa estar dentro da página: campo solto não abre a janela de
+     arquivo em parte dos navegadores. Fica escondido e sai depois da escolha. */
   function pedeArquivo(aceita) {
     return new Promise(function (ok) {
       var inp = document.createElement("input");
-      inp.type = "file"; inp.accept = aceita;
-      inp.addEventListener("change", function () { ok(inp.files && inp.files[0]); }, { once: true });
+      inp.type = "file";
+      inp.accept = aceita;
+      inp.style.cssText = "position:fixed;left:-9999px;width:1px;height:1px;opacity:0";
+      document.body.appendChild(inp);
+      var fim = function (arquivo) { inp.remove(); ok(arquivo); };
+      inp.addEventListener("change", function () { fim(inp.files && inp.files[0]); }, { once: true });
+      inp.addEventListener("cancel", function () { fim(null); }, { once: true });
       inp.click();
     });
   }
