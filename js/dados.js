@@ -14,7 +14,7 @@ window.OLIVEON = {
 
   /* WhatsApp com código do país + DDD, só números.
      Ex.: 5511999999999  (55 = Brasil, 11 = DDD) */
-  whatsapp: "5500000000000",
+  whatsapp: "5513997319531",
 
   /* Mensagem inicial ao abrir o WhatsApp pelos botões do site */
   whatsappMensagem: "Olá! Vim pelo site da Oliveon e quero um diagnóstico da minha operação.",
