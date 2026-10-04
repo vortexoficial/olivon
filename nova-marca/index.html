@@ -316,13 +316,14 @@ const opcoes = [
     atencao: 'As pás ainda têm tamanhos parecidos. Na vetorização, o crescimento de uma pá para a outra fica mais visível, porque é isso que torna o símbolo único. Em tamanho de ícone de aba, as pás viram um giro e quem segura a leitura são o anel e a pá vermelha.',
   },
   {
-    id: 'o5', chave: 'foguete2', n: '05', nome: 'Decolagem', sub: 'O foguete sai do O',
-    txt: 'O O de OLIVEON vira a plataforma de lançamento: um foguete vermelho, compacto e limpo, sai do anel a 45°, e o rastro dele corta o O em duas linhas, como o corte diagonal que a marca já tem. Em 3D branco fosco, com acabamento de ícone premium e o vermelho da marca, sem nenhum metal. Vem com uma versão chapada para fundo claro, impressão em uma cor, bordado e ícone pequeno.',
+    id: 'o5', chave: 'foguete3', n: '05', nome: 'Decolagem', sub: 'O foguete sai do O',
+    txt: 'O O de OLIVEON vira a plataforma de lançamento: um foguete vermelho, compacto e limpo, sai do anel a 45°, deixando a chama para trás, e embaixo o rastro corta o O com uma faixa, como o corte diagonal que a marca já tem. A forma é exatamente a da última miniatura do rascunho, medida e redesenhada em vetor. Em 3D branco fosco, com acabamento de ícone premium e o vermelho da marca, sem nenhum metal, e com uma versão chapada para fundo claro, impressão em uma cor, bordado e ícone pequeno.',
     tags: ['3D branco', 'Foguete saindo do O', 'Rastro em espaço negativo', 'Versão chapada inclusa'],
-    rascunho: 'r8-1', finais: ['f8-2', 'f8-1'], escolhida: 'f8-2', mocks: ['m8a-1', 'm8b-1'],
+    rascunho: 'r8-1', notaRascunho: 'Seis estudos; a escolhida é a última miniatura',
+    finais: ['pl9-1', 'pl9-2'], escolhida: 'pl9-1', rotuloB: 'Versão chapada', mocks: ['m9a-1', 'm9b-1'],
     rotulos: ['3D · fundo escuro', 'Chapada · fundo claro', 'Chapada · uma cor', 'Símbolo 3D'],
-    legendas: { 'm8b-1': 'Recepção · escultura 3D' },
-    forte: 'Leitura imediata de crescimento e lançamento, com o corte diagonal que a OLIVEON já tem. O 3D branco funciona em tela, vídeo e na parede, onde vira escultura.',
+    legendas: { 'm9b-1': 'Recepção · escultura 3D' },
+    forte: 'Leitura imediata de crescimento e lançamento, com o corte diagonal que a OLIVEON já tem. Foguete, chama e rastro no mesmo eixo, desenhados em vetor exato. O 3D branco funciona em tela, vídeo e na parede, onde vira escultura.',
     atencao: 'Foguete é um símbolo comum em marketing; aqui ele se sustenta por nascer de dentro do O da marca. O 3D branco brilha no escuro; no fundo claro, em impressos e no ícone de aba entra a versão chapada, com o anel grafite.',
   },
 ];
@@ -348,7 +349,7 @@ const html = opcoes.map((o) => {
     </div>
 
     <div class="fase">
-      <div class="fase-cab"><span class="rot"><b>Fase 1</b> · Rascunho</span><small>Seis estudos e o escolhido circulado</small></div>
+      <div class="fase-cab"><span class="rot"><b>Fase 1</b> · Rascunho</span><small>${o.notaRascunho || 'Seis estudos e o escolhido circulado'}</small></div>
       <a class="quadro" href="web/${o.rascunho}.webp" target="_blank"><img src="web/${o.rascunho}.webp" alt="Rascunho a lápis da opção ${o.nome}" loading="lazy" width="1800" height="1195"></a>
     </div>
 
@@ -393,7 +394,7 @@ const html = opcoes.map((o) => {
 
     <div class="leitura">
       <div><span class="rot">Ponto forte</span><p>${o.forte}</p><span class="rot" style="margin-top:20px">Atenção</span><p>${o.atencao}</p></div>
-      <div class="var"><span class="rot">Variação B da arte final</span><a href="web/${outra}.webp" target="_blank"><img src="web/${outra}.webp" alt="Segunda variação da opção ${o.nome}" loading="lazy" width="1800" height="1013"></a></div>
+      <div class="var"><span class="rot">${o.rotuloB || 'Variação B da arte final'}</span><a href="web/${outra}.webp" target="_blank"><img src="web/${outra}.webp" alt="Segunda variação da opção ${o.nome}" loading="lazy" width="1800" height="1013"></a></div>
     </div>
   </div>
 </section>`;
