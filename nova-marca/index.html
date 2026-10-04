@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>OLIVEON · Nova marca</title>
+<meta name="description" content="Três propostas para a nova marca da OLIVEON Performance: rascunho, arte final e aplicação.">
+<meta property="og:title" content="OLIVEON · Nova marca">
+<meta property="og:description" content="Três propostas para escolher: Lâmina, Redline e Oliveira.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://www.oliveonperformance.com.br/nova-marca/web/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="theme-color" content="#0a0b0d">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,400..700&family=Barlow:wght@400;500&family=Martian+Mono:wdth,wght@87.5..112.5,400..500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0b0d;
+  --bg-alt:#0d0e11;
+  --card:#121316;
+  --elevated:#191b1f;
+  --border:#24262b;
+  --border-strong:#34373e;
+  --text:#f4f5f7;
+  --text-2:#b9bcc3;
+  --muted:#9da1a8;
+  --steel:#c9ccd2;
+  --steel-dim:#7e838c;
+  --red:#e60012;
+  --claro:#f4f5f7;
+  --display:'Archivo','Arial Black',sans-serif;
+  --font:'Barlow','Segoe UI',sans-serif;
+  --mono:'Martian Mono','Consolas',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 32px}
+.mono{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-variation-settings:"wdth" 100}
+.rot{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel-dim);margin-bottom:16px}
+.rot b{color:var(--steel);font-weight:500}
+h1,h2,h3{font-family:var(--display);font-stretch:125%;font-weight:600;letter-spacing:-.015em;line-height:1}
+
+/* Topo */
+.topo{padding:88px 0 64px;border-bottom:1px solid var(--border)}
+.topo .mono{color:var(--steel-dim)}
+.topo h1{font-size:clamp(2.4rem,5.4vw,4.2rem);margin:28px 0 26px;max-width:15ch}
+.topo h1 em{font-style:normal;color:var(--red)}
+.lead{max-width:62ch;color:var(--text-2);font-size:1.1rem}
+.processo{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:52px;border-top:1px solid var(--border-strong)}
+.processo div{padding:16px 16px 0 0;position:relative}
+.processo div::before{content:"";position:absolute;top:-1px;left:0;width:28px;height:1px;background:var(--steel)}
+.processo div.agora::before{background:var(--red)}
+.processo span{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--steel-dim)}
+.processo strong{display:block;font-family:var(--display);font-stretch:112%;font-weight:600;font-size:1rem;margin-top:6px}
+.processo small{display:block;color:var(--muted);font-size:.86rem;margin-top:4px}
+
+/* Barra fixa */
+.barra{position:sticky;top:0;z-index:5;background:rgba(10,11,13,.86);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.barra .wrap{display:flex;align-items:center;gap:22px;min-height:58px;flex-wrap:wrap}
+.barra nav{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.barra nav a{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:2px;transition:color .2s,background .2s}
+.barra nav a:hover{color:var(--text);background:var(--card)}
+.alterna{display:flex;border:1px solid var(--border-strong);border-radius:2px}
+.alterna button{display:flex;align-items:center;gap:8px;background:none;border:0;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;padding:9px 12px;cursor:pointer}
+.alterna button[aria-pressed="true"]{background:var(--elevated);color:var(--text)}
+.alterna svg{width:14px;height:14px}
+
+/* Seções */
+.secao{padding:84px 0;border-bottom:1px solid var(--border)}
+.secao>.wrap>h2{font-size:clamp(1.9rem,3.8vw,2.9rem);max-width:18ch;margin-bottom:18px}
+.duas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:start}
+.atual{background:var(--bg-alt);border:1px solid var(--border);border-radius:4px;padding:48px 36px}
+.lista{list-style:none;border-top:1px solid var(--border)}
+.lista li{padding:16px 0;border-bottom:1px solid var(--border);color:var(--text-2);display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px}
+.lista li span{font-family:var(--mono);font-size:11px;color:var(--steel-dim);padding-top:4px}
+.lista li b{color:var(--text);font-weight:500}
+
+.pesquisa{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-top:36px}
+.pesquisa figure{min-width:0;background:var(--card);border:1px solid var(--border);border-radius:4px;overflow:hidden;display:flex;flex-direction:column}
+.pesquisa img{width:100%;height:150px;object-fit:cover;object-position:top}
+.pesquisa figcaption{padding:14px;font-size:.88rem;color:var(--text-2);line-height:1.5}
+.pesquisa figcaption b{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel-dim);font-weight:400;margin-bottom:6px}
+
+/* Opção */
+.op{padding:96px 0 84px;border-bottom:1px solid var(--border)}
+.op-cab{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:40px;margin-bottom:56px}
+.op-cab .idx{font-family:var(--mono);font-size:12px;letter-spacing:.14em;color:var(--steel-dim)}
+.op-cab h2{font-size:clamp(2.6rem,6vw,4.6rem);margin:14px 0 10px}
+.op-cab .sub{font-family:var(--display);font-stretch:112%;font-size:1.15rem;color:var(--steel);font-weight:500}
+.op-cab p.txt{color:var(--text-2);font-size:1.06rem;margin-top:4px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tags li{list-style:none;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border-strong);border-radius:2px;padding:7px 10px}
+
+.fase{margin-top:44px}
+.fase-cab{display:flex;align-items:baseline;justify-content:space-between;gap:16px;border-top:1px solid var(--border-strong);padding-top:14px;margin-bottom:18px;position:relative}
+.fase-cab::before{content:"";position:absolute;top:-1px;left:0;width:40px;height:1px;background:var(--steel)}
+.fase-cab .rot{margin:0}
+.fase-cab small{color:var(--muted);font-size:.88rem;text-align:right}
+.quadro{display:block;border:1px solid var(--border);border-radius:4px;overflow:hidden;background:#000}
+.quadro img{width:100%}
+
+.palco{position:relative;border:1px solid var(--border);border-radius:4px;aspect-ratio:16/8;display:grid;place-items:center;background:var(--bg);transition:background .3s;overflow:hidden}
+body[data-fundo="claro"] .palco{background:var(--claro);border-color:#d9dbe0}
+.palco img{grid-area:1/1;max-width:62%;max-height:58%;width:auto;object-fit:contain;transition:opacity .3s}
+.palco img.pos{opacity:0}
+body[data-fundo="claro"] .palco img.pos{opacity:1}
+body[data-fundo="claro"] .palco img.neg{opacity:0}
+.palco .marca{position:absolute;left:16px;bottom:14px;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel-dim)}
+
+.versoes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:12px}
+.versoes figure{min-width:0}
+.versoes .v{aspect-ratio:16/10;border-radius:4px;display:grid;place-items:center;border:1px solid var(--border)}
+.versoes .v img{max-width:74%;max-height:52%;width:auto}
+.versoes .v.ic img{max-height:58%}
+.versoes figcaption{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel-dim);margin-top:8px}
+
+.usos{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:12px;margin-top:12px}
+.uso{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:22px}
+.icones{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.icones figure{display:flex;flex-direction:column;align-items:center;gap:8px}
+.icones figcaption{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel-dim)}
+.avatar{width:72px;height:72px;border-radius:50%;background:var(--bg);border:1px solid var(--border-strong);display:grid;place-items:center}
+.avatar img{max-width:56%;max-height:56%}
+.app{width:72px;height:72px;border-radius:17px;background:var(--claro);display:grid;place-items:center}
+.app img{max-width:60%;max-height:60%}
+.app.escuro{background:#000;border:1px solid var(--border-strong)}
+.abas{display:grid;gap:10px}
+.aba{display:flex;align-items:center;gap:10px;height:36px;padding:0 14px;border-radius:4px 4px 0 0;max-width:280px;font-size:13px}
+.aba.e{background:#202124;color:#e8eaed}
+.aba.c{background:#fff;color:#202124;border:1px solid #dadce0;border-bottom:0}
+.aba img{width:16px;height:16px;flex:none}
+.reduz{display:flex;align-items:flex-end;gap:16px;margin-top:4px}
+.reduz img{flex:none}
+
+.mocks{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.mocks figure{min-width:0}
+.mocks figcaption{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel-dim);margin-top:8px}
+
+.leitura{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:12px;margin-top:44px}
+.leitura>div{min-width:0;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:22px}
+.leitura p{color:var(--text-2);font-size:.96rem}
+.leitura .var img{border-radius:2px;border:1px solid var(--border)}
+
+/* Comparativo */
+.comp{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:36px}
+.comp>div{min-width:0;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;display:flex;flex-direction:column;gap:18px}
+.comp .logo{aspect-ratio:16/9;display:grid;place-items:center;background:var(--bg);border-radius:2px}
+.comp .logo img{max-width:80%;max-height:60%;width:auto}
+.comp h3{font-size:1.25rem;font-stretch:112%}
+.comp .reduz{background:var(--bg);padding:14px;border-radius:2px;justify-content:center}
+.comp.claro .reduz{background:var(--claro)}
+.recomenda{margin-top:28px;border:1px solid var(--border-strong);border-left:2px solid var(--red);border-radius:2px;padding:28px 30px;background:var(--bg-alt)}
+.recomenda h3{font-size:1.5rem;margin-bottom:12px}
+.recomenda p{color:var(--text-2);max-width:78ch}
+.passos{list-style:none;margin-top:36px;border-top:1px solid var(--border)}
+.passos li{display:grid;grid-template-columns:52px minmax(0,1fr);gap:10px;padding:16px 0;border-bottom:1px solid var(--border);color:var(--text-2)}
+.passos li span{font-family:var(--mono);font-size:11px;color:var(--steel-dim);padding-top:4px}
+.passos li b{color:var(--text);font-weight:500}
+.rodape{padding:44px 0 64px;color:var(--steel-dim)}
+.rodape .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+@media (max-width:960px){
+  .duas,.op-cab{grid-template-columns:minmax(0,1fr);gap:28px}
+  .pesquisa{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .usos{grid-template-columns:minmax(0,1fr)}
+  .leitura,.comp{grid-template-columns:minmax(0,1fr)}
+  .processo{grid-template-columns:repeat(2,minmax(0,1fr));row-gap:22px}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .topo{padding:56px 0 44px}
+  .secao,.op{padding:60px 0}
+  .versoes{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mocks{grid-template-columns:minmax(0,1fr)}
+  .palco{aspect-ratio:4/3}
+  .palco img{max-width:84%}
+  .pesquisa img{height:120px}
+  .fase-cab{flex-direction:column;gap:6px}
+  .fase-cab small{text-align:left}
+  .barra nav{display:none}
+  .barra .wrap{justify-content:flex-end}
+}
+</style>
+</head>
+<body data-fundo="escuro">
+
+<header class="topo">
+  <div class="wrap">
+    <span class="mono">OLIVEON Performance · Estudo de marca · 03.10.2026</span>
+    <h1>Três caminhos para a <em>nova</em> marca</h1>
+    <p class="lead">Mesma paleta (grafite, prata, branco e o vermelho #E60012), três símbolos com ideias diferentes. Cada opção passou por rascunho, arte final e teste de aplicação em papelaria e na parede da recepção. No fim da página, as três lado a lado no mesmo teste.</p>
+    <div class="processo">
+      <div><span>00</span><strong>Pesquisa</strong><small>Referências e tendências 2026</small></div>
+      <div><span>01</span><strong>Rascunho</strong><small>Seis estudos por ideia</small></div>
+      <div><span>02</span><strong>Arte final</strong><small>4K, plana, em três cores</small></div>
+      <div><span>03</span><strong>Aplicação</strong><small>Papelaria, parede e ícone</small></div>
+      <div class="agora"><span>04</span><strong>Vetorização</strong><small>Só da escolhida</small></div>
+    </div>
+  </div>
+</header>
+
+<div class="barra">
+  <div class="wrap">
+    <nav aria-label="Seções">
+      <a href="#partida">00 Partida</a>
+      <a href="#o1">01 Lâmina</a>
+      <a href="#o2">02 Redline</a>
+      <a href="#o3">03 Oliveira</a>
+      <a href="#comparar">Comparar</a>
+    </nav>
+    <div class="alterna" role="group" aria-label="Fundo das artes">
+      <button type="button" data-fundo="escuro" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>Escuro</button>
+      <button type="button" data-fundo="claro" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>Claro</button>
+    </div>
+  </div>
+</div>
+
+<main>
+<section class="secao" id="partida">
+  <div class="wrap">
+    <span class="rot"><b>00</b> · Ponto de partida</span>
+    <h2>O que muda e o que fica</h2>
+    <div class="duas">
+      <div class="atual"><img src="web/atual.webp" alt="Logo atual da OLIVEON: O cromado cortado por lâmina vermelha" width="1000" height="296"></div>
+      <ul class="lista">
+        <li><span>01</span><div><b>Cromo, chanfro e brilho</b> datam a marca (efeito de 2015), pesam em tela pequena e não imprimem em uma cor só.</div></li>
+        <li><span>02</span><div><b>O "Ø" lê como "conjunto vazio" ou "proibido".</b> É o símbolo de nada, numa marca que vende resultado.</div></li>
+        <li><span>03</span><div><b>O que fica:</b> grafite, prata, branco e o vermelho #E60012, o ângulo de 45° e o "E" de três barras, que já é assinatura.</div></li>
+      </ul>
+    </div>
+    <div class="pesquisa">
+      <figure><a href="web/pin-r8-abstrato.webp" target="_blank"><img src="web/pin-r8-abstrato.webp" alt="Referências de símbolos abstratos afiados" loading="lazy" width="1400" height="566"></a><figcaption><b>Anel e lâmina</b>A ideia atual em versão fina e afiada fica muito mais elegante.</figcaption></figure>
+      <figure><a href="web/pin-r1-letra-o.webp" target="_blank"><img src="web/pin-r1-letra-o.webp" alt="Referências de letra O como símbolo" loading="lazy" width="1400" height="566"></a><figcaption><b>O como forma</b>Contraforma deslocada dá movimento sem nenhum efeito.</figcaption></figure>
+      <figure><a href="web/pin-r2-gauge.webp" target="_blank"><img src="web/pin-r2-gauge.webp" alt="Referências de velocímetro" loading="lazy" width="1400" height="566"></a><figcaption><b>Velocímetro</b>Clichê de banco de imagem. Só vale enxuto e dentro da palavra.</figcaption></figure>
+      <figure><a href="web/pin-r4-olive.webp" target="_blank"><img src="web/pin-r4-olive.webp" alt="Referências de folha de oliveira geométrica" loading="lazy" width="1400" height="566"></a><figcaption><b>Folha geométrica</b>E uma folha de estudos que guiou a linguagem dos rascunhos.</figcaption></figure>
+      <figure><a href="web/pin-r7-plate.webp" target="_blank"><img src="web/pin-r7-plate.webp" alt="Apresentações de marca em vermelho e preto" loading="lazy" width="1400" height="703"></a><figcaption><b>Vermelho e preto</b>Símbolo simples que vira sistema: cartão, parede, ícone.</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<div id="opcoes"></div>
+
+<section class="secao" id="comparar">
+  <div class="wrap">
+    <span class="rot"><b>04</b> · Lado a lado</span>
+    <h2>As três, no mesmo teste</h2>
+    <p class="lead">Embaixo de cada uma, o símbolo em 64, 32 e 16 px, no tamanho real de um ícone de aba. É ali que uma marca prova se aguenta o dia a dia.</p>
+    <div class="comp" id="comp"></div>
+    <div class="comp claro" id="comp-claro" style="margin-top:12px"></div>
+    <div class="recomenda">
+      <span class="rot">Leitura da direção de arte</span>
+      <h3>Nossa recomendação: 03 Oliveira</h3>
+      <p>É a única das três que nenhum concorrente tem: nasce do próprio nome, conta uma história (a oliveira cresce por séculos) e ainda fala de dados pelas barras. Se a prioridade for não perder o reconhecimento de quem já conhece a OLIVEON, a 01 Lâmina é a transição mais segura. A 02 Redline comunica "performance" na hora, mas é a que mais se aproxima de ícone pronto.</p>
+    </div>
+    <ul class="passos">
+      <li><span>01</span><div><b>Escolha o número da opção</b> (ou diga o que misturar entre elas).</div></li>
+      <li><span>02</span><div><b>Vetorização da escolhida:</b> redesenho em vetor com a tipografia definitiva, com cada curva e espessura acertadas.</div></li>
+      <li><span>03</span><div><b>Entrega:</b> SVG, PDF, EPS e PNG nas versões escura, clara, branca e símbolo, mais o favicon de verdade para o site.</div></li>
+    </ul>
+  </div>
+</section>
+</main>
+
+<footer class="rodape">
+  <div class="wrap">
+    <span class="mono">OLIVEON Performance · Estudo de marca</span>
+    <span class="mono">Propostas para escolha · versão final em vetor após a decisão</span>
+  </div>
+</footer>
+
+<script>
+const opcoes = [
+  {
+    id: 'o1', chave: 'lamina', n: '01', nome: 'Lâmina', sub: 'A evolução',
+    txt: 'O corte vermelho da marca atual deixa de ser um risco sobre o O e vira uma seta que atravessa o anel e sai em 45°. O anel é o ponto de partida, a seta é o resultado saindo dele. Mantém tudo o que a marca já tem de reconhecível (o corte, o vermelho, o "E" de três barras) e troca o cromo por forma pura.',
+    tags: ['Evolução da atual', 'Seta de crescimento', '"E" de três barras', 'Horizontal'],
+    rascunho: 'r1-1', finais: ['f1-1', 'f1-2'], escolhida: 'f1-1', mocks: ['m1a-1', 'm1b-1'],
+    forte: 'Transição sem perder reconhecimento: quem já viu a OLIVEON reconhece o corte, agora com sentido de crescimento.',
+    atencao: 'A lâmina é fina. Abaixo de 24 px ela some e fica só o anel com o corte; na vetorização, engrossar a seta para o ícone.',
+  },
+  {
+    id: 'o2', chave: 'redline', n: '02', nome: 'Redline', sub: 'O instrumento',
+    txt: 'O primeiro O de OLIVEON vira um conta-giros. O ponteiro aponta para a faixa vermelha, o limite do motor: performance levada ao máximo e medida o tempo todo. O símbolo mora dentro da palavra, então a marca se lê inteira, como um nome só.',
+    tags: ['Símbolo dentro da palavra', 'Medição e dados', 'Linguagem automotiva', 'Palavra única'],
+    rascunho: 'r2-1', finais: ['f2-2', 'f2-1'], escolhida: 'f2-2', mocks: ['m2a-1', 'm2b-1'],
+    forte: 'Diz "performance" sem precisar de explicação e ocupa pouco espaço: a palavra inteira é a marca.',
+    atencao: 'É o caminho mais perto de ícone de banco de imagem. Os riscos do mostrador somem em tamanho pequeno e precisam ser redesenhados na vetorização.',
+  },
+  {
+    id: 'o3', chave: 'oliveira', n: '03', nome: 'Oliveira', sub: 'A raiz',
+    txt: 'OLIVE-ON: a oliveira vive séculos e cresce sempre. A folha é montada com barras que crescem como um gráfico, e só a ponta é vermelha: o resultado que nasce dos dados. Dá à agência uma história própria, que nenhum concorrente de seta e foguete tem.',
+    tags: ['Nasce do nome', 'Crescimento que dura', 'Gráfico de barras', 'Vertical'],
+    rascunho: 'r3-1', finais: ['f3-2', 'f3-1'], escolhida: 'f3-2', mocks: ['m3a-1', 'm3b-1'],
+    forte: 'O símbolo mais proprietário das três, com história para contar em pitch, site e redes.',
+    atencao: 'Folha pode lembrar agro ou sustentabilidade. O grafite, o prata e as barras seguram o lado tecnológico; evitar verde em qualquer peça.',
+  },
+];
+
+const nomeMock = { a: 'Papelaria · cartões e caderno', b: 'Recepção · letras em acrílico' };
+const html = opcoes.map((o) => {
+  const outra = o.finais.find((f) => f !== o.escolhida);
+  return `
+<section class="op" id="${o.id}">
+  <div class="wrap">
+    <div class="op-cab">
+      <div>
+        <span class="idx">${o.n} / 03</span>
+        <h2>${o.nome}</h2>
+        <span class="sub">${o.sub}</span>
+      </div>
+      <div>
+        <p class="txt">${o.txt}</p>
+        <ul class="tags">${o.tags.map((t) => `<li>${t}</li>`).join('')}</ul>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fase-cab"><span class="rot"><b>Fase 1</b> · Rascunho</span><small>Seis estudos e o escolhido circulado</small></div>
+      <a class="quadro" href="web/${o.rascunho}.webp" target="_blank"><img src="web/${o.rascunho}.webp" alt="Rascunho a lápis da opção ${o.nome}" loading="lazy" width="1800" height="1195"></a>
+    </div>
+
+    <div class="fase">
+      <div class="fase-cab"><span class="rot"><b>Fase 2</b> · Arte final</span><small>Use o botão Escuro / Claro no topo</small></div>
+      <div class="palco">
+        <img class="neg" src="web/${o.chave}-neg.webp" alt="Logo ${o.nome} para fundo escuro" loading="lazy">
+        <img class="pos" src="web/${o.chave}-pos.webp" alt="Logo ${o.nome} para fundo claro" loading="lazy">
+        <span class="marca">${o.n} ${o.nome}</span>
+      </div>
+      <div class="versoes">
+        <figure><div class="v" style="background:#0b0c0e"><img src="web/${o.chave}-neg.webp" alt="" loading="lazy"></div><figcaption>Fundo escuro</figcaption></figure>
+        <figure><div class="v" style="background:#f4f5f7;border-color:#d9dbe0"><img src="web/${o.chave}-pos.webp" alt="" loading="lazy"></div><figcaption>Fundo claro</figcaption></figure>
+        <figure><div class="v" style="background:#e60012;border-color:#e60012"><img src="web/${o.chave}-branco.webp" alt="" loading="lazy"></div><figcaption>Uma cor · branco</figcaption></figure>
+        <figure><div class="v ic" style="background:#121316"><img src="web/${o.chave}-simbolo-neg.webp" alt="" loading="lazy"></div><figcaption>Símbolo isolado</figcaption></figure>
+      </div>
+      <div class="usos">
+        <div class="uso">
+          <span class="rot">Perfil e aplicativo</span>
+          <div class="icones">
+            <figure><div class="avatar"><img src="web/${o.chave}-simbolo-neg.webp" alt="" loading="lazy"></div><figcaption>Perfil</figcaption></figure>
+            <figure><div class="app escuro"><img src="web/${o.chave}-simbolo-neg.webp" alt="" loading="lazy"></div><figcaption>App escuro</figcaption></figure>
+            <figure><div class="app"><img src="web/${o.chave}-simbolo-pos.webp" alt="" loading="lazy"></div><figcaption>App claro</figcaption></figure>
+          </div>
+        </div>
+        <div class="uso">
+          <span class="rot">Aba do navegador · tamanho real</span>
+          <div class="abas">
+            <div class="aba e"><img src="web/${o.chave}-fav-neg-16.png" srcset="web/${o.chave}-fav-neg-32.png 2x" alt="">OLIVEON Performance</div>
+            <div class="aba c"><img src="web/${o.chave}-fav-pos-16.png" srcset="web/${o.chave}-fav-pos-32.png 2x" alt="">OLIVEON Performance</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fase">
+      <div class="fase-cab"><span class="rot"><b>Fase 3</b> · Aplicação</span><small>Clique para ver em tamanho real</small></div>
+      <div class="mocks">
+        ${o.mocks.map((m) => `<figure><a class="quadro" href="web/${m}.webp" target="_blank"><img src="web/${m}.webp" alt="Mockup ${nomeMock[m[2]]} da opção ${o.nome}" loading="lazy" width="1800" height="1195"></a><figcaption>${nomeMock[m[2]]}</figcaption></figure>`).join('')}
+      </div>
+    </div>
+
+    <div class="leitura">
+      <div><span class="rot">Ponto forte</span><p>${o.forte}</p><span class="rot" style="margin-top:20px">Atenção</span><p>${o.atencao}</p></div>
+      <div class="var"><span class="rot">Variação B da arte final</span><a href="web/${outra}.webp" target="_blank"><img src="web/${outra}.webp" alt="Segunda variação da opção ${o.nome}" loading="lazy" width="1800" height="1013"></a></div>
+    </div>
+  </div>
+</section>`;
+}).join('');
+document.getElementById('opcoes').outerHTML = html;
+
+const comp = (v) => opcoes.map((o) => `
+  <div>
+    <h3>${o.n} ${o.nome}</h3>
+    <div class="logo" ${v === 'pos' ? 'style="background:#f4f5f7"' : ''}><img src="web/${o.chave}-${v}.webp" alt="" loading="lazy"></div>
+    <div class="reduz">
+      <img src="web/${o.chave}-fav-${v}-64.png" width="64" height="64" alt="">
+      <img src="web/${o.chave}-fav-${v}-32.png" srcset="web/${o.chave}-fav-${v}-64.png 2x" width="32" height="32" alt="">
+      <img src="web/${o.chave}-fav-${v}-16.png" srcset="web/${o.chave}-fav-${v}-32.png 2x" width="16" height="16" alt="">
+    </div>
+  </div>`).join('');
+document.getElementById('comp').innerHTML = comp('neg');
+document.getElementById('comp-claro').innerHTML = comp('pos');
+
+document.querySelectorAll('.alterna button').forEach((b) => b.addEventListener('click', () => {
+  document.body.dataset.fundo = b.dataset.fundo;
+  document.querySelectorAll('.alterna button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+}));
+</script>
+</body>
+</html>
