@@ -3,6 +3,8 @@
 > Fonte da verdade visual do site. Leia este arquivo antes de criar ou alterar qualquer interface.
 > Formato inspirado no padrão DESIGN.md (Google Stitch / Uiverse Design): um manual que humanos leem rápido e agentes de código consultam antes de escrever UI.
 
+> **Marca nova desde 05/10/2026.** O logo deixou de ser o "Ø" cromado: agora é a assinatura Decolagem (anel branco com um foguete vermelho saindo a 45°, palavra chapada com o "E" de três barras), em `assets/logo-oliveon-escuro.svg` e `assets/logo-oliveon-claro.svg`; favicon, ícones e prévia de link (`assets/og-oliveon.jpg`) também. Regras da marca: manual em `/marca`, sem prata nem cromo. O tema "Lâmina" desta página (traço diagonal, aço, hairlines) continua valendo para a interface; onde o texto abaixo cita o cromo do logo, leia como a origem histórica do tema, não como referência para peça nova.
+
 ## 1. Produto e tom
 
 OLIVEON Performance é uma operação completa de aquisição digital, estratégia, tráfego pago, design, web e desenvolvimento na mesma mesa, que entrega tráfego, funis e automações (WhatsApp, e-mail, CRM), captação de leads, lançamentos, sites e landing pages, e-commerce e delivery, criativos e **software sob medida** (destaque). O site é institucional/comercial e tem um único trabalho: **gerar diagnósticos e conversas no WhatsApp**.
@@ -56,7 +58,7 @@ Escala (desktop): h1 `clamp(2.5rem, 5.5vw − 0.5rem, 3.6rem)` em > 960px (≤ 9
 
 - Raios: `2px` em botões, campos, tags, filtros, chips e menu; `4px` em cards, módulos, mock do telefone, formulário, grids, capas. Zero pílulas (só avatares são círculos).
 - Hairline `1px --border` para estrutura; `--border-strong` para molduras; `2px --red` só para indicadores (barra do card ativo, linha de foco); `1.5px --steel` no anel da lâmina.
-- Sem sombras difusas. Profundidade = `--edge` (1px de brilho no topo) + troca de camada no hover. Única exceção: o logo cromado (quando usado).
+- Sem sombras difusas. Profundidade = `--edge` (1px de brilho no topo) + troca de camada no hover. Sem exceção: o logo é chapado.
 - Grids colapsados (`gap: 1px` sobre `--border`, moldura `--border-strong`): dores (4 col), serviços (3 col; destaque ocupa 2), equipe (3 col).
 - Container `1140px`, padding lateral 24px; o header usa `1320px` para caber logo + indicador + 6 links + CTA. Seções com `128px` de respiro (88px no mobile).
 
