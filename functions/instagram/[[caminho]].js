@@ -67,7 +67,7 @@ export async function onRequest({ request, env, params }) {
   const url = new URL(request.url);
   const caminho = (params.caminho || []).join("/");
   if (url.pathname === "/instagram") return Response.redirect(url.origin + "/instagram/", 301);
-  if (!env.CMS || !env.MEDIA) return new Response("configuração incompleta", { status: 500 });
+  if (!env.CMS || !env.MEDIA) return new Response("configuração incompleta", { status: 500, headers: { "cache-control": "no-store" } });
   const { senha, chave } = await segredo(env);
 
   if (caminho === "entrar" && request.method === "POST") {
@@ -86,10 +86,13 @@ export async function onRequest({ request, env, params }) {
     return new Response("acesso restrito", { status: 401, headers: { "cache-control": "no-store" } });
   }
 
+  // 404 sem "no-store" fica guardado na borda da Cloudflare por horas (extensão de imagem é cacheada
+  // por padrão): uma peça que subiu depois continuaria dando 404 para todo mundo
+  const naoAchou = () => new Response("não encontrado", { status: 404, headers: { "cache-control": "no-store" } });
   const arquivo = caminho === "" ? "index.html" : caminho;
-  if (!/^[a-zA-Z0-9][a-zA-Z0-9/_.-]{0,200}$/.test(arquivo) || arquivo.includes("..")) return new Response("não encontrado", { status: 404 });
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9/_.-]{0,200}$/.test(arquivo) || arquivo.includes("..")) return naoAchou();
   const objeto = await env.MEDIA.get("instagram/" + arquivo);
-  if (!objeto) return new Response("não encontrado", { status: 404 });
+  if (!objeto) return naoAchou();
   const ext = arquivo.split(".").pop().toLowerCase();
   const cab = new Headers();
   cab.set("content-type", TIPOS[ext] || "application/octet-stream");
